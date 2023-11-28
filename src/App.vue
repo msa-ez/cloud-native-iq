@@ -34,6 +34,7 @@ export default {
 		}
 	},
 	mounted() {
+		document.title = 'cloudiq';
 	},
 	methods: {
 		goHome() {
