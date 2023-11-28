@@ -28,7 +28,7 @@
                     :key="`${n}-content`"
                     :step="n"
                 >
-                    <v-card class="mb-12 stop-box-in">
+                    <v-card class="mb-12 step-box-in">
                         <component @saveUsers="saveUsers" :selectedUser="selectedUser" :is="components[n - 1].component" />
                     </v-card>
                     
@@ -92,7 +92,7 @@ export default {
     height:calc(100vh - 220px);
     /* background-color: lightgoldenrodyellow; */
 }
-.stop-box-in { 
+.step-box-in { 
     /* step-box 안의 흰 박스 */
     height:calc(100vh - 300px);
 }
@@ -107,6 +107,10 @@ export default {
     text-align: right;
     margin-top: 10px;
 }
+.guide-box {
+    height: calc(100vh - 390px);
+    overflow: auto;
+}
 
 @media only screen and (max-width:1100px) {
     .qna-box {
@@ -114,7 +118,7 @@ export default {
     }
 }
 @media only screen and (max-width:700px) {
-    .box-wrap, .step-box, .stop-box-in {
+    .box-wrap, .step-box, .step-box-in {
         height:100%;
     }
     .qna-box {
