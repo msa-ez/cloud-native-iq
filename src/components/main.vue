@@ -5,9 +5,7 @@
 				<!-- <img class="main-logo" src="../image/DPG_logo.png" /> -->
 				<img class="dpg-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" />
 				<div class="main-title">클라우드 네이티브 전환 가이드라인</div>
-				<div class="iq-logo">
-					<img style="" src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
-				</div>
+				<img class="iq-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
 			</div>
 			<v-row>
 				<v-col v-for="(step, index) in steps" :key="index">
@@ -68,36 +66,36 @@ export default {
 
 <style>
 .title-box {
-	/* border: 1px solid red; */
-	height: 50%;
+	width: 100%;
+	margin: 0 auto;
 }
 /* .main-logo {
 	height: calc(50vh - 36px);
 } */
 .dpg-logo {
-	/* width: 300px; */
+	max-width: 100%;
+	height: auto;
 }
 .main-title {
-	font-size: 48px;
+	font-size: 45px;
 	font-weight: bold;
 	color: #003669;
 }
 .iq-logo {
-	width:100%;
-	/* border: 1px solid blue; */
-	object-fit: contain;
+	max-width: 100%;
+	height: auto;
 }
 .card-box {
-	margin:40px 20px 20px 20px; 
+	margin: 40px 20px 20px 20px; 
 	padding: 30px; 
 	text-align: center;
 }
 .card-box > h1 {
-	margin-top: 50px;
+	margin-top: 40px;
 }
 .card-box > div {
-	font-size:20px; 
-	margin-top:20px;
+	font-size: 20px; 
+	margin-top: 20px;
 }
 
 @media only screen and (max-width:1400px) {
@@ -117,12 +115,21 @@ export default {
 		height: 100%;
   	} */
 	.dpg-logo {
-		/* width: 250px; */
+		width: 250px;
 	}
 	.main-title {
 		font-size: 27px;
 	}
-	
+	.iq-logo {
+		width: 350px;
+	}
+	.card-box {
+		margin: 10px auto;
+		width: 90vw;
+	}
+	.card-box > h2 {
+		font-size: 22px;
+	}
 	.card-box > h1 {
 		font-size: 26px;
 	}
