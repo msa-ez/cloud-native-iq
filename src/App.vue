@@ -33,6 +33,9 @@ export default {
 
 		}
 	},
+	mounted() {
+		document.title = 'cloudiq';
+	},
 	methods: {
 		goHome() {
 			this.$router.push('/');
