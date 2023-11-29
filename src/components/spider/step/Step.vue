@@ -36,7 +36,10 @@
             </v-stepper-items>
         </v-stepper>
         <div class="btn-box">
-            <v-btn class="btn-bot" color="primary" @click="nextStep(n)">Next</v-btn>
+            <v-btn class="btn-bot"
+                color="primary"
+                @click="nextStep()"
+                :disabled="e1 === components.length">Next</v-btn>
             <v-btn class="btn-bot" text>Cancel</v-btn>
         </div>
     </div>
@@ -55,6 +58,7 @@ export default {
     },
     data () {
         return {
+            stepNumber: 0,
             e1: 1,
             components: [
                 { component: Assessment, name: '현수준평가' },
@@ -71,11 +75,10 @@ export default {
         saveUsers(){
             this.$emit('saveUsers')
         },
-        nextStep (n) {
-            if (n === this.components.length) {
-                this.e1 = 1
+        nextStep () {
+            if (this.e1 === this.components.length) {
             } else {
-                this.e1 = n + 1
+                this.e1++
             }
         },
     },
