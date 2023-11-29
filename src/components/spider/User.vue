@@ -162,8 +162,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px dashed #ccc;
+    margin-bottom: 10px;
+    /* border-bottom: 1px dashed #ccc; */
     /* border-radius: 5px;
     padding: 10px; */
     /* box-shadow: 0 4px 4px -4px #333; */
