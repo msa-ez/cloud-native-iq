@@ -1,5 +1,5 @@
 module.exports = {
-    publicPath: '/msa-ez-cloudiq.github.io',
+    publicPath: '/',
     devServer: {
         disableHostCheck: true,
     },
