@@ -14,9 +14,10 @@ const routes = [
             component: main,
       },
       {
-            path: '/step',
+            path: '/:name_en',
             name: 'User',
             component: User,
+            props: true
       },
 ];
 

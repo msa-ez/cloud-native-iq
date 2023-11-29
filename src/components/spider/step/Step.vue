@@ -1,11 +1,11 @@
 <template>
     <div>
-        <v-stepper v-model="e1" class="box-wrap">
+        <v-stepper v-model="currentStep" class="box-wrap">
             <v-stepper-header>
                 <template v-for="n in components.length">
                     <v-stepper-step
                         :key="`${n}-step`"
-                        :complete="e1 > n"
+                        :complete="currentStep > n"
                         :step="n"
                         editable
                     >
@@ -39,7 +39,7 @@
             <v-btn class="btn-bot"
                 color="primary"
                 @click="nextStep()"
-                :disabled="e1 === components.length">Next</v-btn>
+                :disabled="currentStep === components.length">Next</v-btn>
             <v-btn class="btn-bot" text>Cancel</v-btn>
         </div>
     </div>
@@ -59,26 +59,37 @@ export default {
     data () {
         return {
             stepNumber: 0,
-            e1: 1,
+            currentStep: 1,
             components: [
-                { component: Assessment, name: '현수준평가' },
-                { component: GoalSetting, name: '목표수준설정' },
-                { component: GetTheGuide, name: '전환가이드' }
+                { component: Assessment, name: '현수준평가', name_en: 'Assessment' },
+                { component: GoalSetting, name: '목표수준설정', name_en: 'GoalSetting' },
+                { component: GetTheGuide, name: '전환가이드', name_en: 'GetTheGuide' }
             ],
         }
     },
-
-    watch: {
+    created() {
+        const nameEn = this.$route.params.name_en;
+        const matchingComponentIndex = this.components.findIndex(c => c.name_en === nameEn);
+        if (matchingComponentIndex !== -1) {
+            this.currentStep = matchingComponentIndex + 1;
+        }
     },
-
+    watch: {
+        currentStep(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                const nameEn = this.components[newVal - 1].name_en;
+                this.$router.push(`/${nameEn}`);
+            }
+        }
+    },
     methods: {
         saveUsers(){
             this.$emit('saveUsers')
         },
         nextStep () {
-            if (this.e1 === this.components.length) {
+            if (this.currentStep === this.components.length) {
             } else {
-                this.e1++
+                this.currentStep++
             }
         },
     },
