@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<div class="flex-column">
-			<div style="text-align: center;">
+			<div class="title-box" style="text-align: center;">
 				<!-- <img class="main-logo" src="../image/DPG_logo.png" /> -->
-				<img class="main-logo2" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" />
+				<img class="dpg-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" />
 				<div class="main-title">클라우드 네이티브 전환 가이드라인</div>
-				<div>
+				<div class="iq-logo">
 					<img style="" src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
 				</div>
 			</div>
@@ -67,17 +67,25 @@ export default {
 </script>
 
 <style>
+.title-box {
+	/* border: 1px solid red; */
+	height: 50%;
+}
 /* .main-logo {
 	height: calc(50vh - 36px);
 } */
-.main-logo2 {
-	width: 300px;
-	margin: 20px auto;
+.dpg-logo {
+	/* width: 300px; */
 }
 .main-title {
 	font-size: 48px;
 	font-weight: bold;
 	color: #003669;
+}
+.iq-logo {
+	width:100%;
+	/* border: 1px solid blue; */
+	object-fit: contain;
 }
 .card-box {
 	margin:40px 20px 20px 20px; 
@@ -108,8 +116,8 @@ export default {
     	width: 100%;
 		height: 100%;
   	} */
-	.main-logo2 {
-		width: 250px;
+	.dpg-logo {
+		/* width: 250px; */
 	}
 	.main-title {
 		font-size: 27px;
