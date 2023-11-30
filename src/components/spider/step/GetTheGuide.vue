@@ -77,7 +77,7 @@ export default {
         this.loadUserPerspectives();
     },
     watch: {
-        selectedUser:{
+        selectedUser: {
             handler(){
                 this.markdownContentFolders = {}
                 this.loadUserPerspectives();
