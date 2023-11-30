@@ -78,7 +78,9 @@ export default {
         currentStep(newVal, oldVal) {
             if (newVal !== oldVal) {
                 const nameEn = this.components[newVal - 1].name_en;
-                this.$router.push(`/${nameEn}`);
+                if (this.$route.params.name_en !== nameEn) {
+                    this.$router.push(`/${nameEn}`);
+                }
             }
         }
     },
