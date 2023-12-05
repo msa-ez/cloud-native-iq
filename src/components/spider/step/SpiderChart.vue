@@ -10,6 +10,16 @@
 						:y2="getCoordinate(chartRadius, index, perspectives.length)[1]"
 						stroke="lightgray"
 					/>
+					<g v-for="level in maxDataValue" :key="`level-line-${index}-${level}`">
+						<line
+							:x1="getLevelLineCoordinate(index, level)[0]"
+							:y1="getLevelLineCoordinate(index, level)[1]"
+							:x2="getLevelLineCoordinate(index, level)[2]"
+							:y2="getLevelLineCoordinate(index, level)[3]"
+							stroke="lightgray"
+							stroke-width="2"
+						/>
+					</g>
 					<text
 						:x="getCoordinate(chartRadius + labelOffset, index, perspectives.length)[0]"
 						:y="getCoordinate(chartRadius + labelOffset, index, perspectives.length)[1]"
@@ -103,6 +113,29 @@ export default {
 			const x = radius * Math.cos(angle);
 			const y = radius * Math.sin(angle);
 			return [x, y];
+		},
+		getLevelLineCoordinate(index, level) {
+			// 각도 계산
+			const angle = (Math.PI * 2 * index) / this.perspectives.length - Math.PI / 2;
+			// 해당 레벨에서의 반지름 계산
+			const radius = this.chartRadius * (level / this.maxDataValue - 1);
+			// 축의 좌표를 계산
+			const x = radius * Math.cos(angle);
+			const y = radius * Math.sin(angle);
+
+			// 수평 선의 길이를 정의
+			const lineLength = 5; // 가로 선의 길이
+
+			// 축에 수직인 선의 끝점을 계산하기 위한 각도 조정
+			const anglePerpendicular = angle + Math.PI / 2;
+
+			// 수평 선의 시작점과 끝점 계산
+			const x1 = x + lineLength * Math.cos(anglePerpendicular);
+			const y1 = y + lineLength * Math.sin(anglePerpendicular);
+			const x2 = x - lineLength * Math.cos(anglePerpendicular);
+			const y2 = y - lineLength * Math.sin(anglePerpendicular);
+
+			return [x1, y1, x2, y2];
 		},
 		getPolygonPoints(perspectives) {
 			if (!perspectives || perspectives.length === 0) {

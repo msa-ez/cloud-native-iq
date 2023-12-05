@@ -21,6 +21,9 @@
                     <div v-if="goalLevels[item.tab_en] > 0 && Object.keys(markdownContentFolders).length > 0"
                         v-html="markdownContentFolders[item.tab_en][goalLevels[item.tab_en]]"
                     ></div>
+                    <div v-else>
+                        전환목표가 없습니다.
+                    </div>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>
@@ -84,6 +87,14 @@ export default {
             },
             deep:true
         },
+        tab(newVal) {
+            const tabName = this.items[newVal].tab_en;
+            this.selectedUser.perspectives.forEach(p => {
+                if (p.name_en === tabName) {
+                    this.$router.push(`/GetTheGuide/${tabName}/level${p.goalLevel}`);
+                }
+            });
+        }
     },
     methods: {
         async getAllMarkdownContentFolders() {
