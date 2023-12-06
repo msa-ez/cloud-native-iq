@@ -1,5 +1,17 @@
 <template>
 	<div class="spider-box">
+		<div style="position:relative">
+			<div style="position: absolute; top:5px; left:10px;">
+				<v-row>
+					<div style="width:16px; height:16px; border-radius: 5px; background-color:rgba(192, 75, 192, 0.5); margin:2px 5px 0px 0px;"></div>
+					<div>목표수준</div>
+				</v-row>
+				<v-row>
+					<div style="width:16px; height:16px; border-radius: 5px; background-color:rgba(75, 192, 192, 1); margin:2px 5px 0px 0px;"></div>
+					<div>현수준</div>
+				</v-row>
+			</div>
+		</div>
 		<svg :width="chartWidth" :height="chartHeight">
 			<g :transform="`translate(${chartCenterX}, ${chartCenterY})`">
 				<g v-for="(perspective, index) in perspectives" :key="`perspective-${index}₩`">

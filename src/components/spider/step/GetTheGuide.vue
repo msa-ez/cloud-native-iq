@@ -16,7 +16,9 @@
             <v-tab-item key="fixed-tab-content">
                 <v-card flat style="padding:20px;">
                     <div v-if="messagingChannel">messagingChannel</div>
-                    <div></div>
+                    <div v-if="infra.kubernetes">infra.kubernetes</div>
+                    <div v-if="infra.bareMetal">infra.bareMetal</div>
+                    <div v-if="infra.virtualMachine">infra.virtualMachine</div>
                 </v-card>
             </v-tab-item>
 
@@ -49,20 +51,20 @@ export default {
     data () {
         return {
         frontEnd: {
-            monolith: Boolean,
-            micro: Boolean,
+            monolith: false,
+            micro: false,
         },
-        gateway: Boolean,
+        gateway: false,
         serviceType: {
-            sidecar: Boolean,
-            micro: Boolean,
-            mini: Boolean,
+            sidecar: false,
+            micro: false,
+            mini: false,
         },
-        messagingChannel: Boolean,
+        messagingChannel: false,
         infra: {
-            kubernetes: Boolean,
-            virtualMachine: Boolean,
-            bareMetal: Boolean,
+            kubernetes: false,
+            virtualMachine: false,
+            bareMetal: false,
         },
         items: [
             {
@@ -105,6 +107,7 @@ export default {
             handler(){
                 this.markdownContentFolders = {}
                 this.loadUserPerspectives();
+                this.updateValues();
             },
             deep:true
         },
@@ -126,15 +129,14 @@ export default {
     },
     methods: {
         updateValues() {
-            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition' && p.goalLevel === 3);
-            const data = this.selectedUser.perspectives.find(p => p.name_en === 'data' && p.goalLevel === 3);
+    const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition' && p.goalLevel === 3);
+    const data = this.selectedUser.perspectives.find(p => p.name_en === 'data' && p.goalLevel === 3);
 
-            if (decomposition && data) {
-                this.messagingChannel = true;
-                this.infra.kubernetes = true;
-                this.infra.vm = true;
-            }
-        },
+    this.messagingChannel = !!(decomposition && data);
+    this.infra.kubernetes = !!(decomposition && data);
+    this.infra.virtualMachine = !!(decomposition && data);
+},
+
         async getAllMarkdownContentFolders() {
             try {
                 const response = await axios.get(`https://api.github.com/repos/msa-ez/cloud-iq/contents/get-the-guide-md`);
