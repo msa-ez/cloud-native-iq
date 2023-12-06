@@ -13,7 +13,7 @@ export default {
             topics: [
                 {
                     name: 'Availability',
-                    goalLevels:[1, 1, 0, 1, 1, 0],
+                    goalLevels:[3, 3, 0, 3, 3, 0],
                     goalCheckCount: 1,
                     questions: [
                         {
