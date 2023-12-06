@@ -100,21 +100,22 @@ export default {
 
 <style>
 .box-wrap {
-    height:calc(100vh - 220px);
+    height:calc(100vh - 60px);
     /* border:1px solid blue; */
 }
 .step-box {
     /* overflow: auto; */
-    height:calc(100vh - 220px);
+    height:calc(100vh - 60px);
     /* background-color: lightgoldenrodyellow; */
 }
 .step-box-in { 
     /* step-box 안의 흰 박스 */
-    height:calc(100vh - 300px);
+    height:calc(100vh - 180px);
+	/* background-color: lightpink; */
 }
 .qna-box {
     /* width: 130%; */
-    height:calc(100vh - 335px);
+    height: calc(100vh - 180px);
 	overflow: auto;
     padding: 20px;
 	/* border: 1px solid pink; */
@@ -124,7 +125,7 @@ export default {
     margin-top: 10px;
 }
 .guide-box {
-    height: calc(100vh - 390px);
+    height: calc(100vh - 330px);
     overflow: auto;
 }
 
