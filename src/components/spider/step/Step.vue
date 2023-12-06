@@ -125,7 +125,7 @@ export default {
     margin-top: 10px;
 }
 .guide-box {
-    height: calc(100vh - 330px);
+    height: calc(100vh - 230px);
     overflow: auto;
 }
 

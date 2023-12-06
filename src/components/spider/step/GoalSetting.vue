@@ -3,7 +3,7 @@
         <v-row>
             <v-col>
                 <div class="qna-box goal-box">
-                    <div style="opacity: 0.8;">설명 : 클라우드 기반 공공 서비스 도입이 필요한 수요기관에서 As-Is 분석과 To-Be 모델을 기반으로 클라우드 서비스 구축사업의 기능/비기능적 요구사항을 정의</div>
+                    <div class="tab-info">본 단계에서는 클라우드 기반 공공 서비스 도입이 필요한 수요기관에서 As-Is 분석과 To-Be 모델을 기반으로 클라우드 서비스 구축사업의 기능/비기능적 요구사항을 정의 합니다.</div>
                     <div v-for="(topic, topicIndex) in selectedUser.topics" :key="topicIndex" style="margin-bottom: 40px;">
                         <h3 style="margin-bottom: 10px;">{{ topic.name }}</h3>
                         <div v-for="(question, questionIndex) in topic.questions" :key="questionIndex" style="margin-bottom: 10px;padding:10px 10px 0 0;border-bottom: 1px solid #ccc;">

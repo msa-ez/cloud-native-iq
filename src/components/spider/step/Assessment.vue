@@ -3,16 +3,16 @@
 		<v-row>
 			<v-col>
 				<div class="qna-box assess-box" >
-					<div style="opacity: 0.8;">설명 : 클라우드 네이티브 앱이 가져야 할 주요 관점별 현 수준을 평가하여 목표 수준과의 Gap을 가시화 (개발조직이 내부에 있을 때 – 발주기관이, 개발 조직이 내부에 없을 때 – 수행기관이 평가 가능)</div>
+					<div class="tab-info">본 단계에서는 클라우드 네이티브 앱이 가져야 할 주요 관점별 현 수준을 평가하여 목표 수준과의 Gap을 가시화 (개발조직이 내부에 있을 때 - 발주기관이, 개발 조직이 내부에 없을 때 - 수행기관이 평가 가능) 합니다.</div>
 					<div v-for="(perspective, index) in selectedUser.perspectives" :key="index" style="margin-bottom: 40px;">
-						<h2 style="margin-bottom: 20px;">{{ perspective.name }}</h2>
+						<h2 style="margin-bottom: 5px;">{{ perspective.name }}</h2>
 						<div v-for="(level, levelIndex) in perspective.levels" :key="levelIndex">
-							<h3 style="margin-bottom: 10px;">Level {{ levelIndex + 1 }}</h3>
+							<h3>Level {{ levelIndex + 1 }}</h3>
 							<div style="margin-bottom: 20px;">
 								<label v-for="(checkpoint, checkpointIndex) in level.checkpoints" :key="checkpointIndex">
 									<div style="display:flex; align-items: start; margin-left: 15px;line-height: 1.7;">
 										<input type="checkbox" v-model="checkpoint.checked" @change="updateLevelCompletion(perspective, level)"
-										style="margin: 7px 5px 0 0;">
+										style="margin: 5px 5px 0 0;">
 										<span style="color: black">{{ checkpoint.text }}</span>
 									</div>
 								</label>
@@ -74,4 +74,10 @@ export default {
 	}
 };
 </script>
+<style>
+.tab-info {
+	font-size:16px; font-weight: 700;
+	margin-bottom:20px;
+}
+</style>
   

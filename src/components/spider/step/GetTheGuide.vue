@@ -14,14 +14,24 @@
         <v-tabs-items v-model="tab" class="guide-box">
             <!-- 새로운 고정 탭 컨텐츠 -->
             <v-tab-item key="fixed-tab-content">
-                <v-card flat style="padding:20px;">
-                    <div v-if="messagingChannel">messagingChannel</div>
-                    <div v-if="infra.kubernetes">infra.kubernetes</div>
-                    <div v-if="infra.bareMetal">infra.bareMetal</div>
-                    <div v-if="infra.virtualMachine">infra.virtualMachine</div>
+                <v-card class="" flat style="padding:20px;">
+                    <!-- 외부 컨테이너 div 추가 -->
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <!-- 1번 div -->
+                        <div style="margin-left:20%;">
+                            <h2>Consumers</h2>
+                            <v-img style="width:80%;" :src="require('@/image/consumers.png')" />
+                        </div>
+                        <div>
+                            <div v-for="i in 11" :key="i">
+                                <div v-for="(src, index) in checkReferenceArchitecture(i)" :key="index">
+                                    <v-img style="width:60%;" :src="src" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </v-card>
             </v-tab-item>
-
             <!-- 기존 v-for를 사용한 탭 컨텐츠들 -->
             <v-tab-item v-for="item in items" :key="item.tab">
                 <v-card flat style="padding:20px;">
@@ -128,14 +138,75 @@ export default {
         }
     },
     methods: {
-        updateValues() {
-    const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition' && p.goalLevel === 3);
-    const data = this.selectedUser.perspectives.find(p => p.name_en === 'data' && p.goalLevel === 3);
+        checkReferenceArchitecture(index) {
+            var images = [];
+            var data = null;
+            var data2 = null
 
-    this.messagingChannel = !!(decomposition && data);
-    this.infra.kubernetes = !!(decomposition && data);
-    this.infra.virtualMachine = !!(decomposition && data);
-},
+            switch(index) {
+                case 1:
+                    data = this.selectedUser.perspectives.find(p => p.name_en === 'sw-architecture');
+                        if (data && data.goalLevel == 4) {
+                            images.push(require('@/image/referenceArchitecture/mic-frontend.png'));
+                        }
+                        if (data && data.goalLevel < 4) {
+                            images.push(require('@/image/referenceArchitecture/mono-frontend.png'));
+                        }
+                    break;
+                case 2:
+                    data = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition');
+                    data2 = this.selectedUser.perspectives.find(p => p.name_en === 'data');
+                        if (data && data.goalLevel >= 2 || data2 && data2.goalLevel >= 2) {
+                            images.push(require('@/image/referenceArchitecture/api.png'));
+                        }
+                    break;
+                case 3:
+                    data = this.selectedUser.perspectives.find(p => p.name_en === 'data');
+                    data2 = this.selectedUser.perspectives.find(p => p.name_en === 'sw-architecture');
+                        if (data && data.goalLevel <= 1) {
+                            images.push(require('@/image/referenceArchitecture/inner1.png'));
+                        }
+                        if (data && data.goalLevel == 2) {
+                            images.push(require('@/image/referenceArchitecture/inner2.png'));
+                        }
+                        if (data && data.goalLevel == 3) {
+                            images.push(require('@/image/referenceArchitecture/inner3.png'));
+                        }
+                        if (data && data.goalLevel >= 3 && data2 && data2.goalLevel == 4) {
+                            images.push(require('@/image/referenceArchitecture/inner4.png'));
+                        }
+                    break;
+                case 4:
+                    data = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition');
+                    data2 = this.selectedUser.perspectives.find(p => p.name_en === 'data');
+                        if (data && data.goalLevel == 4 || data2 && data2.goalLevel == 4) {
+                            images.push(require('@/image/referenceArchitecture/Messaging.png'));
+                        }
+                    break;
+                case 5:
+                    data = this.selectedUser.perspectives.find(p => p.name_en === 'infra-architecture');
+                        if (data && data.goalLevel >= 3) {
+                            images.push(require('@/image/referenceArchitecture/Kubernetes.png'));
+                        }
+                        if (data && data.goalLevel == 2) {
+                            images.push(require('@/image/referenceArchitecture/vm.png'));
+                        }
+                        if (data && data.goalLevel <= 1) {
+                            images.push(require('@/image/referenceArchitecture/bare.png'));
+                        }
+                    break;
+            }
+            return images;
+        },
+
+        updateValues() {
+            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition' && p.goalLevel === 3);
+            const data = this.selectedUser.perspectives.find(p => p.name_en === 'data' && p.goalLevel === 3);
+
+            this.messagingChannel = !!(decomposition && data);
+            this.infra.kubernetes = !!(decomposition && data);
+            this.infra.virtualMachine = !!(decomposition && data);
+        },
 
         async getAllMarkdownContentFolders() {
             try {
