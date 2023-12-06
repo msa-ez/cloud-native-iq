@@ -15,7 +15,7 @@
 					<div>클라우드 네이티브 전환 가이드라인</div>
 				</div> -->
 			</v-app-bar>
-			<v-main style="padding:20px; height: calc(100vh - 60px);">
+			<v-main style="height: calc(100vh - 60px);">
 				<router-view style="height:calc(100vh - 100px);"></router-view>
 			</v-main>
 		</div>

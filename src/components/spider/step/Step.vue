@@ -35,13 +35,13 @@
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
-        <div class="btn-box">
+        <!-- <div class="btn-box">
             <v-btn class="btn-bot"
                 color="primary"
                 @click="nextStep()"
                 :disabled="currentStep === components.length">Next</v-btn>
             <v-btn class="btn-bot" text>Cancel</v-btn>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -61,15 +61,15 @@ export default {
             stepNumber: 0,
             currentStep: 1,
             components: [
-                { component: Assessment, name: '현수준평가', name_en: 'Assessment' },
-                { component: GoalSetting, name: '목표수준설정', name_en: 'GoalSetting' },
-                { component: GetTheGuide, name: '전환가이드', name_en: 'GetTheGuide' }
+                { component: GoalSetting, name: '목표수준설정', name_en: 'GoalSetting', path: 'goal-setting' },
+                { component: Assessment, name: '현수준평가', name_en: 'Assessment', path: 'assessment' },
+                { component: GetTheGuide, name: '전환가이드', name_en: 'GetTheGuide', path: 'get-the-guide' }
             ],
         }
     },
     created() {
-        const nameEn = this.$route.params.name_en;
-        const matchingComponentIndex = this.components.findIndex(c => c.name_en === nameEn);
+        const path = this.$route.params.path;
+        const matchingComponentIndex = this.components.findIndex(c => c.path === path);
         if (matchingComponentIndex !== -1) {
             this.currentStep = matchingComponentIndex + 1;
         }
@@ -77,9 +77,9 @@ export default {
     watch: {
         currentStep(newVal, oldVal) {
             if (newVal !== oldVal) {
-                const nameEn = this.components[newVal - 1].name_en;
-                if (this.$route.params.name_en !== nameEn) {
-                    this.$router.push(`/${nameEn}`);
+                const path = this.components[newVal - 1].path;
+                if (this.$route.params.path !== path) {
+                    this.$router.push(`/${path}`);
                 }
             }
         }
@@ -88,12 +88,12 @@ export default {
         saveUsers(){
             this.$emit('saveUsers')
         },
-        nextStep () {
-            if (this.currentStep === this.components.length) {
-            } else {
-                this.currentStep++
-            }
-        },
+        // nextStep () {
+        //     if (this.currentStep === this.components.length) {
+        //     } else {
+        //         this.currentStep++
+        //     }
+        // },
     },
 }
 </script>

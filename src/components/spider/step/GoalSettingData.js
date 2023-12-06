@@ -13,8 +13,8 @@ export default {
             topics: [
                 {
                     name: 'Availability',
-                    goalLevels:[3, 3, 0, 3, 3, 0],
-                    goalCheckCount: 3,
+                    goalLevels:[1, 1, 0, 1, 1, 0],
+                    goalCheckCount: 1,
                     questions: [
                         {
                             text: '최근 마이너한 신규 기능의 추가로 인하여 핵심 기능의 장애가 발생한 적이 있는가',

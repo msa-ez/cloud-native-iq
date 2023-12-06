@@ -21,7 +21,12 @@ const routes = [
         props: true,
     },
     {
-        path: '/GetTheGuide/:tabName/level:levelNumber',
+        path: '/get-the-guide/:tabName/level:levelNumber',
+        component: User,
+        props: true,
+    },
+    {
+        path: '/get-the-guide/reference-architecture',
         component: User,
         props: true,
     }

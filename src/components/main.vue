@@ -39,17 +39,17 @@ export default {
 				{
 					name: "현 수준 평가",
 					name_en: "Assessment",
-					path: "/Assessment"
+					path: "/assessment"
 				},
 				{
 					name: "목표수준 설정",
 					name_en: "Goal Setting",
-					path: "/GoalSetting"
+					path: "/goal-setting"
 				},
 				{
 					name: "전환 가이드",
 					name_en: "Get the Guide",
-					path: "/GetTheGuide"
+					path: "/get-the-guide"
 				}
 			]
 		}
