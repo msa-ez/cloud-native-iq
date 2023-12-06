@@ -8,7 +8,7 @@ export default {
 					name_en: 'decomposition',
 					goalLevel: 0,
 					levels: [
-						{
+						{ 
 							checkpoints: [
 								{ text: '비즈니스 역량 도출: 비즈니스 도메인을 분석하여 주요 기능과 유즈케이스를 도출하였는가?', checked: false },
 								{ text: '기능 정의: 각 기능을 명확하게 정의하고 해당 기능의 범위를 결정하였는가?', checked: false },
