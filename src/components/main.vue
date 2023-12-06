@@ -37,14 +37,14 @@ export default {
 			steps: 
 			[
 				{
-					name: "현 수준 평가",
-					name_en: "Assessment",
-					path: "/assessment"
-				},
-				{
 					name: "목표수준 설정",
 					name_en: "Goal Setting",
 					path: "/goal-setting"
+				},
+				{
+					name: "현 수준 평가",
+					name_en: "Assessment",
+					path: "/assessment"
 				},
 				{
 					name: "전환 가이드",
