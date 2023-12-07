@@ -17,17 +17,31 @@
                 <v-card class="" flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div style="display: flex; align-items: center; justify-content: center;">
-                        <!-- 1번 div -->
                         <div style="margin-left:20%;">
                             <h2>Consumers</h2>
-                            <v-img style="width:80%;" :src="require('@/image/consumers.png')" />
+                            <img src="../../../../src/image/consumers.png" />
                         </div>
-                        <div>
-                            <div v-for="i in 11" :key="i">
-                                <div v-for="(src, index) in checkReferenceArchitecture(i)" :key="index">
-                                    <v-img style="width:60%;" :src="src" />
-                                </div>
-                            </div>
+                        <div class="">
+                            <!-- Frontend Images -->
+                            <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
+                            <img v-if="frontEnd.monolith" src="../../../../src/image/referenceArchitecture/mono-frontend.png" />
+
+                            <!-- Gateway Image -->
+                            <img  v-if="gateway" src="../../../../src/image/referenceArchitecture/api.png" />
+
+                            <!-- Inner Architecture Images -->
+                            <img  v-if="serviceType.sidecar" src="../../../../src/image/referenceArchitecture/inner1.png" />
+                            <img  v-else-if="serviceType.micro" src="../../../../src/image/referenceArchitecture/inner2.png" />
+                            <img  v-else-if="serviceType.mini" src="../../../../src/image/referenceArchitecture/inner3.png" />
+                            <img  v-else-if="serviceType.mini" src="../../../../src/image/referenceArchitecture/inner3.png" />
+
+                            <!-- Messaging Channel Image -->
+                            <img  v-if="messagingChannel" src="../../../../src/image/referenceArchitecture/Messaging.png" />
+
+                            <!-- Infrastructure Images -->
+                            <img  v-if="infra.kubernetes" src="../../../../src/image/referenceArchitecture/Kubernetes.png" />
+                            <img  v-else-if="infra.virtualMachine" src="../../../../src/image/referenceArchitecture/vm.png" />
+                            <img  v-else-if="infra.bareMetal" src="../../../../src/image/referenceArchitecture/bare.png" />
                         </div>
                     </div>
                 </v-card>
@@ -60,69 +74,72 @@ export default {
     },
     data () {
         return {
-        frontEnd: {
-            monolith: false,
-            micro: false,
-        },
-        gateway: false,
-        serviceType: {
-            sidecar: false,
-            micro: false,
-            mini: false,
-        },
-        messagingChannel: false,
-        infra: {
-            kubernetes: false,
-            virtualMachine: false,
-            bareMetal: false,
-        },
-        items: [
-            {
-                tab: '기능분해',
-                tab_en: 'decomposition',
+            // 데이터 구조
+            frontEnd: {
+                monolith: false,
+                micro: false,
             },
-            { 
-                tab: '데이터',
-                tab_en: 'data',
+            gateway: false,
+            serviceType: {
+                monolith: false,
+                mini: false,
+                micro: false,
+                sidecar: false,
             },
-            { 
-                tab: '소프트웨어 아키텍처',
-                tab_en: 'sw-architecture',
+            messagingChannel: false,
+            infra: {
+                kubernetes: false,
+                virtualMachine: false,
+                bareMetal: false,
             },
-            { 
-                tab: '인프라 아키텍처',
-                tab_en: 'infra-architecture',
-            },
-            { 
-                tab: '배포',
-                tab_en: "distribute",
-            },
-            { 
-                tab: '팀 구조와 문화',
-                tab_en: "team-structure",
-            },
-        ],
-        tab: 0,
-        markdownContentFolders: {},
-        userPerspectives: [],
-        goalLevels: {},
-        contents: [],
-      }
+            items: [
+                {
+                    tab: '기능분해',
+                    tab_en: 'decomposition',
+                },
+                { 
+                    tab: '데이터',
+                    tab_en: 'data',
+                },
+                { 
+                    tab: '소프트웨어 아키텍처',
+                    tab_en: 'sw-architecture',
+                },
+                { 
+                    tab: '인프라 아키텍처',
+                    tab_en: 'infra-architecture',
+                },
+                { 
+                    tab: '배포',
+                    tab_en: "distribute",
+                },
+                { 
+                    tab: '팀 구조와 문화',
+                    tab_en: "team-structure",
+                },
+            ],
+            tab: 0,
+            markdownContentFolders: {},
+            userPerspectives: [],
+            goalLevels: {},
+            contents: [],
+        }
     },
     created() {
         this.loadUserPerspectives();
+        this.checkReferenceArchitecture();
     },
     watch: {
         selectedUser: {
             handler(){
                 this.markdownContentFolders = {}
                 this.loadUserPerspectives();
-                this.updateValues();
+                this.checkReferenceArchitecture();
             },
             deep:true
         },
         tab(newVal) {
-            // 고정 탭 선택시 라우트 변경 방지
+            // 고정 탭 선택시 라우트 변경
             if (newVal === 0) {
                 this.$router.push(`/get-the-guide/reference-architecture`);
                 return;
@@ -138,76 +155,35 @@ export default {
         }
     },
     methods: {
-        checkReferenceArchitecture(index) {
-            var images = [];
-            var data = null;
-            var data2 = null
+        checkReferenceArchitecture() {
+            const swArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'sw-architecture');
+            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition');
+            const dataPerspective = this.selectedUser.perspectives.find(p => p.name_en === 'data');
+            const infraArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'infra-architecture');
 
-            switch(index) {
-                case 1:
-                    data = this.selectedUser.perspectives.find(p => p.name_en === 'sw-architecture');
-                        if (data && data.goalLevel == 4) {
-                            images.push(require('@/image/referenceArchitecture/mic-frontend.png'));
-                        }
-                        if (data && data.goalLevel < 4) {
-                            images.push(require('@/image/referenceArchitecture/mono-frontend.png'));
-                        }
-                    break;
-                case 2:
-                    data = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition');
-                    data2 = this.selectedUser.perspectives.find(p => p.name_en === 'data');
-                        if (data && data.goalLevel >= 2 || data2 && data2.goalLevel >= 2) {
-                            images.push(require('@/image/referenceArchitecture/api.png'));
-                        }
-                    break;
-                case 3:
-                    data = this.selectedUser.perspectives.find(p => p.name_en === 'data');
-                    data2 = this.selectedUser.perspectives.find(p => p.name_en === 'sw-architecture');
-                        if (data && data.goalLevel <= 1) {
-                            images.push(require('@/image/referenceArchitecture/inner1.png'));
-                        }
-                        if (data && data.goalLevel == 2) {
-                            images.push(require('@/image/referenceArchitecture/inner2.png'));
-                        }
-                        if (data && data.goalLevel == 3) {
-                            images.push(require('@/image/referenceArchitecture/inner3.png'));
-                        }
-                        if (data && data.goalLevel >= 3 && data2 && data2.goalLevel == 4) {
-                            images.push(require('@/image/referenceArchitecture/inner4.png'));
-                        }
-                    break;
-                case 4:
-                    data = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition');
-                    data2 = this.selectedUser.perspectives.find(p => p.name_en === 'data');
-                        if (data && data.goalLevel == 4 || data2 && data2.goalLevel == 4) {
-                            images.push(require('@/image/referenceArchitecture/Messaging.png'));
-                        }
-                    break;
-                case 5:
-                    data = this.selectedUser.perspectives.find(p => p.name_en === 'infra-architecture');
-                        if (data && data.goalLevel >= 3) {
-                            images.push(require('@/image/referenceArchitecture/Kubernetes.png'));
-                        }
-                        if (data && data.goalLevel == 2) {
-                            images.push(require('@/image/referenceArchitecture/vm.png'));
-                        }
-                        if (data && data.goalLevel <= 1) {
-                            images.push(require('@/image/referenceArchitecture/bare.png'));
-                        }
-                    break;
+            // Frontend 조건 설정
+            this.frontEnd.micro = swArchitecture && swArchitecture.goalLevel === 4;
+            this.frontEnd.monolith = swArchitecture && swArchitecture.goalLevel < 4;
+
+            // Gateway 조건 설정
+            this.gateway = (decomposition && decomposition.goalLevel >= 2) || (dataPerspective && dataPerspective.goalLevel >= 2);
+
+            // Inner Architecture 조건 설정
+            this.serviceType.monolith = dataPerspective && dataPerspective.goalLevel <= 1;
+            this.serviceType.mini = dataPerspective && dataPerspective.goalLevel === 2;
+            this.serviceType.micro = dataPerspective && dataPerspective.goalLevel === 3;
+            if (dataPerspective && dataPerspective.goalLevel >= 3 && swArchitecture && swArchitecture.goalLevel === 4) {
+                this.serviceType.sidecar = true
             }
-            return images;
+
+            // Messaging Channel 조건 설정
+            this.messagingChannel = (decomposition && decomposition.goalLevel == 4) || (dataPerspective && dataPerspective.goalLevel == 4);
+
+            // Infra 조건 설정
+            this.infra.kubernetes = infraArchitecture && infraArchitecture.goalLevel >= 3;
+            this.infra.virtualMachine = infraArchitecture && infraArchitecture.goalLevel === 2;
+            this.infra.bareMetal = infraArchitecture && infraArchitecture.goalLevel <= 1;
         },
-
-        updateValues() {
-            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition' && p.goalLevel === 3);
-            const data = this.selectedUser.perspectives.find(p => p.name_en === 'data' && p.goalLevel === 3);
-
-            this.messagingChannel = !!(decomposition && data);
-            this.infra.kubernetes = !!(decomposition && data);
-            this.infra.virtualMachine = !!(decomposition && data);
-        },
-
         async getAllMarkdownContentFolders() {
             try {
                 const response = await axios.get(`https://api.github.com/repos/msa-ez/cloud-iq/contents/get-the-guide-md`);
