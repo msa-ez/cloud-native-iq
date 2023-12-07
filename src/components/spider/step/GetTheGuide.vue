@@ -14,7 +14,7 @@
         <v-tabs-items v-model="tab" class="guide-box">
             <!-- 새로운 고정 탭 컨텐츠 -->
             <v-tab-item key="fixed-tab-content">
-                <v-card class="reference-architecture-box" flat style="padding:20px;">
+                <v-card flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
                         <div class="consumers-img-box">
@@ -34,10 +34,10 @@
                             <img  v-if="gateway" src="../../../../src/image/referenceArchitecture/api.png" />
 
                             <!-- Inner Architecture Images -->
-                            <img  v-if="serviceType.sidecar" src="../../../../src/image/referenceArchitecture/inner1.png" />
-                            <img  v-else-if="serviceType.micro" src="../../../../src/image/referenceArchitecture/inner2.png" />
-                            <img  v-else-if="serviceType.mini" src="../../../../src/image/referenceArchitecture/inner3.png" />
-                            <img  v-else-if="serviceType.mini" src="../../../../src/image/referenceArchitecture/inner3.png" />
+                            <img  v-else-if="serviceType.monolith" src="../../../../src/image/referenceArchitecture/inner1.png" />
+                            <img  v-else-if="serviceType.mini" src="../../../../src/image/referenceArchitecture/inner2.png" />
+                            <img  v-else-if="serviceType.micro" src="../../../../src/image/referenceArchitecture/inner3.png" />
+                            <img  v-if="serviceType.sidecar" src="../../../../src/image/referenceArchitecture/inner4.png" />
 
                             <!-- Messaging Channel Image -->
                             <img  v-if="messagingChannel" src="../../../../src/image/referenceArchitecture/Messaging.png" />
