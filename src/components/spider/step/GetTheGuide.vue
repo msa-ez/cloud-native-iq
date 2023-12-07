@@ -14,14 +14,18 @@
         <v-tabs-items v-model="tab" class="guide-box">
             <!-- 새로운 고정 탭 컨텐츠 -->
             <v-tab-item key="fixed-tab-content">
-                <v-card class="" flat style="padding:20px;">
+                <v-card class="reference-architecture-box" flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
-                    <div style="display: flex; align-items: center; justify-content: center;">
-                        <div style="margin-left:20%;">
-                            <h2>Consumers</h2>
-                            <img src="../../../../src/image/consumers.png" />
+                    <div class="img-box-wrap">
+                        <div class="consumers-img-box">
+                            <!-- <h2>Consumers</h2> -->
+                            <img src="../../../../src/image/consumers-pc.png" />
                         </div>
-                        <div class="">
+                        <div class="consumers-img-box-mo">
+                            <!-- <h2>Consumers</h2> -->
+                            <img src="../../../../src/image/consumers-m.png" />
+                        </div>
+                        <div class="reference-img-box">
                             <!-- Frontend Images -->
                             <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
                             <img v-if="frontEnd.monolith" src="../../../../src/image/referenceArchitecture/mono-frontend.png" />
@@ -224,5 +228,97 @@ export default {
 .tab-title {
     font-size: 16px;
     font-weight: 700;
+}
+.img-box-wrap {
+    max-width: 1920px;
+    width: 100%;
+    height: calc(100vh - 270px);
+    margin: 0 auto;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+.consumers-img-box {
+    width: 25%;
+    height: calc(100vh - 300px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+.consumers-img-box > img {
+    display: block;
+    max-height: 100%;
+    height: 80%;
+}
+.consumers-img-box-mo {
+    display: none;
+    max-width: 767px;
+    width: 100%;
+}
+.consumers-img-box-mo > img {
+    max-width: 100%;
+    width: 100%;
+	height: auto;
+}
+.reference-img-box {
+    max-width: 1000px;
+    width: 50%;
+    height: calc(100vh - 300px);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.reference-img-box > img {
+    max-width: 100%;
+    width: 60%;
+	height: auto;
+}
+
+@media only screen and (max-width:1579px) {
+    .consumers-img-box > img {
+        height: 75%;
+    }
+    .reference-img-box > img {
+        width: 80%;
+    }
+}
+@media only screen and (max-width:1299px) {
+    .consumers-img-box > img {
+        height: 70%;
+    }
+    .reference-img-box > img {
+        width: 80%;
+    }
+    .reference-img-box > img {
+        width: 90%;
+    }
+}
+@media only screen and (max-width:1023px) {
+    .consumers-img-box > img {
+        height: 60%;
+    }
+    .reference-img-box > img {
+        width: 100%;
+    }
+}
+@media only screen and (max-width:767px) {
+    .img-box-wrap {
+        height: 100%;
+        padding: 10px;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .consumers-img-box {
+        display: none;
+    }
+    .consumers-img-box-mo {
+        display: block;
+    }
+    .reference-img-box {
+        width: 100%;
+        height: 100%;
+        justify-content: flex-start;
+    }
 }
 </style>

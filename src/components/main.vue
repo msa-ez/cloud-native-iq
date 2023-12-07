@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<div class="">
 		<div class="flex-column">
-			<div class="title-box" style="text-align: center;">
+			<div class="title-box">
 				<!-- <img class="main-logo" src="../image/DPG_logo.png" /> -->
 				<img class="dpg-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" />
 				<div class="main-title">클라우드 네이티브 전환 가이드라인</div>
@@ -17,7 +17,7 @@
 				</v-col>
 			</v-row>
 			<div class="flex-grow-1"></div> 
-			<v-row class="align-left justify-left" style="height:36px;">
+			<v-row class="align-left justify-left footer-wrap">
 				<v-btn text>전환가이드 전체 보기</v-btn>
 				<v-divider vertical class="mx-2"></v-divider> 
 				<v-btn text>About</v-btn>
@@ -68,6 +68,7 @@ export default {
 .title-box {
 	width: 100%;
 	margin: 0 auto;
+	text-align: center;
 }
 /* .main-logo {
 	height: calc(50vh - 36px);
@@ -75,6 +76,7 @@ export default {
 .dpg-logo {
 	max-width: 100%;
 	height: auto;
+	margin-top: 20px;
 }
 .main-title {
 	font-size: 45px;
@@ -97,7 +99,11 @@ export default {
 	font-size: 20px; 
 	margin-top: 20px;
 }
-
+.footer-wrap {
+	height:36px;
+	position: fixed;
+	bottom:1%;
+}
 @media only screen and (max-width:1400px) {
 	/* .main-logo {
 		height: calc(50vh - 66px);
@@ -107,6 +113,9 @@ export default {
 	}
 	.card-box > h1 {
 		margin-top: 30px;;
+	}
+	.footer-wrap {
+		position: relative;
 	}
 }
 @media only screen and (max-width:700px) {
