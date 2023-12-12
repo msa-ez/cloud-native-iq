@@ -11,16 +11,16 @@
 					<v-card @click="goToStep(step.path)" class="card-box">
 						<div>
 							<h2 class="step-index">Step. {{ index + 1 }}</h2>
-							<Icon :icon="step.icon" class="card-icon"/>
+							<Icon :icon="step.icon" class="card-icon" />
 							<h1 class="step-name">{{ step.name }}</h1>
 							<div class="step-name-en">{{ step.name_en }}</div>
 						</div>
 					</v-card>
 				</v-col>
 				<v-col>
-					<v-card @click="goCaseStudy()" class="card-box">
+					<v-card @click="goToStep('/case-study')" class="card-box">
 						<div>
-							<Icon icon="fluent:briefcase-search-20-regular" width="40" height="40" />
+							<Icon icon="fluent:briefcase-search-20-regular" class="card-icon" />
 							<h1 class="step-name">전환 사례</h1>
 							<div class="step-name-en">Case Study</div>
 						</div>

@@ -10,8 +10,8 @@
                             <div>{{ question.text }}</div>
                             <v-slider
                                 v-model="question.value"
-                                :tick-labels="tickLabels"
-                                :max="tickLabels.length - 1"
+                                :tick-labels="getTickLabels(question)"
+                                :max="getTickLabels(question).length - 1"
                                 step="1"
                                 ticks="always"
                                 :tick-size="4"
@@ -67,6 +67,10 @@ export default {
     },
 
     methods: {
+        getTickLabels(question) {
+            // question에 tickLabels가 정의되어 있으면 그것을 사용하고, 그렇지 않으면 기본 tickLabels를 반환합니다.
+            return question.tickLabels || this.tickLabels;
+        },
         onSliderChange() {
             this.changeGoalLevel()
         },
