@@ -17,14 +17,12 @@
                 <v-card flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
-                        <div class="consumers-img-box">
-                            <!-- <h2>Consumers</h2> -->
+                        <!-- <div class="consumers-img-box">
                             <img src="../../../../src/image/consumers-pc.png" />
                         </div>
                         <div class="consumers-img-box-mo">
-                            <!-- <h2>Consumers</h2> -->
                             <img src="../../../../src/image/consumers-m.png" />
-                        </div>
+                        </div> -->
                         <div class="reference-img-box">
                             <!-- Frontend Images -->
                             <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
@@ -238,7 +236,7 @@ export default {
     align-items: center; 
     justify-content: center;
 }
-.consumers-img-box {
+/* .consumers-img-box {
     width: 25%;
     height: calc(100vh - 300px);
     display: flex;
@@ -249,7 +247,7 @@ export default {
 .consumers-img-box > img {
     display: block;
     max-height: 100%;
-    height: 80%;
+	height: calc((100vh - 96px) * 0.6);
 }
 .consumers-img-box-mo {
     display: none;
@@ -260,11 +258,10 @@ export default {
     max-width: 100%;
     width: 100%;
 	height: auto;
-}
+} */
 .reference-img-box {
     max-width: 1000px;
     width: 50%;
-    height: calc(100vh - 300px);
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -273,52 +270,44 @@ export default {
     max-width: 100%;
     width: 60%;
 	height: auto;
+    margin: 0 auto;
 }
 
-@media only screen and (max-width:1579px) {
-    .consumers-img-box > img {
-        height: 75%;
-    }
+@media all and (min-width:1520px) and (max-height:779px) { 
     .reference-img-box > img {
-        width: 80%;
+        width: 53%;
     }
 }
-@media only screen and (max-width:1299px) {
-    .consumers-img-box > img {
-        height: 70%;
-    }
+@media only screen and (max-width:1280px) {
     .reference-img-box > img {
-        width: 80%;
+        width: 70%;
     }
+}
+@media only screen and (max-width:1024px) {
     .reference-img-box > img {
         width: 90%;
     }
 }
-@media only screen and (max-width:1023px) {
-    .consumers-img-box > img {
-        height: 60%;
-    }
-    .reference-img-box > img {
-        width: 100%;
-    }
-}
-@media only screen and (max-width:767px) {
+@media only screen and (max-width:768px) {
     .img-box-wrap {
         height: 100%;
         padding: 10px;
         flex-direction: column;
         justify-content: flex-start;
     }
-    .consumers-img-box {
+    /* .consumers-img-box {
         display: none;
     }
     .consumers-img-box-mo {
         display: block;
-    }
+    } */
     .reference-img-box {
         width: 100%;
         height: 100%;
         justify-content: flex-start;
+    }
+    .reference-img-box > img {
+        width: 100%;
     }
 }
 </style>
