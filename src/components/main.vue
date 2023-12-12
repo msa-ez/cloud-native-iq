@@ -11,7 +11,7 @@
 					<v-card @click="goToStep(step.path)" class="card-box">
 						<div>
 							<h2 class="step-index">Step. {{ index + 1 }}</h2>
-							<Icon :icon="step.icon" width="50" height="50"/>
+							<Icon :icon="step.icon" class="card-icon"/>
 							<h1 class="step-name">{{ step.name }}</h1>
 							<div class="step-name-en">{{ step.name_en }}</div>
 						</div>
@@ -42,19 +42,19 @@ export default {
 					name: "목표수준 설정",
 					name_en: "Goal Setting",
 					path: "/goal-setting",
-					icon: "fluent:delete-28-filled"
+					icon: "octicon:goal-24"
 				},
 				{
 					name: "현 수준 평가",
 					name_en: "Assessment",
 					path: "/assessment",
-					icon: "octicon:goal-24"
+					icon: "solar:checklist-minimalistic-outline"
 				},
 				{
 					name: "전환 가이드",
 					name_en: "Get the Guide",
 					path: "/get-the-guide",
-					icon: "https://github.com/msa-ez/cloud-iq/assets/149130268/7fc71935-b563-4900-b436-f8c2d52070f3"
+					icon: "cil:book"
 				}
 			]
 		}
@@ -109,16 +109,16 @@ export default {
 .card-icon {
 	width: 45px;
 	height: 45px;
-	margin: 20px auto;
+	padding: 5px;
 }
 .card-box:hover {
 	color: #fff;
 	background-color: #003669;
 	border: 1px solid #003669 !important;
-	/* transition: all linear 0.3s 0s; */
 }
 .card-box:hover .card-icon {
-	border-radius: 50%;
+	color: #222;
+	border-radius: 30%;
 	background-color: #fff;
 	transition: all linear 0.3s 0s;
 }
@@ -195,8 +195,9 @@ export default {
 		width: 40%;
 	}
 	.card-icon {
-		width: 40px;
-		height: 40px;
+		width: 36px;
+		height: 36px;
+		padding: 2px;
 	}
 }
 @media only screen and (max-width:768px) {
