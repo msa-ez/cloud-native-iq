@@ -20,7 +20,7 @@
 				<v-col>
 					<v-card @click="goCaseStudy()" class="card-box">
 						<div>
-							<Icon icon="fluent:briefcase-search-20-regular" width="40" height="40" />
+							<Icon icon="fluent:briefcase-search-20-regular" class="card-icon" />
 							<h1 class="step-name">전환 사례</h1>
 							<div class="step-name-en">Case Study</div>
 						</div>
@@ -107,7 +107,7 @@ export default {
 }
 .card-box {
 	height: calc((100vh - 96px) * 0.33);
-	margin: 30px 20px 20px 20px; 
+	margin: 30px 10px; 
 	text-align: center;
 	display: flex;
 	flex-direction: column;
@@ -119,6 +119,7 @@ export default {
 	width: 45px;
 	height: 45px;
 	padding: 5px;
+	margin-top: 10px;
 }
 .card-box:hover {
 	color: #fff;
@@ -198,6 +199,15 @@ export default {
 	.iq-logo {
 		width: 45%;
 	}
+	.step-index {
+		font-size: 1.2rem;
+	}
+	.step-name {
+		font-size: 1.7rem;
+	}
+	.step-name-en {
+		font-size: 1.12rem;
+	}
 }
 @media only screen and (max-width:1023px) {
 	.iq-logo {
@@ -207,6 +217,9 @@ export default {
 		width: 36px;
 		height: 36px;
 		padding: 2px;
+	}
+	.step-name {
+		font-size: 1.5rem;
 	}
 }
 @media only screen and (max-width:768px) {
@@ -229,13 +242,10 @@ export default {
 		padding: 30px;
 	}
 	.step-index {
-		font-size: 22px;
+		font-size: 1.3rem;
 	}
 	.step-name {
-		font-size: 26px;
-	}
-	.step-name-en {
-		font-size: 16px;
+		font-size: 1.65rem;
 	}
 	.footer-wrap {
 		position: relative;

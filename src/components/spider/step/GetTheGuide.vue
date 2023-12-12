@@ -17,6 +17,14 @@
                 <v-card flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
+                        <!-- <div class="conversion-img-box">
+                            <div class="conversion-goal">
+                                <img src="../../../../src/image/conversionGoal/01ready.png" />
+                            </div>
+                            <div class="conversion-method">
+                                <img src="../../../../src/image/conversionMethod/01retire.png" />
+                            </div>
+                        </div> -->
                         <div class="reference-img-box">
                             <!-- Frontend Images -->
                             <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
@@ -234,6 +242,16 @@ export default {
     display: flex;
     align-items: center; 
     justify-content: center;
+    border: 1px solid red;
+}
+.conversion-img-box {
+    max-width: 920px;
+    width: 50%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid yellowgreen;
 }
 /* .consumers-img-box {
     width: 25%;
@@ -259,11 +277,12 @@ export default {
 	height: auto;
 } */
 .reference-img-box {
-    max-width: 1000px;
+    max-width: 920px;
     width: 50%;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    border: 1px solid blue;
 }
 .reference-img-box > img {
     max-width: 100%;
