@@ -41,8 +41,8 @@
 
 <script>
 import SpiderChart from './SpiderChart.vue'
-import AssessmentData from './AssessmentData';
-import GoalSettingData from './GoalSettingData'
+import AssessmentData from './AssessmentData2.js';
+import GoalSettingData from './GoalSettingData2.js'
 
 export default {
     name: "GoalSetting",

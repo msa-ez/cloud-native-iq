@@ -67,8 +67,8 @@
   
 <script>
 import Step from './step/Step.vue';
-import AssessmentData from './step/AssessmentData';
-import GoalSettingData from './step/GoalSettingData';
+import AssessmentData from './step/AssessmentData2.js';
+import GoalSettingData from './step/GoalSettingData2.js';
 
 export default {
     mixins:[

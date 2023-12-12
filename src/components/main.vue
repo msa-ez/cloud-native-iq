@@ -17,6 +17,15 @@
 						</div>
 					</v-card>
 				</v-col>
+				<v-col>
+					<v-card @click="goCaseStudy()" class="card-box">
+						<div>
+							<Icon icon="fluent:briefcase-search-20-regular" width="40" height="40" />
+							<h1 class="step-name">전환 사례</h1>
+							<div class="step-name-en">Case Study</div>
+						</div>
+					</v-card>
+				</v-col>
 			</v-row>
 			<div class="flex-grow-1"></div> 
 			<v-row class="align-left justify-left footer-wrap">

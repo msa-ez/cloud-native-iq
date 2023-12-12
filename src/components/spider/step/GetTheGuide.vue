@@ -3,7 +3,7 @@
         <v-tabs v-model="tab" fixed-tabs>
             <!-- 새로운 고정 탭 추가 -->
             <v-tab class="tab-title" key="fixed-tab">
-                참조 아키텍처
+                검토결과
             </v-tab>
             <!-- 기존 v-for를 사용한 탭들 -->
             <v-tab class="tab-title" v-for="item in items" :key="item.tab">
@@ -17,12 +17,6 @@
                 <v-card flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
-                        <!-- <div class="consumers-img-box">
-                            <img src="../../../../src/image/consumers-pc.png" />
-                        </div>
-                        <div class="consumers-img-box-mo">
-                            <img src="../../../../src/image/consumers-m.png" />
-                        </div> -->
                         <div class="reference-img-box">
                             <!-- Frontend Images -->
                             <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
@@ -96,28 +90,32 @@ export default {
             },
             items: [
                 {
-                    tab: '기능분해',
-                    tab_en: 'decomposition',
+                    tab: '애플리케이션',
+                    tab_en: 'application',
                 },
                 { 
-                    tab: '데이터',
-                    tab_en: 'data',
+                    tab: '데이터베이스',
+                    tab_en: 'database',
                 },
                 { 
-                    tab: '소프트웨어 아키텍처',
-                    tab_en: 'sw-architecture',
+                    tab: '인프라스트럭처',
+                    tab_en: 'infrastructure',
                 },
                 { 
-                    tab: '인프라 아키텍처',
-                    tab_en: 'infra-architecture',
+                    tab: '개발',
+                    tab_en: 'development',
                 },
                 { 
-                    tab: '배포',
-                    tab_en: "distribute",
+                    tab: '보안',
+                    tab_en: "security",
                 },
                 { 
-                    tab: '팀 구조와 문화',
-                    tab_en: "team-structure",
+                    tab: '확장성',
+                    tab_en: "scalability",
+                },
+                { 
+                    tab: '가시성',
+                    tab_en: "visibility",
                 },
             ],
             tab: 0,
@@ -143,12 +141,13 @@ export default {
         tab(newVal) {
             // 고정 탭 선택시 라우트 변경
             if (newVal === 0) {
-                this.$router.push(`/get-the-guide/reference-architecture`);
+                this.$router.push(`/get-the-guide/review-result`);
                 return;
             }
 
             // 기존 탭들에 대한 처리
             const tabName = this.items[newVal - 1].tab_en; // 인덱스 조정
+            console.log(tabName)
             this.selectedUser.perspectives.forEach(p => {
                 if (p.name_en === tabName) {
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
@@ -158,10 +157,10 @@ export default {
     },
     methods: {
         checkReferenceArchitecture() {
-            const swArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'sw-architecture');
-            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'decomposition');
-            const dataPerspective = this.selectedUser.perspectives.find(p => p.name_en === 'data');
-            const infraArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'infra-architecture');
+            const swArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'application');
+            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'development');
+            const dataPerspective = this.selectedUser.perspectives.find(p => p.name_en === 'database');
+            const infraArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'scalability');
 
             // Frontend 조건 설정
             this.frontEnd.micro = swArchitecture && swArchitecture.goalLevel === 4;
@@ -188,7 +187,7 @@ export default {
         },
         async getAllMarkdownContentFolders() {
             try {
-                const response = await axios.get(`https://api.github.com/repos/msa-ez/cloud-iq/contents/get-the-guide-md`);
+                const response = await axios.get(`https://api.github.com/repos/msa-ez/cloud-iq/contents/get-the-guide-md2`);
                 const markdownContentFolders = response.data.filter(item => item.type === 'dir');
                 for (const folder of markdownContentFolders) {
                     await this.getFolderContents(folder.name);
@@ -202,7 +201,7 @@ export default {
             try {
                 let folderFiles = {};
                 for (let i = 1; i <= 4; i++) {
-                    const fileResponse = await axios.get(`https://raw.githubusercontent.com/msa-ez/cloud-iq/main/get-the-guide-md/${folderName}/level${i}.md`);
+                    const fileResponse = await axios.get(`https://raw.githubusercontent.com/msa-ez/cloud-iq/main/get-the-guide-md2/${folderName}/level${i}.md`);
                     const markdownContent = marked(fileResponse.data);
                     folderFiles[i] =  markdownContent ;
                 }

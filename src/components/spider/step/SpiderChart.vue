@@ -23,7 +23,7 @@
 						stroke="lightgray"
 					/>
 					<g v-for="level in maxDataValue" :key="`level-line-${index}-${level}`">
-						<line
+						<line v-if="level < maxDataValue"
 							:x1="getLevelLineCoordinate(index, level)[0]"
 							:y1="getLevelLineCoordinate(index, level)[1]"
 							:x2="getLevelLineCoordinate(index, level)[2]"
@@ -130,13 +130,13 @@ export default {
 			// 각도 계산
 			const angle = (Math.PI * 2 * index) / this.perspectives.length - Math.PI / 2;
 			// 해당 레벨에서의 반지름 계산
-			const radius = this.chartRadius * (level / this.maxDataValue - 1);
+			const radius = this.chartRadius * (level / this.maxDataValue);
 			// 축의 좌표를 계산
 			const x = radius * Math.cos(angle);
 			const y = radius * Math.sin(angle);
 
 			// 수평 선의 길이를 정의
-			const lineLength = 5; // 가로 선의 길이
+			const lineLength = 5; // 가로 선의 길이는 항상 일정
 
 			// 축에 수직인 선의 끝점을 계산하기 위한 각도 조정
 			const anglePerpendicular = angle + Math.PI / 2;

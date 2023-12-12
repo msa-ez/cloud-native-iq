@@ -26,7 +26,7 @@ const routes = [
         props: true,
     },
     {
-        path: '/get-the-guide/reference-architecture',
+        path: '/get-the-guide/review-result',
         component: User,
         props: true,
     }
