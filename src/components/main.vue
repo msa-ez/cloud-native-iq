@@ -11,9 +11,7 @@
 					<v-card @click="goToStep(step.path)" class="card-box">
 						<div>
 							<h2 class="step-index">Step. {{ index + 1 }}</h2>
-							<v-img class="card-icon"
-								:src="step.imgUrl" 
-							/>
+							<Icon :icon="step.icon" width="50" height="50"/>
 							<h1 class="step-name">{{ step.name }}</h1>
 							<div class="step-name-en">{{ step.name_en }}</div>
 						</div>
@@ -44,19 +42,19 @@ export default {
 					name: "목표수준 설정",
 					name_en: "Goal Setting",
 					path: "/goal-setting",
-					imgUrl: "https://github.com/msa-ez/cloud-iq/assets/149130268/f757d654-8f3b-4bc2-8a89-1f0b9d73902c"
+					icon: "fluent:delete-28-filled"
 				},
 				{
 					name: "현 수준 평가",
 					name_en: "Assessment",
 					path: "/assessment",
-					imgUrl: "https://github.com/msa-ez/cloud-iq/assets/149130268/a010e5a6-6fba-4ef3-ba01-62d29adcc992"
+					icon: "octicon:goal-24"
 				},
 				{
 					name: "전환 가이드",
 					name_en: "Get the Guide",
 					path: "/get-the-guide",
-					imgUrl: "https://github.com/msa-ez/cloud-iq/assets/149130268/7fc71935-b563-4900-b436-f8c2d52070f3"
+					icon: "https://github.com/msa-ez/cloud-iq/assets/149130268/7fc71935-b563-4900-b436-f8c2d52070f3"
 				}
 			]
 		}
