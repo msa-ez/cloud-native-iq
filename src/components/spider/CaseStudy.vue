@@ -4,21 +4,19 @@
             <h1>고객 사례</h1>
             <h2>엔터프라이즈부터 공공 분야까지</h2>
         </div>
-        <v-row>
-            <v-col v-for="client in clients" style="margin:20px;">
-                <v-card outlined style="padding:20px; text-align: left;">
-                    <v-row >
-                        <div>
-                            <div style="font-size:24px; font-weight: 700;">{{ client.title }}</div>
-                            <div style="font-size:14px; opacity: 0.8;">{{ client.subTitle }}</div>
-                        </div>
-                        <v-spacer></v-spacer>
-                        <v-chip outlined>{{ client.chip }}</v-chip>
-                    </v-row>
-                    <div style="margin-top:20px;">{{ client.case }}</div>
-                </v-card>
-            </v-col>
-        </v-row>
+        <div style="display:flex; justify-content: center;">
+            <v-card v-for="client in clients" style="margin:20px; padding:20px; text-align: left; width:300px;">
+                <v-row>
+                    <div>
+                        <div style="font-size:24px; font-weight: 700;">{{ client.title }}</div>
+                        <div style="font-size:14px; opacity: 0.8;">{{ client.subTitle }}</div>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-chip outlined>{{ client.chip }}</v-chip>
+                </v-row>
+                <div style="margin-top:20px;">{{ client.case }}</div>
+            </v-card>
+        </div>
     </div>
 </template>
 
