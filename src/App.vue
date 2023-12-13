@@ -7,9 +7,17 @@
 					src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" 
 				/>
 				<v-spacer></v-spacer>
-				<v-btn icon @click="resetRegisteredUsers()">
-					<Icon icon="ic:baseline-refresh" width="30" height="30" />
-				</v-btn>
+				<v-tooltip bottom>
+					<template v-slot:activator="{ on }">
+						<v-btn @click="resetRegisteredUsers()"
+							icon
+							v-on="on"
+						>
+							<Icon icon="uiw:user-delete" width="30" height="30" />
+						</v-btn>
+					</template>
+					<span>유저 삭제</span>
+				</v-tooltip>
 			</v-app-bar>
 			<v-main style="height: calc(100vh - 60px);">
 				<router-view style="height:calc(100vh - 100px);"></router-view>

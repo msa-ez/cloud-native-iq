@@ -18,13 +18,25 @@
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
                         <div class="conversion-img-box">
-                            <div style="margin-bottom: 15px;">
-                                <h3>ㆍ전환 목표</h3>
-                                <img src="../../../../src/image/conversionGoal/01ready.png" />
-                            </div>
                             <div>
-                                <h3>ㆍ전환 방법</h3>
-                                <img src="../../../../src/image/conversionMethod/01retire.png" />
+                                <h3>ㆍ목표 성숙도 모델</h3>
+                                <img v-if="slaResult.conversionGoal === 'ready'" src="../../../../src/image/conversionGoal/01ready.png" />
+                                <img v-if="slaResult.conversionGoal === 'optimized'" src="../../../../src/image/conversionGoal/02optimized.png" />
+                                <img v-if="slaResult.conversionGoal === 'native'" src="../../../../src/image/conversionGoal/03native.png" />
+                                <div style="margin:0 auto;">
+                                    <div>"서비스에 대한 클라우드 네이티브 적합성 검토결과, <span style="font-weight: 700; color:red;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여 <span style="font-weight: 700; color:red;">{{ slaResult.cloudStatus }}</span> 도입 필요로 검토됨"</div>
+                                    <div>"정보시스템 등급에 따른 SLA 수준은 <span style="font-weight: 700; color:red;">{{ slaResult.percentage }}</span>로, 년 허용가능 다운타임 <span style="font-weight: 700; color:red;">약 {{ slaResult.time }}</span>정도"</div>
+                                </div>
+                            </div>
+                            <br>
+                            <div>
+                                <h3>ㆍ전환 및 모더나이즈 방법론</h3>
+                                <img v-if="slaResult.conversionMethod === 'reHost'" src="../../../../src/image/conversionMethod/02rehost.png" />
+                                <img v-if="slaResult.conversionMethod === 'rePlatform'" src="../../../../src/image/conversionMethod/04replatform.png" />
+                                <img v-if="slaResult.conversionMethod === 'reArchitect'" src="../../../../src/image/conversionMethod/07rearchitect.png" />
+                                <div style="margin:0 auto;">
+                                    <div>{{ slaResult.conversionText }}</div>
+                                </div>
                             </div>
                         </div>
                         <div class="reference-img-box">
@@ -72,9 +84,13 @@
 <script>
 import axios from 'axios';
 import marked from 'marked';
+import SLABase from './SLABase.vue'
 
 export default {
     name: "GetTheGuide",
+    mixins: [
+        SLABase
+    ],
     components: {
     },
     props: {
@@ -82,7 +98,6 @@ export default {
     },
     data () {
         return {
-            // 데이터 구조
             frontEnd: {
                 monolith: false,
                 micro: false,
@@ -140,6 +155,7 @@ export default {
     created() {
         this.loadUserPerspectives();
         this.checkReferenceArchitecture();
+        this.getSLAPercentage(this.selectedUser);
     },
     watch: {
         selectedUser: {
@@ -147,6 +163,7 @@ export default {
                 this.markdownContentFolders = {}
                 this.loadUserPerspectives();
                 this.checkReferenceArchitecture();
+                this.getSLAPercentage(this.selectedUser);
             },
             deep:true
         },

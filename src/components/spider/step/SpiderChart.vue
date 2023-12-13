@@ -7,9 +7,9 @@
 					<v-row style="font-size:20px;">
 						<div>목표수준 - </div>
 						<div style="font-weight: 700;">&nbsp;Maturity Level:&nbsp;</div>
-						<div style="color:blue">{{ cloudStatus }},</div>
+						<div style="color:blue">{{ slaResult.cloudStatus }},</div>
 						<div style="font-weight: 700;">&nbsp;SLA:&nbsp;</div>
-						<div style="color:red">{{ slaPercentage }}</div>
+						<div style="color:red">{{ slaResult.percentage }}</div>
 					</v-row>
 				</v-row>
 				<v-row>
@@ -79,10 +79,12 @@
 </template>
   
 <script>
+import SLABase from './SLABase.vue'
 
 export default {
     name: "SpiderChart",
 	mixins: [
+		SLABase
 	],
 	props: {
 		selectedUser: {
@@ -101,67 +103,21 @@ export default {
     comments: {
     },
     data () {
-        return {
-            slaPercentage: '',
-            cloudStatus: '',
-        }
+		return {
+		}
     },
 	created() {
-		this.getSLAPercentage();
+		this.getSLAPercentage(this.selectedUser);
 	},
 	watch: {
 		selectedUser: {
-            deep: true,  // 객체 내부의 변경도 감시하기 위해 deep 옵션을 true로 설정
+            deep: true,
             handler() {
-                this.getSLAPercentage();
+                this.getSLAPercentage(this.selectedUser);
             }
         }
     },
     methods: {
-		getSLAPercentage() {
-            let percentage = '';
-            for (let topic of this.selectedUser.topics) {
-                // '[정보시스템 등급]' 질문 찾기
-                const slaQuestion = topic.questions.find(q => q.title === '[정보시스템 등급]');
-                if (slaQuestion) {
-                    switch (slaQuestion.value) {
-                        case 0:
-                            percentage = '99.5%';
-                            break;
-                        case 1:
-                            percentage = '99.9%';
-                            break;
-                        case 2:
-                            percentage = '99.95%';
-                            break;
-                        default:
-                            percentage = '99.99%';
-                            break;
-                    }
-                    break; // 질문을 찾으면 루프를 종료합니다.
-                }
-            }
-
-            this.slaPercentage = percentage;
-
-            // 클라우드 상태 평가 로직
-            let count = 0;
-            this.selectedUser.topics.forEach(topic => {
-                count += topic.questions.filter(question => question.value >= 3).length;
-            });
-
-            if (count >= 5) {
-                this.cloudStatus = 'Cloud Native';
-            } else if (count >= 3) {
-                this.cloudStatus = 'Cloud Optimized';
-            } else if (count === 2) {
-                this.cloudStatus = 'Cloud Ready';
-            } else {
-                this.cloudStatus = '기존 시스템 유지';
-            }
-
-            return percentage;
-        },
 		getDataLength(perspectives) {
 			let count = 0;
 			Object.keys(perspectives).forEach(key => {
