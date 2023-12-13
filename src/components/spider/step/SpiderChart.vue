@@ -3,27 +3,33 @@
 		<div style="position:relative">
 			<div style="position: absolute; top:5px; left:10px;">
 				<v-row>
-					<div style="width:16px; height:16px; border-radius: 5px; background-color:rgba(192, 75, 192, 0.5); margin:2px 5px 0px 0px;"></div>
-					<div>목표수준 - Maturity Level : {{ cloudStatus }}, SLA : {{ slaPercentage }}</div>
+					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(192, 75, 192, 0.5); margin:4px 5px 0px 0px;"></div>
+					<v-row style="font-size:20px;">
+						<div>목표수준 - </div>
+						<div style="font-weight: 700;">&nbsp;Maturity Level:&nbsp;</div>
+						<div style="color:blue">{{ cloudStatus }},</div>
+						<div style="font-weight: 700;">&nbsp;SLA:&nbsp;</div>
+						<div style="color:red">{{ slaPercentage }}</div>
+					</v-row>
 				</v-row>
 				<v-row>
-					<div style="width:16px; height:16px; border-radius: 5px; background-color:rgba(75, 192, 192, 1); margin:2px 5px 0px 0px;"></div>
-					<div>현수준</div>
+					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(75, 192, 192, 1); margin:4px 5px 0px 0px;"></div>
+					<div style="font-size:20px;">현수준</div>
 				</v-row>
 			</div>
 		</div>
 		<svg :width="chartWidth" :height="chartHeight">
 			<g :transform="`translate(${chartCenterX}, ${chartCenterY})`">
-				<g v-for="(perspective, index) in perspectives" :key="`perspective-${index}₩`">
+				<g v-for="(perspective, index) in selectedUser.perspectives" :key="`perspective-${index}₩`">
 					<line
 						:x1="0"
 						:y1="0"
-						:x2="getCoordinate(chartRadius, index, perspectives.length)[0]"
-						:y2="getCoordinate(chartRadius, index, perspectives.length)[1]"
+						:x2="getCoordinate(chartRadius, index, selectedUser.perspectives.length)[0]"
+						:y2="getCoordinate(chartRadius, index, selectedUser.perspectives.length)[1]"
 						stroke="lightgray"
 					/>
 					<g v-for="level in maxDataValue" :key="`level-line-${index}-${level}`">
-						<line v-if="level < maxDataValue"
+						<line
 							:x1="getLevelLineCoordinate(index, level)[0]"
 							:y1="getLevelLineCoordinate(index, level)[1]"
 							:x2="getLevelLineCoordinate(index, level)[2]"
@@ -33,8 +39,8 @@
 						/>
 					</g>
 					<text
-						:x="getCoordinate(chartRadius + labelOffset, index, perspectives.length)[0]"
-						:y="getCoordinate(chartRadius + labelOffset, index, perspectives.length)[1]"
+						:x="getCoordinate(chartRadius + labelOffset, index, selectedUser.perspectives.length)[0]"
+						:y="getCoordinate(chartRadius + labelOffset, index, selectedUser.perspectives.length)[1]"
 						dominant-baseline="middle"
 						text-anchor="middle"
 					>
@@ -43,16 +49,16 @@
 				</g>
 				<g>
 					<polygon
-						:points="getPolygonPoints(perspectives)"
+						:points="getPolygonPoints(selectedUser.perspectives)"
 						fill="rgba(75, 192, 192, 0.2)"
 						stroke="rgba(75, 192, 192, 1)"
 					/>
 					<polygon
-						:points="getPolygonPointsGoal(perspectives)"
+						:points="getPolygonPointsGoal(selectedUser.perspectives)"
 						fill="rgba(192, 75, 192, 0.1)"
             			stroke="rgba(192, 75, 192, 1)"
 					/>
-					<g v-for="(perspective, index) in perspectives">
+					<g v-for="(perspective, index) in selectedUser.perspectives">
 						<circle
 							:cx="getCoordinateForCircle(perspective, index)[0]"
 							:cy="getCoordinateForCircle(perspective, index)[1]"
@@ -75,11 +81,14 @@
 <script>
 
 export default {
-    name: "GoalSetting",
+    name: "SpiderChart",
 	mixins: [
 	],
 	props: {
-		perspectives: Array,
+		selectedUser: {
+            type: Object,
+            required: true
+        },
 		chartWidth: Number,
 		chartHeight: Number,
 		chartCenterX: Number,
@@ -87,22 +96,72 @@ export default {
 		chartRadius: Number,
 		labelOffset: Number,
 		maxDataValue: Number,
-		pointRadius: Number,
-		slaPercentage: String,
-		cloudStatus: String,
+		pointRadius: Number
 	},
     comments: {
     },
     data () {
         return {
+            slaPercentage: '',
+            cloudStatus: '',
         }
     },
-	mounted() {
-		console.log(this.slaPercentage)
+	created() {
+		this.getSLAPercentage();
 	},
 	watch: {
+		selectedUser: {
+            deep: true,  // 객체 내부의 변경도 감시하기 위해 deep 옵션을 true로 설정
+            handler() {
+                this.getSLAPercentage();
+            }
+        }
     },
     methods: {
+		getSLAPercentage() {
+            let percentage = '';
+            for (let topic of this.selectedUser.topics) {
+                // '[정보시스템 등급]' 질문 찾기
+                const slaQuestion = topic.questions.find(q => q.title === '[정보시스템 등급]');
+                if (slaQuestion) {
+                    switch (slaQuestion.value) {
+                        case 0:
+                            percentage = '99.5%';
+                            break;
+                        case 1:
+                            percentage = '99.9%';
+                            break;
+                        case 2:
+                            percentage = '99.95%';
+                            break;
+                        default:
+                            percentage = '99.99%';
+                            break;
+                    }
+                    break; // 질문을 찾으면 루프를 종료합니다.
+                }
+            }
+
+            this.slaPercentage = percentage;
+
+            // 클라우드 상태 평가 로직
+            let count = 0;
+            this.selectedUser.topics.forEach(topic => {
+                count += topic.questions.filter(question => question.value >= 3).length;
+            });
+
+            if (count >= 5) {
+                this.cloudStatus = 'Cloud Native';
+            } else if (count >= 3) {
+                this.cloudStatus = 'Cloud Optimized';
+            } else if (count === 2) {
+                this.cloudStatus = 'Cloud Ready';
+            } else {
+                this.cloudStatus = '기존 시스템 유지';
+            }
+
+            return percentage;
+        },
 		getDataLength(perspectives) {
 			let count = 0;
 			Object.keys(perspectives).forEach(key => {
@@ -116,11 +175,11 @@ export default {
 		getCoordinateForCircle(perspective, index) {
 			const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
 			const radius = this.chartRadius * (completedLevels / this.maxDataValue);
-			return this.getCoordinate(radius, index, this.perspectives.length);
+			return this.getCoordinate(radius, index, this.selectedUser.perspectives.length);
 		},
 		getCoordinateForCircleGoal(perspective, index) {
 			const radius = this.chartRadius * (perspective.goalLevel / this.maxDataValue);
-			return this.getCoordinate(radius, index, this.perspectives.length);
+			return this.getCoordinate(radius, index, this.selectedUser.perspectives.length);
 		},
 		getCoordinate(radius, index, total) {
 			const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
@@ -130,7 +189,7 @@ export default {
 		},
 		getLevelLineCoordinate(index, level) {
 			// 각도 계산
-			const angle = (Math.PI * 2 * index) / this.perspectives.length - Math.PI / 2;
+			const angle = (Math.PI * 2 * index) / this.selectedUser.perspectives.length - Math.PI / 2;
 			// 해당 레벨에서의 반지름 계산
 			const radius = this.chartRadius * (level / this.maxDataValue);
 			// 축의 좌표를 계산
@@ -155,31 +214,29 @@ export default {
 			if (!perspectives || perspectives.length === 0) {
 				return '';
 			}
-			let points = perspectives.map((perspective, index) => {
-				const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
-				if (completedLevels === 0) { // 0인 값을 체크
-				return ''; // 0인 경우는 빈 문자열을 반환하여 포함시키지 않음
-				}
-				const radius = this.chartRadius * (completedLevels / this.maxDataValue);
-				return this.getCoordinate(radius, index, perspectives.length).join(',');
-			}).filter(point => point !== ''); // 필터링을 통해 빈 문자열을 제거
-			return points.join(' ');
-			},
+			var perspectiveArray = perspectives
+				.map((perspective, index) => {
+					const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
+					const radius = this.chartRadius * (completedLevels / this.maxDataValue);
+					return this.getCoordinate(radius, index, perspectives.length).join(',');
+				})
+				.join(' ');
 
-			getPolygonPointsGoal(perspectives) {
+			return perspectiveArray;
+		},
+		getPolygonPointsGoal(perspectives) {
 			if (!perspectives || perspectives.length === 0) {
 				return '';
 			}
-			let points = perspectives.map((perspective, index) => {
-				if (perspective.goalLevel === 0) { // 목표 수준이 0인지 체크
-				return ''; // 0인 경우는 포함시키지 않음
-				}
+			var perspectiveArray = perspectives
+			.map((perspective, index) => {
 				const radius = this.chartRadius * (perspective.goalLevel / this.maxDataValue);
 				return this.getCoordinate(radius, index, perspectives.length).join(',');
-			}).filter(point => point !== ''); // 필터링을 통해 빈 문자열 제거
-			return points.join(' ');
-			},
+			})
+			.join(' ');
 
+			return perspectiveArray
+		},
 		checkAllLevelsCompletion(perspective) {
 			perspective.isCompleted = perspective.levels.every((level) => level.isCompleted);
 		

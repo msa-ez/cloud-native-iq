@@ -4,7 +4,7 @@ export default {
             isAllLevelsCompleted: false,
 			perspectives: [
 				{
-					name: '애플리케이션',
+					name: '애플리케이션 관점',
 					name_en: 'application',
 					goalLevel: 0,
 					levels: [
@@ -43,7 +43,7 @@ export default {
 					],
 				},
 				{
-					name: '데이터베이스',
+					name: '데이터베이스 관점',
 					name_en: 'database',
 					goalLevel: 0,
 					levels: [
@@ -81,7 +81,7 @@ export default {
 					],
 				},
 				{
-					name: '인프라스트럭처',
+					name: '인프라스트럭처 관점',
 					name_en: 'infrastructure',
 					goalLevel: 0,
 					levels: [
@@ -120,7 +120,7 @@ export default {
 					],
 				},
 				{
-					name: '개발',
+					name: '개발 관점',
 					name_en: 'development',
 					goalLevel: 0,
 					levels: [
@@ -155,7 +155,7 @@ export default {
 					],
 				},
 				{
-					name: '보안',
+					name: '보안 관점',
 					name_en: 'security',
 					goalLevel: 0,
 					levels: [
@@ -189,7 +189,7 @@ export default {
 					],
 				},
 				{
-					name: '확장성',
+					name: '확장성 관점',
 					name_en: 'scalability',
 					goalLevel: 0,
 					levels: [
@@ -224,7 +224,7 @@ export default {
 					],
 				},
 				{
-					name: '가시성',
+					name: '가시성 관점',
 					name_en: 'visibility',
 					goalLevel: 0,
 					levels: [

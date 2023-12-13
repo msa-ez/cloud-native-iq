@@ -29,7 +29,7 @@
 			</v-col>
 			<v-col>
 				<SpiderChart
-					:perspectives="selectedUser.perspectives"
+					:selectedUser="selectedUser"
 					:chartWidth="chartWidth"
 					:chartHeight="chartHeight"
 					:chartCenterX="chartCenterX"
