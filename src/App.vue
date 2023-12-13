@@ -6,6 +6,10 @@
 					style="width:100%; height:100%; object-fit: contain; cursor: pointer; align-items: left; width:100px;" 
 					src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" 
 				/>
+				<v-spacer></v-spacer>
+				<v-btn icon @click="resetRegisteredUsers()">
+					<Icon icon="ic:baseline-refresh" width="30" height="30" />
+				</v-btn>
 			</v-app-bar>
 			<v-main style="height: calc(100vh - 60px);">
 				<router-view style="height:calc(100vh - 100px);"></router-view>
@@ -31,7 +35,11 @@ export default {
 	methods: {
 		goHome() {
 			this.$router.push('/');
-		}
+		},
+		resetRegisteredUsers() {
+			localStorage.removeItem('registeredUsers');
+			window.location.reload();
+		},
 	},
 };
 </script>
