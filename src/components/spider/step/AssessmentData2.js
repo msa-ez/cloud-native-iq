@@ -10,38 +10,33 @@ export default {
 					levels: [
 						{ 
 							checkpoints: [
-								{ text: '비즈니스 역량 도출: 비즈니스 도메인을 분석하여 주요 기능과 유즈케이스를 도출하였는가?', checked: false },
-								{ text: '기능 정의: 각 기능을 명확하게 정의하고 해당 기능의 범위를 결정하였는가?', checked: false },
-								{ text: '유즈케이스 식별: 각 기능에 대한 유즈케이스를 식별하고 이를 단위로 분리하였는가?', checked: false },
-								{ text: '의존성 분석: 각 기능과 유즈케이스 간의 의존성을 분석하여 적절한 분리 수준을 결정하였는가?', checked: false },
+								{ text: '모노리식 아키텍처: 귀하의 시스템은 모든 기능이 하나의 애플리케이션 내에서 통합되어 있습니까?', checked: false },
+								{ text: '기능적 통합: 시스템 내 다양한 기능들이 긴밀하게 연결되어 있어, 하나의 기능 변경이 전체 시스템에 영향을 미칩니까?', checked: false },
+								{ text: '개발 및 배포의 단순성: 전체 애플리케이션을 하나의 단위로 개발하고 배포하고 있습니까?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '인터페이스 설계: 각 유즈케이스와 관련된 데이터에 대한 인터페이스를 정의하고 필요한 메소드와 매개변수를 명시하였는가?', checked: false },
-								{ text: '데이터 액세스 계획: 각 유즈케이스에서 필요한 데이터 액세스 방법을 계획하고 이를 인터페이스에 반영하였는가?', checked: false },
-								{ text: '보안 및 인증 고려: 서비스 간의 인터페이스에서 보안 및 인증 요구사항을 고려하여 액세스 제어 방법을 정의하였는가?', checked: false },
-								{ text: '에러 핸들링 정의: 인터페이스에서 발생할 수 있는 예외 상황에 대한 처리 방법과 오류 핸들링 전략을 정의하였는가?', checked: false },
+								{ text: '하이브리드 아키텍처: 귀하의 시스템은 모노리스와 마이크로서비스 기능이 혼합된 구조입니까?', checked: false },
+								{ text: '서비스 분리의 시작: 중요한 기능을 별도의 마이크로서비스로 분리하기 시작하셨습니까?', checked: false },
+								{ text: '시스템 간 통신: 모노리스와 마이크로서비스 간의 통신 구조를 관리하고 있습니까?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'Ubiquitous language 정의: 각 bounded context에서 사용될 공통 언어와 용어를 정의하고 이를 문서화하였는가?', checked: false },
-								{ text: 'Boundary 정의: 각 bounded context의 경계를 명확하게 정의하고 외부에서의 커뮤니케이션 방식을 결정하였는가?', checked: false },
-								{ text: 'Anti-corruption layer 구현: bounded context 간의 통신을 관리하기 위해 Anti-corruption layer를 구현하고 외부 인터페이스 변환 및 데이터 변환을 수행하였는가?', checked: false },
-								{ text: '도메인 이벤트 식별: bounded context 간에 필요한 도메인 이벤트를 식별하고 이를 통해 비동기적인 상호작용을 구현하였는가?', checked: false },
+								{ text: '마이크로서비스 아키텍처: 귀하의 애플리케이션의 대부분 또는 전체가 마이크로서비스로 구성되어 있습니까?', checked: false },
+								{ text: '서비스 간 느슨한 결합: 서비스들이 독립적으로 개발되고 운영되고 있습니까?', checked: false },
+								{ text: '확장성 및 유연성: 귀하의 마이크로서비스 아키텍처는 확장성과 유연성을 제공합니까?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'CQRS 모델 설계: 읽기와 쓰기를 위한 별도의 모델을 설계하고 도메인 이벤트를 활용하였는가?', checked: false },
-								{ text: '이벤트 스토리지 구현: 도메인 이벤트를 저장하고 관리하기 위한 이벤트 스토리지를 구현하였는가?', checked: false },
-								{ text: '이벤트 드리븐 아키텍처 구축: 도메인 이벤트를 기반으로 비즈니스 로직을 처리하는 이벤트 드리븐 아키텍처를 구축하였는가?', checked: false },
-								{ text: '이벤트 버전 관리: 도메인 이벤트의 버전을 관리하고 업데이트할 수 있는 메커니즘을 도입하였는가?',checked: false },
-								{ text: '이벤트 소싱 및 재생: 이벤트 소싱을 통해 시스템 상태를 재생하고 이벤트 스트림을 통해 상태 변경을 추적하였는가?',checked: false },
+								{ text: '이벤트 기반 아키텍처: 귀하의 마이크로서비스 간 상호작용이 이벤트 기반으로 이루어집니까?', checked: false },
+								{ text: '도메인 중심 설계: 각 마이크로서비스가 특정 비즈니스 도메인을 중심으로 설계되어 있습니까?', checked: false },
+								{ text: '고급 서비스 오케스트레이션: 서비스들 간의 상호작용을 관리하기 위해 고급 오케스트레이션 도구나 기법을 사용하고 있습니까?', checked: false },
 							],
 							isCompleted: false,
 						},
@@ -92,33 +87,33 @@ export default {
 					levels: [
 						{
 							checkpoints: [
-								{ text: 'UI/UX: Server Side Rendering (SSR): 클라이언트 요청 시 서버에서 페이지를 완전히 렌더링하여 전송하는 방식을 사용합니다. 이를 통해 초기 로딩 속도를 개선하고 SEO에 더 유리한 환경을 제공할 수 있습니다.', checked: false },
-								{ text: 'Session-based 보안: 세션을 사용하여 사용자 인증 및 권한 부여를 처리합니다. 세션은 서버에 저장되어 클라이언트와의 상태를 유지하고 보안을 강화합니다.', checked: false },
-								{ text: '단일 언어(예: Spring Framework): 특정 언어 또는 프레임워크에 의존하여 애플리케이션을 개발합니다. 예를 들어, Spring Framework를 사용하여 모노리틱 서비스를 구축하고 운영합니다.', checked: false },
+								{ text: '베어 메탈 서버(Bare Metal): 물리적 서버를 직접 사용하여 애플리케이션과 서비스를 호스팅하고 있나요?', checked: false },
+								{ text: '기본적인 데이터 센터 운영: 전통적인 데이터 센터 관리 방식으로, 서버의 구매, 설정, 유지보수가 필요한 환경인가요?', checked: false },
+								{ text: '제한된 자동화와 확장성: 자동화는 최소화되어 있으며, 확장성과 유연성이 제한적인 인프라를 사용하고 있나요?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'UI/UX: Server Side Rendering (SSR): Level 1과 동일하게 서버에서 페이지를 렌더링하여 전송합니다.', checked: false },
-								{ text: 'Session Cluster 적용: 세션 클러스터링을 통해 여러 서버 간에 세션 정보를 공유하여 확장성과 가용성을 개선합니다.', checked: false },
-								{ text: 'MSA 지향 언어(예: Spring Boot): 마이크로서비스 아키텍처에 적합한 언어 또는 프레임워크를 선택하여 개발합니다. Spring Boot와 같은 경량화된 프레임워크를 사용하여 서비스를 독립적으로 구축하고 배포합니다.', checked: false },
+								{ text: '가상화된 데이터 센터(Virtualized Data Center): 가상화 기술을 사용하여 하드웨어 리소스를 효율적으로 활용하고, 복수의 가상 서버를 하나의 물리적 서버에서 운영하고 계신가요?', checked: false },
+								{ text: '초기 클라우드 기술 도입: 일부 인프라가 클라우드 서비스로 이전되기 시작하며, 프라이빗 클라우드의 구축을 고려하고 있나요?', checked: false },
+								{ text: '기초적인 리소스 오케스트레이션: 자동화와 오케스트레이션이 도입되지만, 아직은 초기 단계에 머물러 있나요?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'UI/UX: Client Side Rendering (CSR): 클라이언트에서 페이지 렌더링을 수행하고 필요한 데이터만 서버로부터 요청하여 가져옵니다. 이를 통해 초기 로딩 시간을 줄이고 사용자 경험을 향상시킬 수 있습니다.', checked: false },
-								{ text: 'Token-based 보안, OAuth2: 세션 대신 토큰을 사용하여 사용자 인증과 권한 부여를 처리합니다. OAuth2와 같은 표준 프로토콜을 사용하여 안전한 인증 및 인가를 구현합니다.', checked: false },
-								{ text: '폴리글랏 언어: 다양한 언어를 선택하여 각 마이크로서비스에 가장 적합한 언어를 사용합니다. 이를 통해 개발자들은 자신이 가장 잘 알고 있는 언어로 서비스를 개발할 수 있으며, 시스템 전체의 다양성과 유연성을 높일 수 있습니다.', checked: false },
+								{ text: '퍼블릭 및 프라이빗 클라우드: 퍼블릭 클라우드 서비스를 활발히 이용하고 있으며, 동시에 프라이빗 클라우드 인프라를 구축하여 운영하고 있나요?', checked: false },
+								{ text: '고도화된 클라우드 서비스: 현재, 다양한 클라우드 서비스(예: 컴퓨팅, 스토리지, 네트워킹)를 적극적으로 활용하여 인프라를 더 효율적으로 관리하고 있나요?', checked: false },
+								{ text: '개선된 자동화 및 오케스트레이션: 리소스 관리와 배포에 대한 자동화가 갖춰져 있으며, 데브옵스 툴 체인  오케스트레이션 도구를 사용하고 있나요?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'UI/UX: Client Side Rendering (CSR) + MVVM: 클라이언트에서 페이지 렌더링 및 상태 관리를 담당하는 MVVM(Model-View-ViewModel) 아키텍처를 사용합니다. 이를 통해 사용자 경험을 향상시키고 복잡한 상태 관리를 용이하게 합니다.', checked: false },
-								{ text: 'Token-based 보안, OAuth2: Level 3과 동일하게 토큰 기반의 보안 메커니즘을 사용합니다.', checked: false },
-								{ text: '폴리글랏 언어 + Service Mesh: 다양한 언어를 사용하며, 마이크로서비스 간 통신과 네트워크 기능을 관리하기 위해 Service Mesh를 도입합니다. Service Mesh는 서비스 간의 통신, 로드 밸런싱, 모니터링 등을 추상화하여 관리합니다. 이를 통해 시스템의 확장성과 안정성을 향상시킬 수 있습니다.', checked: false },
+								{ text: '멀티클라우드 및 하이브리드 클라우드: 다양한 퍼블릭 클라우드 제공업체를 활용하는 멀티클라우드 전략을 채택하고, 프라이빗 클라우드와의 통합을 통해 하이브리드 클라우드 환경을 구축하고 있다.', checked: false },
+								{ text: '고급 클라우드 네이티브 기술: 컨테이너화, 서비스 메쉬, 마이크로서비스 등 고급 클라우드 네이티브 기술들을 잘 활용하고 있다.', checked: false },
+								{ text: '완전한 자동화 및 통합된 인프라 관리: 인프라의 프로비저닝, 관리, 모니터링이 자동화되어 있으며, 다양한 클라우드 환경에서의 일원화된 관리와 운영이 가능하다.', checked: false },
 							],
 							isCompleted: false,
 						},
@@ -131,31 +126,29 @@ export default {
 					levels: [
 						{
 							checkpoints: [
-								{ text: '지속적인 빌드와 지속적인 통합 운영을 수행하고 있는가?', checked: false },
-								{ text: '개발 및 운영 사이의 원활한 협업을 위한 도구와 프로세스를 도입하였는가?', checked: false },
+								{ text: '적용 방법론: 전통적인 Waterfall 개발 방법론을 주로 사용하고 있으며, 계획, 설계, 구현, 검증, 유지보수 등의 순차적 단계로 정보시스템이 개발되고 있는가?', checked: false },
+								{ text: '배포 주기: 연간 또는 분기별 배포가 일반적이며, 변경 사항이 많고, 1번의 배포에 이를 적용하고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '지속적인 딜리버리와 배포를 수행하고 있는가?', checked: false },
-								{ text: '로그를 중앙 집중화하여 모니터링과 분석을 용이하게 하였는가?', checked: false },
+								{ text: '적용 방법론: 빠른 피드백과 반복적인 개발을 통해 요구사항의 변화에 빠르게 대응할 수 있는 Agile 방법론을 일부 사용하고 있는가?', checked: false },
+								{ text: '배포 주기: 분기별 또는 월별 배포 주기로 시장의 변화에 대응하고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '컨테이너 사용 (도커)을 적용하였는가?', checked: false },
-								{ text: '컨테이너 오케스트레이터 (Kubernetes)를 사용하여 마이크로서비스를 관리하고 스케일링하였는가?', checked: false },
-								{ text: '외부 구성 요소 (예: 유레카, 주키퍼)를 활용하여 마이크로서비스 간의 통신과 구성 관리를 개선했는가?', checked: false },
+								{ text: '적용 방법론: Agile 및 DevOps 개발을 병행하고 있으며 개발과 운영의 협업을 통해 지속적인 통합(CI) 및 지속적인 배포(CD)를 적용하고 있는가?', checked: false },
+								{ text: '배포 주기: 월별, 주별 또는 그 이상의 빈도로 배포가 이루어지고 있으며, 신속하게 시장에 새로운 기능을 제공하기 위해 더 짧은 배포 주기와 자동화된 파이프라인이 필요한가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '자동 프로비저닝을 갖춘 PaaS(Pass-as-a-Service) 기반 솔루션을 사용하였는가?', checked: false },
-								{ text: '인프라 자원의 프로비저닝, 확장 및 관리를 자동화하고 스케일링 용이성을 향상시켰는가?', checked: false },
-								{ text: 'PaaS를 통해 개발팀은 인프라 구성과 관리에 대해 걱정하지 않고 비즈니스 로직에 집중할 수 있는 환경을 제공받았는가?', checked: false },
+								{ text: '적용 방법론: 완전히 Agile 및 DevOps 중심으로 전환된 방법론을 적용하고 있는가?', checked: false },
+								{ text: '배포 주기: 일간 배포 또는 필요에 따른 지속적인 배포가 가능하며, 고도의 자동화 및 최적화를 통해 언제든지 안전하고 신속하게 배포할 수 있는 능력을 갖추고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
@@ -168,35 +161,28 @@ export default {
 					levels: [
 						{
 							checkpoints: [
-								{ text: '설치 스크립트 구동 및 호스트 당 멀티 서비스 인스턴스를 적용하였는가?', checked: false },
-								{ text: '설치 스크립트: 서비스 인스턴스를 설치하고 구성하기 위한 자동화된 스크립트를 사용하였는가?', checked: false },
-								{ text: '호스트 당 멀티 서비스 인스턴스: 단일 호스트에서 여러 개의 서비스 인스턴스를 실행하여 확장성을 향상시켰는가?', checked: false },
+								{ text: '인증 : 기본적인 사용자 이름과 비밀번호 기반 인증이 주를 이루고, 세션 기반 인증이 많이 사용되는가? 권한관리 : 주로 역할 기반 접근 제어(RBAC)를 사용하여 구현되는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'VM 당 하나의 서비스 인스턴스, 클라이언트 사이드 로드 밸런싱, 서버 사이드 로드 밸런싱을 적용하였는가?', checked: false },
-								{ text: 'VM 당 하나의 서비스 인스턴스: 가상 머신(VM) 당 하나의 서비스 인스턴스를 실행하여 격리와 확장성을 개선했는가?', checked: false },
-								{ text: '클라이언트 사이드 로드 밸런싱: 클라이언트 측에서 요청을 여러 서비스 인스턴스로 분산시키는 로드 밸런싱을 구현하였는가?', checked: false },
-								{ text: '서버 사이드 로드 밸런싱: 로드 밸런서를 사용하여 서비스 인스턴스 간에 요청을 분산시키는 로드 밸런싱을 구현하였는가?', checked: false },
+								{ text: '다중 시스템과 서비스 간의 인증 방식을 사용하며, OAuth, OpenID Connect와 같은 표준 프로토콜 기반으로 동작하고 있는가?', checked: false },
+								{ text: '권한 관리는 RBAC에 더해 속성 기반 접근 제어(ABAC)가 도입되어 더 세밀한 권한 관리가 가능한가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: 'Immutable 서버, 컨테이너 당 하나의 서비스 인스턴스, blue/green 배포를 포함한 다양한 배포 전략을 구사하였는가?', checked: false },
-								{ text: 'Immutable 서버: 변경 불가능한 서버 이미지를 사용하여 배포와 롤백의 안정성과 일관성을 확보하였는가?', checked: false },
-								{ text: '컨테이너 당 하나의 서비스 인스턴스: 컨테이너 당 하나의 서비스 인스턴스를 실행하여 격리와 확장성을 개선했는가?', checked: false },
-								{ text: 'Blue/Green 배포: 새로운 버전의 서비스를 기존 버전과 동시에 배포하고 트래픽을 전환하는 Blue/Green 배포 전략을 구현하였는가?', checked: false },
+								{ text: '서비스 간의 인증과 통합된 사용자 인증이 가능하며, JSON Web Tokens (JWT)와 같은 방식이 널리 사용되는가?', checked: false },
+								{ text: '더 복잡한 시스템 구조에 대응하기 위해 마이크로서비스별로 세분화된 권한 관리 시스템이 필요한가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '멀티 클라우드 및 멀티 데이터 센터 지원을 포함한 배포 관점의 성숙도를 갖췄는가?', checked: false },
-								{ text: '멀티 클라우드: 여러 클라우드 제공업체를 사용하여 애플리케이션을 배포 및 실행하는 환경을 구축하였는가?', checked: false },
-								{ text: '멀티 데이터 센터: 여러 데이터 센터에 애플리케이션을 분산 배포하여 가용성과 복원력을 향상시켰는가?', checked: false },
+								{ text: '다중 요소 인증(Multi-Factor Authentication, MFA)과 같은 더 강화된 인증 메커니즘을 활용하고 있는가?', checked: false },
+								{ text: '제로 트러스트 보안 모델(Zero-Trust Security Model)이 도입되어 모든 사용자와 기기는 항상 검증되어야 하며, 최소 권한 원칙이 적용되는가?', checked: false },
 							],
 							isCompleted: false,
 						},
@@ -209,34 +195,29 @@ export default {
 					levels: [
 						{
 							checkpoints: [
-								{ text: '개발, QA, 릴리즈, 운영이 분리된 하나의 기능 팀을 적용하였는가?', checked: false },
-								{ text: '개발, QA, 릴리즈, 운영이 분리된 하나의 기능 팀: 기능별로 분리된 팀이 각자의 역할에 집중하여 작업하고, 개발부터 운영까지 전체 생명주기를 담당하였는가?', checked: false },
+								{ text: '성격: 주로 수직적 확장(Vertical Scaling)에 의존하고 있는가?', checked: false },
+								{ text: '모노리스 아키텍처의 한계: 모노리스 시스템에서는 확장성이 제한적이며, 시스템 전체를 확장해야 하는 상황이 자주 발생하는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '공유된 서비스 모델로 팀 공동 작업, 내부 소스 공개를 적용하였는가?', checked: false },
-								{ text: '공유된 서비스 모델: 여러 팀이 공통적으로 사용하는 서비스 모델을 개발하고 유지보수하여 효율성을 향상시켰는가?', checked: false },
-								{ text: '팀 공동 작업: 여러 팀이 협업하여 기능을 개발하고 통합하는 작업을 수행하였는가?', checked: false },
-								{ text: '내부 소스 공개: 팀 내에서 개발된 소스 코드와 지식을 공유하고 문서화하여 효율적인 협업을 도모하였는가?', checked: false },
+								{ text: '조합된 확장성: 모노리스와 마이크로서비스의 조합을 통해 확장성을 관리하고 있는가? (일부 서비스는 수직적 확장을, 다른 서비스는 초기 형태의 수평적 확장(Horizontal Scaling)을 사용)', checked: false },
+								{ text: '수동적 확장: 확장이 필요할 때 수동으로 리소스를 추가하거나 제거하는 전략을 사용하고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '서비스별 프로덕트 팀(PO, UI/UX 디자이너, 개발자) Cross Functional한 플랫폼 팀을 적용하였는가?', checked: false },
-								{ text: '서비스별 프로덕트 팀: 각 서비스에 대한 전체적인 책임을 갖는 프로덕트 팀을 구성하였는가?', checked: false },
-								{ text: 'PO, UI/UX 디자이너, 개발자: 다양한 역할을 수행하는 멤버들로 구성되어 프로덕트를 개발하고 개선하는데 참여하였는가?', checked: false },
-								{ text: 'Cross Functional한 플랫폼 팀: 다양한 기술과 역할을 갖춘 팀이 플랫폼 관련 업무를 수행하고, 서비스 팀을 지원하였는가?', checked: false },
+								{ text: '수평적 자동 확장: 클라우드 네이티브한 환경에서 마이크로서비스가 더 많이 사용되며, 트래픽 변화에 따라 자동으로 스케일링되는 수평적 자동 확장이 사용되고 있는가?', checked: false },
+								{ text: '효율적인 리소스 관리: 로드 밸런싱과 함께, 필요에 따라 서비스 인스턴스를 추가하거나 제거하여 리소스 사용을 최적화하고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '업무 기능별 혹은 도메인별 팀들이 모든 관점에서 책임을 수반하였으며, "네가 구축한 것은 네가 운영합니다"를 적용하였는가?', checked: false },
-								{ text: '업무 기능별 혹은 도메인별 팀: 특정 업무 기능이나 도메인을 담당하는 팀이 모든 측면에서 책임을 진다.', checked: false },
-								{ text: '"네가 구축한 것은 네가 운영합니다": 각 팀이 자체적으로 구축한 서비스나 기능을 직접 운영하고 유지보수하는 책임을 가지며, 자율성을 강조하였는가?', checked: false },
+								{ text: '온디맨드 수평적 복제(On-demand Horizontal Cloning): 트래픽의 급격한 증가에 대응하여 신속하게 추가 인스턴스를 생성하는 온디맨드 복제 방식을 적용하고 있는가?', checked: false },
+								{ text: '고급 자동 스케일링 전략: 예측적 스케일링과 같은 고급 기능을 통해 미리 리소스를 조정하거나, 다양한 서비스 간에 리소스를 동적으로 재배치하는 전략을 구사 가능한가?', checked: false },
 							],
 							isCompleted: false,
 						},
@@ -249,34 +230,30 @@ export default {
 					levels: [
 						{
 							checkpoints: [
-								{ text: '개발, QA, 릴리즈, 운영이 분리된 하나의 기능 팀을 적용하였는가?', checked: false },
-								{ text: '개발, QA, 릴리즈, 운영이 분리된 하나의 기능 팀: 기능별로 분리된 팀이 각자의 역할에 집중하여 작업하고, 개발부터 운영까지 전체 생명주기를 담당하였는가?', checked: false },
+								{ text: 'OS 및 하드웨어 모니터링: 기본적인 운영체제(OS) 및 하드웨어(H/W) 모니터링(CPU 사용량, 메모리 사용량, 디스크 I/O 등의)에 의존하는가?', checked: false },
+								{ text: '정적 통계 수집: 서비스 로그, 서버 메트릭스 등 정적인 통계 데이터를 정적으로 수집하여 시스템의 상태를 파악하고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '공유된 서비스 모델로 팀 공동 작업, 내부 소스 공개를 적용하였는가?', checked: false },
-								{ text: '공유된 서비스 모델: 여러 팀이 공통적으로 사용하는 서비스 모델을 개발하고 유지보수하여 효율성을 향상시켰는가?', checked: false },
-								{ text: '팀 공동 작업: 여러 팀이 협업하여 기능을 개발하고 통합하는 작업을 수행하였는가?', checked: false },
-								{ text: '내부 소스 공개: 팀 내에서 개발된 소스 코드와 지식을 공유하고 문서화하여 효율적인 협업을 도모하였는가?', checked: false },
+								{ text: '텔레메트리 데이터 수집: 애플리케이션 성능 관리(APM) 도구를 토해 서비스 및 애플리케이션의 텔레메트리 데이터 수집이 가능한가?', checked: false },
+								{ text: '기본적인 관측성 지표(Observability Metrics): 로그, 메트릭스, 트레이스 등을 통해 시스템의 성능과 건강 상태를 더 자세히 파악할 수 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '서비스별 프로덕트 팀(PO, UI/UX 디자이너, 개발자) Cross Functional한 플랫폼 팀을 적용하였는가?', checked: false },
-								{ text: '서비스별 프로덕트 팀: 각 서비스에 대한 전체적인 책임을 갖는 프로덕트 팀을 구성하였는가?', checked: false },
-								{ text: 'PO, UI/UX 디자이너, 개발자: 다양한 역할을 수행하는 멤버들로 구성되어 프로덕트를 개발하고 개선하는데 참여하였는가?', checked: false },
-								{ text: 'Cross Functional한 플랫폼 팀: 다양한 기술과 역할을 갖춘 팀이 플랫폼 관련 업무를 수행하고, 서비스 팀을 지원하였는가?', checked: false },
+								{ text: '서비스 메쉬 특화 관측성: 마이크로서비스 아키텍처에 특화된 관측성 지표를 서비스 메쉬 기반으로 내부 데이터 흐름과 서비스 간의 상호작용 모니터링이 가능한가?', checked: false },
+								{ text: '다양한 환경에 걸친 일관된 모니터링: 클라우드, 온프레미스, 하이브리드 환경 등 다양한 환경에서 일관된 모니터링을 위한 도구와 이상감지, Alerting 등의 프로세스가 운영되고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},
 						{
 							checkpoints: [
-								{ text: '업무 기능별 혹은 도메인별 팀들이 모든 관점에서 책임을 수반하였으며, "네가 구축한 것은 네가 운영합니다"를 적용하였는가?', checked: false },
-								{ text: '업무 기능별 혹은 도메인별 팀: 특정 업무 기능이나 도메인을 담당하는 팀이 모든 측면에서 책임을 진다.', checked: false },
-								{ text: '"네가 구축한 것은 네가 운영합니다": 각 팀이 자체적으로 구축한 서비스나 기능을 직접 운영하고 유지보수하는 책임을 가지며, 자율성을 강조하였는가?', checked: false },
+								{ text: '고급 관측성 및 예측 분석: 머신 러닝과 같은 고급 기술을 사용하여 예측 분석과 자동화된 문제 해결이 가능한가?', checked: false },
+								{ text: '시스템의 이상을 사전에 감지하고, 더 나은 의사 결정을 위한 도구를 활용하고 있는가?', checked: false },
+								{ text: '통합된 통찰력 및 자동화된 대응: 전체 인프라와 서비스에 대한 통합된 통찰력을 제공하며, 이를 바탕으로 자동화된 대응 메커니즘으로 시스템의 안정성과 성능을 지속적으로 개선하고 있는가?', checked: false },
 							],
 							isCompleted: false,
 						},

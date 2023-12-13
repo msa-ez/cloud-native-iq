@@ -17,15 +17,19 @@
                 <v-card flat style="padding:20px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
-                        <!-- <div class="conversion-img-box">
-                            <div class="conversion-goal">
+                        <div class="conversion-img-box">
+                            <div style="margin-bottom: 15px;">
+                                <h3>ㆍ전환 목표</h3>
                                 <img src="../../../../src/image/conversionGoal/01ready.png" />
                             </div>
-                            <div class="conversion-method">
+                            <div>
+                                <h3>ㆍ전환 방법</h3>
                                 <img src="../../../../src/image/conversionMethod/01retire.png" />
                             </div>
-                        </div> -->
+                        </div>
                         <div class="reference-img-box">
+                            <h3>ㆍ참조 아키텍처</h3>
+                            
                             <!-- Frontend Images -->
                             <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
                             <img v-if="frontEnd.monolith" src="../../../../src/image/referenceArchitecture/mono-frontend.png" />
@@ -242,47 +246,39 @@ export default {
     display: flex;
     align-items: center; 
     justify-content: center;
-    border: 1px solid red;
 }
 .conversion-img-box {
-    max-width: 920px;
-    width: 50%;
-    height: auto;
+    max-width: 720px;
+    width: 40%;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    border: 1px solid yellowgreen;
 }
-/* .consumers-img-box {
-    width: 25%;
-    height: calc(100vh - 300px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-}
-.consumers-img-box > img {
-    display: block;
+.conversion-img-box > div {
+    width: 100%;
     max-height: 100%;
-	height: calc((100vh - 96px) * 0.6);
 }
-.consumers-img-box-mo {
-    display: none;
-    max-width: 767px;
-    width: 100%;
+.conversion-img-box > div > h3 {
+    width: 70%;
+    margin: 0 auto;
 }
-.consumers-img-box-mo > img {
+.conversion-img-box > div > img {
+    display: block;
     max-width: 100%;
-    width: 100%;
+    width: 70%;
 	height: auto;
-} */
+    margin: 0 auto;
+}
 .reference-img-box {
-    max-width: 920px;
+    max-width: 760px;
     width: 50%;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    border: 1px solid blue;
+}
+.reference-img-box > h3 {
+    width: 60%;
+    margin: 0 auto;
 }
 .reference-img-box > img {
     max-width: 100%;
@@ -292,18 +288,31 @@ export default {
 }
 
 @media all and (min-width:1520px) and (max-height:779px) { 
-    .reference-img-box > img {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+        width: 55%;
+        font-size: 1.1rem;
+    }
+    .reference-img-box > h3, .reference-img-box > img {
         width: 53%;
+        font-size: 1.1rem;
     }
 }
 @media only screen and (max-width:1280px) {
-    .reference-img-box > img {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+        width: 80%;
+    }
+    .reference-img-box > h3, .reference-img-box > img {
         width: 70%;
     }
 }
 @media only screen and (max-width:1024px) {
-    .reference-img-box > img {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
         width: 90%;
+        font-size: 1.05rem;
+    }
+    .reference-img-box > h3, .reference-img-box > img {
+        width: 80%;
+        font-size: 1.05rem;
     }
 }
 @media only screen and (max-width:768px) {
@@ -313,18 +322,20 @@ export default {
         flex-direction: column;
         justify-content: flex-start;
     }
-    /* .consumers-img-box {
-        display: none;
+    .conversion-img-box{
+        width: 100%;
+        padding-bottom: 20px;
     }
-    .consumers-img-box-mo {
-        display: block;
-    } */
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+        width: 100%;
+    }
     .reference-img-box {
         width: 100%;
         height: 100%;
         justify-content: flex-start;
+        margin-top: 20px;
     }
-    .reference-img-box > img {
+    .reference-img-box > h3, .reference-img-box > img {
         width: 100%;
     }
 }
