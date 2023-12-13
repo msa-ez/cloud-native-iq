@@ -7,6 +7,7 @@
                     <div v-for="(topic, topicIndex) in selectedUser.topics" :key="topicIndex" style="margin-bottom: 40px;">
                         <h3 style="margin-bottom: 10px;">{{ topic.name }}</h3>
                         <div v-for="(question, questionIndex) in topic.questions" :key="questionIndex" style="margin-bottom: 10px;padding:10px 10px 0 0;border-bottom: 1px solid #ccc;">
+                            <div style="font-weight: 700;">{{ question.title }}</div>
                             <div>{{ question.text }}</div>
                             <v-slider
                                 v-model="question.value"
@@ -16,7 +17,7 @@
                                 ticks="always"
                                 :tick-size="4"
                                 class="tickLabels-txt"
-                                @input="onSliderChange()"
+                                @input="onSliderChange(question)"
                             ></v-slider>
                         </div>
                     </div>
@@ -33,6 +34,8 @@
                     :labelOffset="labelOffset"
                     :maxDataValue="maxDataValue"
                     :pointRadius="pointRadius"
+                    :slaPercentage="slaPercentage"
+                    :cloudStatus="cloudStatus"
                 />
             </v-col>
         </v-row>
@@ -58,10 +61,12 @@ export default {
     },
     data () {
         return {
-            
+            slaPercentage: '',
+            cloudStatus: '',
         }
     },
     created() {
+        this.getSLAPercentage()
     },
     watch: {
     },
@@ -73,6 +78,51 @@ export default {
         },
         onSliderChange() {
             this.changeGoalLevel()
+            this.getSLAPercentage()
+        },
+        getSLAPercentage() {
+            let percentage = '';
+            for (let topic of this.selectedUser.topics) {
+                // '[정보시스템 등급]' 질문 찾기
+                const slaQuestion = topic.questions.find(q => q.title === '[정보시스템 등급]');
+                if (slaQuestion) {
+                    switch (slaQuestion.value) {
+                        case 0:
+                            percentage = '99.5%';
+                            break;
+                        case 1:
+                            percentage = '99.9%';
+                            break;
+                        case 2:
+                            percentage = '99.95%';
+                            break;
+                        default:
+                            percentage = '99.99%';
+                            break;
+                    }
+                    break; // 질문을 찾으면 루프를 종료합니다.
+                }
+            }
+
+            this.slaPercentage = percentage;
+
+            // 클라우드 상태 평가 로직
+            let count = 0;
+            this.selectedUser.topics.forEach(topic => {
+                count += topic.questions.filter(question => question.value >= 3).length;
+            });
+
+            if (count >= 5) {
+                this.cloudStatus = 'Cloud Native';
+            } else if (count >= 3) {
+                this.cloudStatus = 'Cloud Optimized';
+            } else if (count === 2) {
+                this.cloudStatus = 'Cloud Ready';
+            } else {
+                this.cloudStatus = '기존 시스템 유지';
+            }
+
+            return percentage;
         },
         changeGoalLevel() {
             var me = this

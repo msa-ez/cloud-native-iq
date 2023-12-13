@@ -4,7 +4,7 @@
 			<div style="position: absolute; top:5px; left:10px;">
 				<v-row>
 					<div style="width:16px; height:16px; border-radius: 5px; background-color:rgba(192, 75, 192, 0.5); margin:2px 5px 0px 0px;"></div>
-					<div>목표수준</div>
+					<div>목표수준 - Maturity Level : {{ cloudStatus }}, SLA : {{ slaPercentage }}</div>
 				</v-row>
 				<v-row>
 					<div style="width:16px; height:16px; border-radius: 5px; background-color:rgba(75, 192, 192, 1); margin:2px 5px 0px 0px;"></div>
@@ -87,7 +87,9 @@ export default {
 		chartRadius: Number,
 		labelOffset: Number,
 		maxDataValue: Number,
-		pointRadius: Number
+		pointRadius: Number,
+		slaPercentage: String,
+		cloudStatus: String,
 	},
     comments: {
     },
@@ -96,7 +98,7 @@ export default {
         }
     },
 	mounted() {
-		
+		console.log(this.slaPercentage)
 	},
 	watch: {
     },
@@ -153,29 +155,31 @@ export default {
 			if (!perspectives || perspectives.length === 0) {
 				return '';
 			}
-			var perspectiveArray = perspectives
-				.map((perspective, index) => {
-					const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
-					const radius = this.chartRadius * (completedLevels / this.maxDataValue);
-					return this.getCoordinate(radius, index, perspectives.length).join(',');
-				})
-				.join(' ');
+			let points = perspectives.map((perspective, index) => {
+				const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
+				if (completedLevels === 0) { // 0인 값을 체크
+				return ''; // 0인 경우는 빈 문자열을 반환하여 포함시키지 않음
+				}
+				const radius = this.chartRadius * (completedLevels / this.maxDataValue);
+				return this.getCoordinate(radius, index, perspectives.length).join(',');
+			}).filter(point => point !== ''); // 필터링을 통해 빈 문자열을 제거
+			return points.join(' ');
+			},
 
-			return perspectiveArray;
-		},
-		getPolygonPointsGoal(perspectives) {
+			getPolygonPointsGoal(perspectives) {
 			if (!perspectives || perspectives.length === 0) {
 				return '';
 			}
-			var perspectiveArray = perspectives
-			.map((perspective, index) => {
+			let points = perspectives.map((perspective, index) => {
+				if (perspective.goalLevel === 0) { // 목표 수준이 0인지 체크
+				return ''; // 0인 경우는 포함시키지 않음
+				}
 				const radius = this.chartRadius * (perspective.goalLevel / this.maxDataValue);
 				return this.getCoordinate(radius, index, perspectives.length).join(',');
-			})
-			.join(' ');
+			}).filter(point => point !== ''); // 필터링을 통해 빈 문자열 제거
+			return points.join(' ');
+			},
 
-			return perspectiveArray
-		},
 		checkAllLevelsCompletion(perspective) {
 			perspective.isCompleted = perspective.levels.every((level) => level.isCompleted);
 		
