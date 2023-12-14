@@ -117,31 +117,31 @@ export default {
             },
             items: [
                 {
-                    tab: '애플리케이션',
+                    tab: '애플리케이션 영역',
                     tab_en: 'application',
                 },
                 { 
-                    tab: '데이터베이스',
+                    tab: '데이터베이스 영역',
                     tab_en: 'database',
                 },
                 { 
-                    tab: '인프라스트럭처',
+                    tab: '인프라스트럭처 영역',
                     tab_en: 'infrastructure',
                 },
                 { 
-                    tab: '개발',
+                    tab: '개발 영역',
                     tab_en: 'development',
                 },
                 { 
-                    tab: '보안',
+                    tab: '보안 영역',
                     tab_en: "security",
                 },
                 { 
-                    tab: '확장성',
+                    tab: '확장성 영역',
                     tab_en: "scalability",
                 },
                 { 
-                    tab: '가시성',
+                    tab: '가시성 영역',
                     tab_en: "visibility",
                 },
             ],
