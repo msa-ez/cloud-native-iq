@@ -261,7 +261,7 @@ export default {
     height: calc(100vh - 270px);
     margin: 0 auto;
     display: flex;
-    align-items: center; 
+    align-items: flex-start; 
     justify-content: center;
 }
 .conversion-img-box {
