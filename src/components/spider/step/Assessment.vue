@@ -56,7 +56,7 @@ export default {
         SpiderChart,
     },
     props: {
-        selectedProfile: [],
+        selectedProfile: null,
     },
 	data() {
         return {

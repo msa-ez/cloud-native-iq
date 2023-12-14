@@ -8,7 +8,7 @@ import {Icon} from '@iconify/vue2';
 
 
 Vue.component('Icon', Icon);
-Vue.prototype.$bus = new Vue();
+Vue.prototype.$eventBus = new Vue();
 
 require('./style.css')
 

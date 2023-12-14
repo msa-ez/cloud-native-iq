@@ -1,59 +1,79 @@
 <template>
     <div>
-        <div style="display:none ;">
-        <!-- 사용자 선택 -->
-            <div class="profile-box">
+        <div>
+            <div>
                 <h2>프로필 선택/등록</h2>
-                <!-- <div class="sub-tit">사용자 프로필을 선택하거나 등록하세요.</div> -->
-                
-                <div class="profile-box-in">
-                    <v-select
-                        :items="profiles"
-                        :item-text="profileDisplayText"
-                        item-value="email"
-                        label="사용자 선택"
-                        v-model="selectedProfile"
-                        class="ml10"
-                    ></v-select>
-                
-                    <!-- 등록 버튼 -->
-                    <v-btn color="primary" @click="showDialog = true" class="btn-reg">사용자 등록</v-btn>
-                </div>
+                <v-row align="center">
+                    <v-col cols="2">
+                        <v-select
+                            :items="profiles"
+                            :item-text="profileDisplayText"
+                            item-value="name"
+                            label="프로필 선택"
+                            v-model="selectedProfile"
+                            class="ml10"
+                        ></v-select>
+                    </v-col>
+                </v-row>
             </div>
         
-    
-            <!-- 등록 다이얼로그 -->
-            <v-dialog v-model="showDialog" persistent max-width="600px">
-                <v-card>
-                    <v-card-title>사용자 등록</v-card-title>
+            <!-- 프로플 추가 다이얼로그 -->
+            <v-dialog v-model="profileDialog"
+                persistent
+                max-width="300"
+            >
+                <v-card width="500">
+                    <v-card-title>프로필 등록</v-card-title>
                     <v-card-text>
                         <v-container>
                             <v-form @submit.prevent="registerProfile">
                                 <v-text-field class="profile-input-field"
-                                    label="이름"
+                                    label="프로필"
                                     v-model="newProfile.name"
                                     :rules="newProfile.nameRules"
                                     required
-                                    style="width:300px;"
                                 ></v-text-field>
-                                <v-text-field class="profile-input-field"
-                                    label="이메일"
-                                    v-model="newProfile.email"
-                                    :rules="newProfile.emailRules"
-                                    required
-                                ></v-text-field>
-                                <!-- 기타 필드 추가 -->
                             </v-form>
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <!-- <v-btn color="blue darken-1" text @click="closeDialog">취소</v-btn>
-                        <v-btn color="green darken-1" text @click="registerProfile">등록</v-btn> -->
-                        <div class="reg-btn-box">
-                            <v-btn color="primary" @click="registerProfile">등록</v-btn>
-                            <v-btn style="margin-left: 10px;border:1px solid #ddd;" text @click="closeDialog">취소</v-btn>
+                        <div>
+                            <v-btn @click="closeProfileDialog"
+                                style="margin-left: 10px;"
+                                text
+                            >취소
+                            </v-btn>
+                            <v-btn @click="registerProfile"
+                                color="primary"
+                                text
+                                :disabled="isNameDuplicate(newProfile.name)"
+                            >등록
+                            </v-btn>
                         </div>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <!-- 프로필 삭제 다이얼로그 -->
+            <v-dialog v-model="deleteDialog" persistent max-width="300px">
+                <v-card>
+                    <v-card-title class="headline">프로필 삭제 확인</v-card-title>
+                    <v-card-text>
+                        "{{ selectedProfile }}" 프로필을 삭제하시겠습니까?
+                        <v-checkbox v-model="deleteConfirmed" label="확인"></v-checkbox>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="deleteDialog = false"
+                            text
+                        >취소
+                        </v-btn>
+                        <v-btn @click="deleteProfile()"
+                            color="red darken-1"
+                            text
+                            :disabled="!deleteConfirmed"
+                        >삭제</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -64,14 +84,14 @@
         />
     </div>
 </template>
-  
+
 <script>
 import Step from './step/Step.vue';
 import AssessmentData from './step/AssessmentData2.js';
 import GoalSettingData from './step/GoalSettingData2.js';
 
 export default {
-    mixins:[
+    mixins: [
         AssessmentData,
         GoalSettingData
     ],
@@ -80,36 +100,39 @@ export default {
     },
     data() {
         return {
-            showDialog: false,
+            deleteDialog: false,
+            deleteConfirmed: false,
+            profileDialog: false,
             profiles: [],
-            profile:[],
+            profile: [],
             newProfile: {
                 name: '',
-                email: '',
                 nameRules: [
-                    v => !!v || '이름을 입력해 주세요.'
-                ],
-                emailRules: [
-                    v => !!v || '이메일을 입력해 주세요.', // 필수 입력 필드
-                    v => /.+@.+\..+/.test(v) || '유효한 이메일 형식이 아닙니다.' // 이메일 형식 검사
+                    v => !!v || '프로필을 입력해 주세요.',
+                    v => !this.isNameDuplicate(v) || '이미 등록된 프로필입니다.'
                 ],
                 perspectives: [],
-                topics:[],
+                topics: [],
             },
-            selectedProfile: null
+            selectedProfile: null,
         }
     },
     mounted() {
-        this.selectedProfile = this.profiles[0].email
+        if (this.profiles.length > 0) {
+        this.selectedProfile = this.profiles[0].name;
+    } else {
+        this.selectedProfile = null;
+    }
+        this.$eventBus.$on('addProfile', this.openAddProfile);
+        this.$eventBus.$on('deleteProfile', this.openDeleteProfile);
     },
     created() {
         this.loadProfiles();
-        
     },
     watch: {
         selectedProfile: {
-            handler(selectedProfile){
-                this.profile = this.profiles.find(profile => profile.email == selectedProfile)
+            handler(selectedProfile) {
+                this.profile = this.profiles.find(profile => profile.name === selectedProfile);
             }
         }
     },
@@ -122,36 +145,50 @@ export default {
             if (profiles) {
                 this.profiles = JSON.parse(profiles);
             }
-            if (this.profiles.length == 0) {
-                var newProfile = { ...this.newProfile }
-                newProfile.perspectives = this.perspectives
-                newProfile.topics = this.topics
-                newProfile.name = '유엔진'
-                newProfile.email = 'uengine@uengine.org'
-                this.profiles.push(newProfile);
-                this.profile = newProfile
-                this.selectedProfile = newProfile.email
-                this.saveProfiles()
-            }
         },
         profileDisplayText(item) {
-            return `${item.name} (${item.email})`; // 이름과 이메일을 결합
+            return `${item.name}`;
         },
         registerProfile() {
-            var newProfile = { ...this.newProfile }
-            newProfile.perspectives = this.perspectives
-            newProfile.topics = this.topics
-            this.profiles.push(newProfile);
-            this.profile = newProfile
-            this.selectedProfile = newProfile.email
-            this.saveProfiles()
-            this.closeDialog();
+            if (!this.isNameDuplicate(this.newProfile.name)) {
+                let newProfile = { ...this.newProfile };
+                newProfile.perspectives = JSON.parse(JSON.stringify(this.perspectives));
+                newProfile.topics = JSON.parse(JSON.stringify(this.topics));
+                this.profiles.push(newProfile);
+                this.profile = newProfile;
+                this.selectedProfile = newProfile.name;
+                this.saveProfiles();
+                this.closeProfileDialog();
+            }
         },
-        closeDialog() {
-            this.showDialog = false;
+        deleteProfile() {
+            if (this.deleteConfirmed) {
+                this.profiles = this.profiles.filter(profile => profile.name !== this.selectedProfile);
+                this.saveProfiles();
+                if (this.selectedProfile === this.selectedProfile) {
+                    this.selectedProfile = null;
+                }
+                this.deleteDialog = false;
+                this.deleteConfirmed = false; // 체크박스 상태 초기화
+            }
+        },
+        openDeleteProfile() {
+            this.deleteDialog = true;
+        },
+        closeProfileDialog() {
+            this.profileDialog = false;
             this.newProfile.name = '';
-            this.newProfile.email = '';
-        }
+        },
+        openAddProfile() {
+            this.profileDialog = true;
+        },
+        isNameDuplicate(name) {
+            return this.profiles.some(profile => profile.name === name);
+        },
+    },
+    beforeDestroy() {
+        this.$eventBus.$off('addProfile', this.openAddProfile);
+        this.$eventBus.$off('deleteProfile', this.openDeleteProfile);
     }
 }
 </script>
@@ -179,9 +216,6 @@ export default {
 }
 .profile-input-field .v-messages__message {
     line-height: 18px;
-}
-.reg-btn-box {
-    margin: 0 10px 10px 0;
 }
 
 @media only screen and (max-width:1440px) {
