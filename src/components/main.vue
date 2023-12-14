@@ -150,6 +150,9 @@ export default {
 		font-size: 2.4rem;
 		margin: 0;
 	}
+	.iq-logo {
+		height: calc((100vh - 96px) * 0.3);
+	}
 	.step-index {
 		font-size: 1.4rem;
 	}
