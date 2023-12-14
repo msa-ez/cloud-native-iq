@@ -3,7 +3,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import main from '../components/main.vue';
 import Step from '../components/spider/step/Step.vue'
-import User from '../components/spider/User.vue'
+import Profile from '../components/spider/Profile.vue'
 import CaseStudy from '../components/spider/CaseStudy.vue'
 
 Vue.use(VueRouter);
@@ -16,12 +16,12 @@ const routes = [
     },
     {
         path: '/get-the-guide/:tabName/level:levelNumber',
-        component: User,
+        component: Profile,
         props: true,
     },
     {
         path: '/get-the-guide/review-result',
-        component: User,
+        component: Profile,
         props: true,
     },
     {
@@ -31,8 +31,8 @@ const routes = [
     },
     {
         path: '/:path',
-        name: 'User',
-        component: User,
+        name: 'Profile',
+        component: Profile,
         props: true,
     },
 ];

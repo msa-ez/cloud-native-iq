@@ -9,14 +9,25 @@
 				<v-spacer></v-spacer>
 				<v-tooltip bottom>
 					<template v-slot:activator="{ on }">
-						<v-btn @click="resetRegisteredUsers()"
+						<v-btn @click="addRegisteredProfile()"
+							icon
+							v-on="on"
+						>
+							<Icon icon="uiw:user-add" width="30" height="30" />
+						</v-btn>
+					</template>
+					<span>프로필 등록</span>
+				</v-tooltip>
+				<v-tooltip bottom>
+					<template v-slot:activator="{ on }">
+						<v-btn @click="deleteProfile()"
 							icon
 							v-on="on"
 						>
 							<Icon icon="uiw:user-delete" width="30" height="30" />
 						</v-btn>
 					</template>
-					<span>유저 삭제</span>
+					<span>프로필 삭제</span>
 				</v-tooltip>
 			</v-app-bar>
 			<v-main style="height: calc(100vh - 60px);">
@@ -42,12 +53,16 @@ export default {
 	},
 	methods: {
 		goHome() {
-			this.$router.push('/');
+			if (this.$router.currentRoute.path !== '/') {
+				this.$router.push('/');
+			}
 		},
-		resetRegisteredUsers() {
-			localStorage.removeItem('registeredUsers');
-			window.location.reload();
+		addRegisteredProfile() {
+			this.$eventBus.$emit('addProfile');
 		},
+		deleteProfile() {
+			this.$eventBus.$emit('deleteProfile');
+		}
 	},
 };
 </script>

@@ -5,7 +5,7 @@
             <h2>공공 분야에서 금융분야까지</h2>
         </div>
         <div style="display:flex; justify-content: center;">
-            <v-card v-for="client in clients" style="margin:20px; padding:20px; text-align: left; width:300px;">
+            <v-card v-for="(client, index) in clients" :key="index" style="margin:20px; padding:20px; text-align: left; width:300px;">
                 <v-row>
                     <div>
                         <div style="font-size:24px; font-weight: 700;">{{ client.title }}</div>

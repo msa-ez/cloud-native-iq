@@ -1,8 +1,8 @@
 export default {
     data() {
         return {
-            user:[],
-            users:[],
+            profile:[],
+            profiles:[],
             tickLabels: [
                 '전혀 그렇지 않다.',
                 '그렇지 않다.',
