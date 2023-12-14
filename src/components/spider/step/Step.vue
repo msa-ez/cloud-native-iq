@@ -29,7 +29,7 @@
                     :step="n"
                 >
                     <v-card class="mb-12 step-box-in">
-                        <component @saveUsers="saveUsers" :selectedUser="selectedUser" :is="components[n - 1].component" />
+                        <component @saveProfiles="saveProfiles" :selectedProfile="selectedProfile" :is="components[n - 1].component" />
                     </v-card>
                     
                 </v-stepper-content>
@@ -54,7 +54,7 @@ export default {
     components: {
     },
     props: {
-        selectedUser: null,
+        selectedProfile: null,
     },
     data () {
         return {
@@ -85,8 +85,8 @@ export default {
         }
     },
     methods: {
-        saveUsers(){
-            this.$emit('saveUsers')
+        saveProfiles(){
+            this.$emit('saveProfiles')
         },
         // nextStep () {
         //     if (this.currentStep === this.components.length) {

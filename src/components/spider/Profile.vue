@@ -2,17 +2,17 @@
     <div>
         <div style="display:none ;">
         <!-- 사용자 선택 -->
-            <div class="user-box">
+            <div class="profile-box">
                 <h2>프로필 선택/등록</h2>
                 <!-- <div class="sub-tit">사용자 프로필을 선택하거나 등록하세요.</div> -->
                 
-                <div class="user-box-in">
+                <div class="profile-box-in">
                     <v-select
-                        :items="users"
-                        :item-text="userDisplayText"
+                        :items="profiles"
+                        :item-text="profileDisplayText"
                         item-value="email"
                         label="사용자 선택"
-                        v-model="selectedUser"
+                        v-model="selectedProfile"
                         class="ml10"
                     ></v-select>
                 
@@ -28,18 +28,18 @@
                     <v-card-title>사용자 등록</v-card-title>
                     <v-card-text>
                         <v-container>
-                            <v-form @submit.prevent="registerUser">
-                                <v-text-field class="user-input-field"
+                            <v-form @submit.prevent="registerProfile">
+                                <v-text-field class="profile-input-field"
                                     label="이름"
-                                    v-model="newUser.name"
-                                    :rules="newUser.nameRules"
+                                    v-model="newProfile.name"
+                                    :rules="newProfile.nameRules"
                                     required
                                     style="width:300px;"
                                 ></v-text-field>
-                                <v-text-field class="user-input-field"
+                                <v-text-field class="profile-input-field"
                                     label="이메일"
-                                    v-model="newUser.email"
-                                    :rules="newUser.emailRules"
+                                    v-model="newProfile.email"
+                                    :rules="newProfile.emailRules"
                                     required
                                 ></v-text-field>
                                 <!-- 기타 필드 추가 -->
@@ -49,18 +49,18 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <!-- <v-btn color="blue darken-1" text @click="closeDialog">취소</v-btn>
-                        <v-btn color="green darken-1" text @click="registerUser">등록</v-btn> -->
+                        <v-btn color="green darken-1" text @click="registerProfile">등록</v-btn> -->
                         <div class="reg-btn-box">
-                            <v-btn color="primary" @click="registerUser">등록</v-btn>
+                            <v-btn color="primary" @click="registerProfile">등록</v-btn>
                             <v-btn style="margin-left: 10px;border:1px solid #ddd;" text @click="closeDialog">취소</v-btn>
                         </div>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
         </div>
-        <Step v-if="selectedUser"
-            @saveUsers="saveUsers"
-            :selectedUser="user"
+        <Step v-if="selectedProfile"
+            @saveProfiles="saveProfiles"
+            :selectedProfile="profile"
         />
     </div>
 </template>
@@ -81,9 +81,9 @@ export default {
     data() {
         return {
             showDialog: false,
-            users: [],
-            user:[],
-            newUser: {
+            profiles: [],
+            profile:[],
+            newProfile: {
                 name: '',
                 email: '',
                 nameRules: [
@@ -96,67 +96,67 @@ export default {
                 perspectives: [],
                 topics:[],
             },
-            selectedUser: null
+            selectedProfile: null
         }
     },
     mounted() {
-        this.selectedUser = this.users[0].email
+        this.selectedProfile = this.profiles[0].email
     },
     created() {
-        this.loadUsers();
+        this.loadProfiles();
         
     },
     watch: {
-        selectedUser: {
-            handler(selectedUser){
-                this.user = this.users.find(user => user.email == selectedUser)
+        selectedProfile: {
+            handler(selectedProfile){
+                this.profile = this.profiles.find(profile => profile.email == selectedProfile)
             }
         }
     },
     methods: {
-        saveUsers() {
-            localStorage.setItem('registeredUsers', JSON.stringify(this.users));
+        saveProfiles() {
+            localStorage.setItem('registeredProfiles', JSON.stringify(this.profiles));
         },
-        loadUsers() {
-            const users = localStorage.getItem('registeredUsers');
-            if (users) {
-                this.users = JSON.parse(users);
+        loadProfiles() {
+            const profiles = localStorage.getItem('registeredProfiles');
+            if (profiles) {
+                this.profiles = JSON.parse(profiles);
             }
-            if (this.users.length == 0) {
-                var newUser = { ...this.newUser }
-                newUser.perspectives = this.perspectives
-                newUser.topics = this.topics
-                newUser.name = '유엔진'
-                newUser.email = 'uengine@uengine.org'
-                this.users.push(newUser);
-                this.user = newUser
-                this.selectedUser = newUser.email
-                this.saveUsers()
+            if (this.profiles.length == 0) {
+                var newProfile = { ...this.newProfile }
+                newProfile.perspectives = this.perspectives
+                newProfile.topics = this.topics
+                newProfile.name = '유엔진'
+                newProfile.email = 'uengine@uengine.org'
+                this.profiles.push(newProfile);
+                this.profile = newProfile
+                this.selectedProfile = newProfile.email
+                this.saveProfiles()
             }
         },
-        userDisplayText(item) {
+        profileDisplayText(item) {
             return `${item.name} (${item.email})`; // 이름과 이메일을 결합
         },
-        registerUser() {
-            var newUser = { ...this.newUser }
-            newUser.perspectives = this.perspectives
-            newUser.topics = this.topics
-            this.users.push(newUser);
-            this.user = newUser
-            this.selectedUser = newUser.email
-            this.saveUsers()
+        registerProfile() {
+            var newProfile = { ...this.newProfile }
+            newProfile.perspectives = this.perspectives
+            newProfile.topics = this.topics
+            this.profiles.push(newProfile);
+            this.profile = newProfile
+            this.selectedProfile = newProfile.email
+            this.saveProfiles()
             this.closeDialog();
         },
         closeDialog() {
             this.showDialog = false;
-            this.newUser.name = '';
-            this.newUser.email = '';
+            this.newProfile.name = '';
+            this.newProfile.email = '';
         }
     }
 }
 </script>
 <style>
-.user-box {
+.profile-box {
     width: 100%;
     height: 60px;
     display: flex;
@@ -169,7 +169,7 @@ export default {
     /* box-shadow: 0 4px 4px -4px #333; */
     /* box-shadow: 0 1px 2px 1px #ddd; */
 }
-.user-box-in {
+.profile-box-in {
     width: 86%;
     display: flex;
     align-items: center;
@@ -177,7 +177,7 @@ export default {
 .ml10, .btn-reg {
     margin-left: 10px;
 }
-.user-input-field .v-messages__message {
+.profile-input-field .v-messages__message {
     line-height: 18px;
 }
 .reg-btn-box {
@@ -185,24 +185,24 @@ export default {
 }
 
 @media only screen and (max-width:1440px) {
-    .user-box > h2 {
+    .profile-box > h2 {
         font-size: 22px;
     }
-    .user-box-in {
+    .profile-box-in {
         width: 82%;
     }
 }
 @media only screen and (max-width:1024px) {
-    .user-box-in {
+    .profile-box-in {
         width: 75%;
     }
 }
 @media only screen and (max-width:750px) {
-  .user-box {
+  .profile-box {
     height: 90px;
     display: block;
   }
-  .user-box-in {
+  .profile-box-in {
     width: 100%;
   }
   .ml10 {

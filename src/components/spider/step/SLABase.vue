@@ -30,10 +30,10 @@ export default {
 	watch: {
     },
     methods: {
-		getSLAPercentage(selectedUser) {
+		getSLAPercentage(selectedProfile) {
             let percentage = '';
             let time = '';
-            for (let topic of selectedUser.topics) {
+            for (let topic of selectedProfile.topics) {
                 const slaQuestion = topic.questions.find(q => q.title === '[정보시스템 등급]');
                 if (slaQuestion) {
                     switch (slaQuestion.value) {
@@ -63,7 +63,7 @@ export default {
 
             // 클라우드 상태 평가 로직
             let count = 0;
-            this.selectedUser.topics.forEach(topic => {
+            this.selectedProfile.topics.forEach(topic => {
                 count += topic.questions.filter(question => question.value >= 3).length;
             });
 

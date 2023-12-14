@@ -94,7 +94,7 @@ export default {
     components: {
     },
     props: {
-        selectedUser: null
+        selectedProfile: null
     },
     data () {
         return {
@@ -147,23 +147,23 @@ export default {
             ],
             tab: 0,
             markdownContentFolders: {},
-            userPerspectives: [],
+            profilePerspectives: [],
             goalLevels: {},
             contents: [],
         }
     },
     created() {
-        this.loadUserPerspectives();
+        this.loadProfilePerspectives();
         this.checkReferenceArchitecture();
-        this.getSLAPercentage(this.selectedUser);
+        this.getSLAPercentage(this.selectedProfile);
     },
     watch: {
-        selectedUser: {
+        selectedProfile: {
             handler(){
                 this.markdownContentFolders = {}
-                this.loadUserPerspectives();
+                this.loadProfilePerspectives();
                 this.checkReferenceArchitecture();
-                this.getSLAPercentage(this.selectedUser);
+                this.getSLAPercentage(this.selectedProfile);
             },
             deep:true
         },
@@ -177,7 +177,7 @@ export default {
             // 기존 탭들에 대한 처리
             const tabName = this.items[newVal - 1].tab_en; // 인덱스 조정
             console.log(tabName)
-            this.selectedUser.perspectives.forEach(p => {
+            this.selectedProfile.perspectives.forEach(p => {
                 if (p.name_en === tabName) {
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
                 }
@@ -186,10 +186,10 @@ export default {
     },
     methods: {
         checkReferenceArchitecture() {
-            const swArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'application');
-            const decomposition = this.selectedUser.perspectives.find(p => p.name_en === 'development');
-            const dataPerspective = this.selectedUser.perspectives.find(p => p.name_en === 'database');
-            const infraArchitecture = this.selectedUser.perspectives.find(p => p.name_en === 'scalability');
+            const swArchitecture = this.selectedProfile.perspectives.find(p => p.name_en === 'application');
+            const decomposition = this.selectedProfile.perspectives.find(p => p.name_en === 'development');
+            const dataPerspective = this.selectedProfile.perspectives.find(p => p.name_en === 'database');
+            const infraArchitecture = this.selectedProfile.perspectives.find(p => p.name_en === 'scalability');
 
             // Frontend 조건 설정
             this.frontEnd.micro = swArchitecture && swArchitecture.goalLevel === 4;
@@ -239,9 +239,9 @@ export default {
                 console.error(`Failed to load contents for folder ${folderName}`, error);
             }
         },
-        loadUserPerspectives() {
-            if (this.selectedUser && this.selectedUser.perspectives) {
-                this.selectedUser.perspectives.forEach(p =>{
+        loadProfilePerspectives() {
+            if (this.selectedProfile && this.selectedProfile.perspectives) {
+                this.selectedProfile.perspectives.forEach(p =>{
                     this.goalLevels[p.name_en] = p.goalLevel
                 });
                 this.getAllMarkdownContentFolders()

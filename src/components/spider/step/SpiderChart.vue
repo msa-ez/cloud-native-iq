@@ -20,12 +20,12 @@
 		</div>
 		<svg :width="chartWidth" :height="chartHeight">
 			<g :transform="`translate(${chartCenterX}, ${chartCenterY})`">
-				<g v-for="(perspective, index) in selectedUser.perspectives" :key="`perspective-${index}₩`">
+				<g v-for="(perspective, index) in selectedProfile.perspectives" :key="`perspective-${index}₩`">
 					<line
 						:x1="0"
 						:y1="0"
-						:x2="getCoordinate(chartRadius, index, selectedUser.perspectives.length)[0]"
-						:y2="getCoordinate(chartRadius, index, selectedUser.perspectives.length)[1]"
+						:x2="getCoordinate(chartRadius, index, selectedProfile.perspectives.length)[0]"
+						:y2="getCoordinate(chartRadius, index, selectedProfile.perspectives.length)[1]"
 						stroke="lightgray"
 					/>
 					<g v-for="level in maxDataValue" :key="`level-line-${index}-${level}`">
@@ -39,8 +39,8 @@
 						/>
 					</g>
 					<text
-						:x="getCoordinate(chartRadius + labelOffset, index, selectedUser.perspectives.length)[0]"
-						:y="getCoordinate(chartRadius + labelOffset, index, selectedUser.perspectives.length)[1]"
+						:x="getCoordinate(chartRadius + labelOffset, index, selectedProfile.perspectives.length)[0]"
+						:y="getCoordinate(chartRadius + labelOffset, index, selectedProfile.perspectives.length)[1]"
 						dominant-baseline="middle"
 						text-anchor="middle"
 					>
@@ -49,16 +49,16 @@
 				</g>
 				<g>
 					<polygon
-						:points="getPolygonPoints(selectedUser.perspectives)"
+						:points="getPolygonPoints(selectedProfile.perspectives)"
 						fill="rgba(75, 192, 192, 0.2)"
 						stroke="rgba(75, 192, 192, 1)"
 					/>
 					<polygon
-						:points="getPolygonPointsGoal(selectedUser.perspectives)"
+						:points="getPolygonPointsGoal(selectedProfile.perspectives)"
 						fill="rgba(192, 75, 192, 0.1)"
             			stroke="rgba(192, 75, 192, 1)"
 					/>
-					<g v-for="(perspective, index) in selectedUser.perspectives">
+					<g v-for="(perspective, index) in selectedProfile.perspectives">
 						<circle
 							:cx="getCoordinateForCircle(perspective, index)[0]"
 							:cy="getCoordinateForCircle(perspective, index)[1]"
@@ -87,7 +87,7 @@ export default {
 		SLABase
 	],
 	props: {
-		selectedUser: {
+		selectedProfile: {
             type: Object,
             required: true
         },
@@ -107,13 +107,13 @@ export default {
 		}
     },
 	created() {
-		this.getSLAPercentage(this.selectedUser);
+		this.getSLAPercentage(this.selectedProfile);
 	},
 	watch: {
-		selectedUser: {
+		selectedProfile: {
             deep: true,
             handler() {
-                this.getSLAPercentage(this.selectedUser);
+                this.getSLAPercentage(this.selectedProfile);
             }
         }
     },
@@ -131,11 +131,11 @@ export default {
 		getCoordinateForCircle(perspective, index) {
 			const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
 			const radius = this.chartRadius * (completedLevels / this.maxDataValue);
-			return this.getCoordinate(radius, index, this.selectedUser.perspectives.length);
+			return this.getCoordinate(radius, index, this.selectedProfile.perspectives.length);
 		},
 		getCoordinateForCircleGoal(perspective, index) {
 			const radius = this.chartRadius * (perspective.goalLevel / this.maxDataValue);
-			return this.getCoordinate(radius, index, this.selectedUser.perspectives.length);
+			return this.getCoordinate(radius, index, this.selectedProfile.perspectives.length);
 		},
 		getCoordinate(radius, index, total) {
 			const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
@@ -145,7 +145,7 @@ export default {
 		},
 		getLevelLineCoordinate(index, level) {
 			// 각도 계산
-			const angle = (Math.PI * 2 * index) / this.selectedUser.perspectives.length - Math.PI / 2;
+			const angle = (Math.PI * 2 * index) / this.selectedProfile.perspectives.length - Math.PI / 2;
 			// 해당 레벨에서의 반지름 계산
 			const radius = this.chartRadius * (level / this.maxDataValue);
 			// 축의 좌표를 계산

@@ -9,7 +9,7 @@
 				<v-spacer></v-spacer>
 				<v-tooltip bottom>
 					<template v-slot:activator="{ on }">
-						<v-btn @click="resetRegisteredUsers()"
+						<v-btn @click="resetRegisteredProfiles()"
 							icon
 							v-on="on"
 						>
@@ -44,8 +44,8 @@ export default {
 		goHome() {
 			this.$router.push('/');
 		},
-		resetRegisteredUsers() {
-			localStorage.removeItem('registeredUsers');
+		resetRegisteredProfiles() {
+			localStorage.removeItem('registeredProfiles');
 			window.location.reload();
 		},
 	},
