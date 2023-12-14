@@ -42,7 +42,9 @@ export default {
 	},
 	methods: {
 		goHome() {
-			this.$router.push('/');
+			if (this.$router.currentRoute.path !== '/') {
+				this.$router.push('/');
+			}
 		},
 		resetRegisteredProfiles() {
 			localStorage.removeItem('registeredProfiles');

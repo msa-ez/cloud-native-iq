@@ -14,7 +14,7 @@ export default {
             topics: [
                 {
                     name: '정책 및 업무 관점',
-                    goalLevels:[3, 3, 0, 3, 3, 0, 2],
+                    goalLevels:[4, 4, 4, 4, 4, 4, 4],
                     goalCheckCount: 1,
                     questions: [
                         {

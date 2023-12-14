@@ -29,7 +29,7 @@
 						stroke="lightgray"
 					/>
 					<g v-for="level in maxDataValue" :key="`level-line-${index}-${level}`">
-						<line
+						<line v-if="level < maxDataValue"
 							:x1="getLevelLineCoordinate(index, level)[0]"
 							:y1="getLevelLineCoordinate(index, level)[1]"
 							:x2="getLevelLineCoordinate(index, level)[2]"
