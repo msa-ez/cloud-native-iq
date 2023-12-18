@@ -2,11 +2,6 @@
 	<div class="">
 		<div class="flex-column">
 			<div class="title-box">
-				<div>
-					<img class="dpg-logo" src="../image/logo.png" />
-					<span>대통령직속 디지털플랫폼정부위원회</span>
-				</div>
-				<!-- <img class="dpg-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" /> -->
 				<div class="main-title">클라우드 네이티브 전환 가이드라인<br>(Beta)</div>
 				<img class="iq-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
 			</div>
@@ -95,21 +90,11 @@ export default {
 	justify-content: center;
 	align-items: center;
 }
-.dpg-logo {
-	width: 45px;
-	height: auto;
-	vertical-align: bottom;
-}
-.main-title, .title-box > div > span {
+.main-title {
 	font-size: 2.8rem;
 	font-weight: bold;
 	color: #003669;
 	margin: 10px;
-}
-.title-box > div > span {
-	font-size: 1.5rem;
-	display: inline-block;
-	margin-bottom: 5px;
 }
 .iq-logo {
 	max-width: 100%;
@@ -152,46 +137,9 @@ export default {
 	position: fixed;
 	bottom: 1%;
 }
-@media all and (min-width:1520px) and (max-height:770px) { 
+@media all and (min-width:1520px) and (max-height:770px), only screen and (max-width:1519px) { 
 	.title-box {
 		display: block;
-	}
-	.title-box > div > span {
-		font-size: 1.3rem;
-	}
-	.dpg-logo {
-		width: 40px;
-	}
-	.main-title {
-		font-size: 2.4rem;
-		margin: 5px;
-	}
-	.iq-logo {
-		height: calc((100vh - 96px) * 0.3);
-	}
-	.step-index {
-		font-size: 1.4rem;
-	}
-	.card-icon {
-		margin: 5px auto;
-	}
-	.step-name {
-		font-size: 1.9rem;
-	}
-	.step-name-en {
-		font-size: 1.17rem;
-		margin-top: 3px;
-	}
-} 
-@media only screen and (max-width:1519px) {
-	.title-box {
-		display: block;
-	}
-	.title-box > div > span {
-		font-size: 1.3rem;
-	}
-	.dpg-logo {
-		width: 40px;
 	}
 	.main-title {
 		font-size: 2.4rem;
@@ -213,7 +161,7 @@ export default {
 		font-size: 1.17rem;
 		margin-top: 3px;
 	}
-}
+} 
 @media only screen and (max-width:1279px) {
 	.iq-logo {
 		width: 45%;
@@ -244,13 +192,6 @@ export default {
 @media only screen and (max-width:768px) {
 	.title-box {
 		height: auto;
-	}
-	.title-box > div > span {
-		font-size: 1rem;
-		margin-bottom: 3px;
-	}
-	.dpg-logo {
-		width: 30px;
 	}
 	.main-title {
 		margin-top: 10px;
