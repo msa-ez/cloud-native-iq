@@ -2,7 +2,11 @@
 	<div class="">
 		<div class="flex-column">
 			<div class="title-box">
-				<img class="dpg-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" />
+				<div>
+					<img class="dpg-logo" src="../image/logo.png" />
+					<span>대통령직속 디지털플랫폼정부위원회</span>
+				</div>
+				<!-- <img class="dpg-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/1d4667a1-b6b7-47ef-a07c-94dc0da510b2" /> -->
 				<div class="main-title">클라우드 네이티브 전환 가이드라인<br>(Beta)</div>
 				<img class="iq-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
 			</div>
@@ -92,18 +96,24 @@ export default {
 	align-items: center;
 }
 .dpg-logo {
-	max-width: 100%;
+	width: 45px;
 	height: auto;
+	vertical-align: bottom;
 }
-.main-title {
+.main-title, .title-box > div > span {
 	font-size: 2.8rem;
 	font-weight: bold;
 	color: #003669;
 	margin: 10px;
 }
+.title-box > div > span {
+	font-size: 1.5rem;
+	display: inline-block;
+	margin-bottom: 5px;
+}
 .iq-logo {
 	max-width: 100%;
-	height: calc((100vh - 96px) * 0.4);
+	height: calc((100vh - 96px) * 0.3);
 }
 .card-box {
 	height: calc((100vh - 96px) * 0.33);
@@ -146,9 +156,15 @@ export default {
 	.title-box {
 		display: block;
 	}
+	.title-box > div > span {
+		font-size: 1.3rem;
+	}
+	.dpg-logo {
+		width: 40px;
+	}
 	.main-title {
 		font-size: 2.4rem;
-		margin: 0;
+		margin: 5px;
 	}
 	.iq-logo {
 		height: calc((100vh - 96px) * 0.3);
@@ -171,14 +187,17 @@ export default {
 	.title-box {
 		display: block;
 	}
+	.title-box > div > span {
+		font-size: 1.3rem;
+	}
 	.dpg-logo {
-		width: 35%;
+		width: 40px;
 	}
 	.main-title {
 		font-size: 2.4rem;
 	}
 	.iq-logo {
-		width: 50%;
+		width: 45%;
 		height: auto;
 	}
 	.step-index {
@@ -196,9 +215,6 @@ export default {
 	}
 }
 @media only screen and (max-width:1279px) {
-	.dpg-logo {
-		width: 30%;
-	}
 	.iq-logo {
 		width: 45%;
 	}
@@ -229,10 +245,15 @@ export default {
 	.title-box {
 		height: auto;
 	}
+	.title-box > div > span {
+		font-size: 1rem;
+		margin-bottom: 3px;
+	}
 	.dpg-logo {
-		width: 250px;
+		width: 30px;
 	}
 	.main-title {
+		margin-top: 10px;
 		font-size: 1.68rem;
 	}
 	.iq-logo {
