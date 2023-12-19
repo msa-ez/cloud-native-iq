@@ -1,12 +1,14 @@
 <template>
-	<div class="">
-		<div class="flex-column">
-			<div class="title-box">
-				<div class="main-title">클라우드 네이티브 전환 가이드라인<br>(Beta)</div>
-				<img class="iq-logo" src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
-			</div>
-			<v-row>
-				<v-col v-for="(step, index) in steps" :key="index">
+	<div>
+		<div style="padding:0px 30px 0px 30px;">
+			<v-card-title class="text-center justify-center main-title">클라우드 네이티브 전환 가이드라인<br><br>(Beta)</v-card-title>
+			<v-row justify="center">
+				<v-col cols="6" md="4" lg="3">
+					<v-img src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
+				</v-col>
+			</v-row>
+			<v-row class="ma-0 pa-0">
+				<v-col cols="12" lg="3" md="3" sm="6" v-for="(step, index) in steps" :key="index">
 					<v-card @click="goToStep(step.path)" class="card-box">
 						<div>
 							<h2 class="step-index">Step. {{ index + 1 }}</h2>
@@ -16,7 +18,7 @@
 						</div>
 					</v-card>
 				</v-col>
-				<v-col>
+				<v-col cols="12" lg="3" md="3" sm="6">
 					<v-card @click="goToStep('/case-study')" class="card-box">
 						<div>
 							<Icon icon="fluent:briefcase-search-20-regular" class="card-icon" />
@@ -26,12 +28,13 @@
 					</v-card>
 				</v-col>
 			</v-row>
-			<div class="flex-grow-1"></div> 
-			<v-row class="align-left justify-left footer-wrap">
-				<v-btn text>전환가이드 전체 보기</v-btn>
-				<v-divider vertical class="mx-2"></v-divider> 
-				<v-btn text>About</v-btn>
-			</v-row>
+			<v-footer fixed style="background-color: transparent;">
+				<v-row>
+					<v-btn text>전환가이드 전체 보기</v-btn>
+					<v-divider vertical class="mx-2"></v-divider> 
+					<v-btn text>About</v-btn>
+				</v-row>
+			</v-footer>
 		</div>
 	</div>
 </template>
@@ -78,37 +81,20 @@ export default {
 </script>
 
 <style>
-.title-box {
-	max-width: 767px;
-	width: 100%;
-	height: calc((100vh - 96px) * 0.6);
-	margin: 0 auto;
-	text-align: center;
-	padding: 10px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
 .main-title {
-	font-size: 2.8rem;
+	font-size: 2.4rem;
 	font-weight: bold;
 	color: #003669;
-	margin: 10px;
-}
-.iq-logo {
-	max-width: 100%;
-	height: calc((100vh - 96px) * 0.3);
+	text-align: center;
 }
 .card-box {
-	height: calc((100vh - 96px) * 0.33);
-	margin: 30px 10px; 
+	padding:10px;
+	height:100%;
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	border: 1px solid #ededed !important;
 }
 .card-icon {
 	width: 45px;
@@ -130,91 +116,6 @@ export default {
 .step-name-en {
 	font-size: 1.25rem; 
 	margin-top: 10px;
-}
-.footer-wrap {
-	width: 100%;
-	height: 36px;
-	position: fixed;
-	bottom: 1%;
-}
-@media all and (min-width:1520px) and (max-height:770px), only screen and (max-width:1519px) { 
-	.title-box {
-		display: block;
-	}
-	.main-title {
-		font-size: 2.4rem;
-	}
-	.iq-logo {
-		width: 45%;
-		height: auto;
-	}
-	.step-index {
-		font-size: 1.4rem;
-	}
-	.card-icon {
-		margin: 5px auto;
-	}
-	.step-name {
-		font-size: 1.9rem;
-	}
-	.step-name-en {
-		font-size: 1.17rem;
-		margin-top: 3px;
-	}
-} 
-@media only screen and (max-width:1279px) {
-	.iq-logo {
-		width: 45%;
-	}
-	.step-index {
-		font-size: 1.2rem;
-	}
-	.step-name {
-		font-size: 1.7rem;
-	}
-	.step-name-en {
-		font-size: 1.12rem;
-	}
-}
-@media only screen and (max-width:1023px) {
-	.iq-logo {
-		width: 40%;
-	}
-	.card-icon {
-		width: 36px;
-		height: 36px;
-		padding: 2px;
-	}
-	.step-name {
-		font-size: 1.5rem;
-	}
-}
-@media only screen and (max-width:768px) {
-	.title-box {
-		height: auto;
-	}
-	.main-title {
-		margin-top: 10px;
-		font-size: 1.68rem;
-	}
-	.iq-logo {
-		width: 350px;
-	}
-	.card-box {
-		margin: 10px auto;
-		width: 90vw;
-		height: auto;
-		padding: 30px;
-	}
-	.step-index {
-		font-size: 1.3rem;
-	}
-	.step-name {
-		font-size: 1.65rem;
-	}
-	.footer-wrap {
-		position: relative;
-	}
 }
 </style>
 

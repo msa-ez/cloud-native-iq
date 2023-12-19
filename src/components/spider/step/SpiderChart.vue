@@ -1,7 +1,7 @@
 <template>
-	<div class="spider-box">
+	<div>
 		<div style="position:relative">
-			<div style="position: absolute; top:5px; left:10px;">
+			<div style="margin-left:10px;">
 				<v-row>
 					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(192, 75, 192, 0.5); margin:4px 5px 0px 0px;"></div>
 					<v-row style="font-size:20px;">
@@ -209,29 +209,6 @@ export default {
 </script>
   
 <style>
-.spider-box {
-	/* background-color: lightblue; */
-	/* width:130%; */
-	/* margin-left: auto; */
-}
-
-/* 
-@media only screen and (max-width:1100px) {
-  .spider-box {
-    width:100%;
-  }    
-}
-@media only screen and (max-width:900px) {
-  .spider-box {
-    width:100%;
-  }    
-}*/
-@media only screen and (max-width:700px) {
-  .spider-box {
-    /* width:100%; */
-	/* overflow: auto; */
-  }    
-} 
 </style>
   
   

@@ -1,48 +1,56 @@
 <template>
     <div>
         <div>
-            <div>
-                <h2>프로필 선택/등록</h2>
-                <v-row align="center">
-                    <v-col cols="2">
-                        <v-select
-                            :items="profiles"
-                            :item-text="profileDisplayText"
-                            item-value="name"
-                            label="프로필 선택"
-                            v-model="selectedProfile"
-                            class="ml10"
-                        ></v-select>
-                    </v-col>
-                </v-row>
-            </div>
-        
-            <!-- 프로플 추가 다이얼로그 -->
             <v-dialog v-model="profileDialog"
                 persistent
-                max-width="300"
+                max-width="400"
             >
-                <v-card width="500">
-                    <v-card-title>프로필 등록</v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <v-form @submit.prevent="registerProfile">
-                                <v-text-field class="profile-input-field"
-                                    label="프로필"
-                                    v-model="newProfile.name"
-                                    :rules="newProfile.nameRules"
-                                    required
-                                ></v-text-field>
-                            </v-form>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions>
+                <v-card class="pa-5">
+                    <v-card-title class="pa-0">프로필 관리</v-card-title>
+                    <v-form @submit.prevent="registerProfile">
+                        <v-text-field class="profile-input-field"
+                            label="프로필 입력"
+                            v-model="newProfile.name"
+                            :rules="newProfile.nameRules"
+                            required
+                        ></v-text-field>
+                    </v-form>
+                    <v-row align="center">
+                        <v-col 
+                        cols="12" >
+                            <v-select
+                                :items="profiles"
+                                :item-text="profileDisplayText"
+                                item-value="name"
+                                label="프로필 선택"
+                                v-model="selectedProfile"
+                            ></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-checkbox 
+                        v-model="deleteConfirmed"
+                        :label="selectedProfile ? `'${selectedProfile}' 프로필을 삭제하시겠습니까?` : '등록된 프로필이 없습니다.'"
+                        class="ma-0 pa-0"
+                        :disabled="!selectedProfile"
+                    ></v-checkbox>
+                    <v-card-actions class="ma-0 pa-0">
                         <v-spacer></v-spacer>
                         <div>
                             <v-btn @click="closeProfileDialog"
                                 style="margin-left: 10px;"
                                 text
                             >취소
+                            </v-btn>
+                            <v-btn @click="deleteProfile()"
+                                color="red darken-1"
+                                text
+                                :disabled="!deleteConfirmed"
+                            >삭제</v-btn>
+                            <v-btn @click="updateProfile()"
+                                color="green"
+                                text
+                                :disabled="isNameDuplicate(newProfile.name)"
+                            >수정
                             </v-btn>
                             <v-btn @click="registerProfile"
                                 color="primary"
@@ -51,29 +59,6 @@
                             >등록
                             </v-btn>
                         </div>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-
-            <!-- 프로필 삭제 다이얼로그 -->
-            <v-dialog v-model="deleteDialog" persistent max-width="300px">
-                <v-card>
-                    <v-card-title class="headline">프로필 삭제 확인</v-card-title>
-                    <v-card-text>
-                        "{{ selectedProfile }}" 프로필을 삭제하시겠습니까?
-                        <v-checkbox v-model="deleteConfirmed" label="확인"></v-checkbox>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn @click="deleteDialog = false"
-                            text
-                        >취소
-                        </v-btn>
-                        <v-btn @click="deleteProfile()"
-                            color="red darken-1"
-                            text
-                            :disabled="!deleteConfirmed"
-                        >삭제</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -100,8 +85,8 @@ export default {
     },
     data() {
         return {
-            deleteDialog: false,
             deleteConfirmed: false,
+            isEditingProfile: false,
             profileDialog: false,
             profiles: [],
             profile: [],
@@ -123,8 +108,7 @@ export default {
     } else {
         this.selectedProfile = null;
     }
-        this.$eventBus.$on('addProfile', this.openAddProfile);
-        this.$eventBus.$on('deleteProfile', this.openDeleteProfile);
+        this.$eventBus.$on('editProfile', this.openEditProfile);
     },
     created() {
         this.loadProfiles();
@@ -133,6 +117,7 @@ export default {
         selectedProfile: {
             handler(selectedProfile) {
                 this.profile = this.profiles.find(profile => profile.name === selectedProfile);
+                this.sendSelectedProfile()
             }
         }
     },
@@ -161,6 +146,17 @@ export default {
                 this.closeProfileDialog();
             }
         },
+        updateProfile() {
+            if (this.selectedProfile && !this.isNameDuplicate(this.newProfile.name, true)) {
+                let index = this.profiles.findIndex(profile => profile.name === this.selectedProfile);
+                if (index !== -1) {
+                    this.profiles[index].name = this.newProfile.name;
+                    this.saveProfiles();
+                    this.selectedProfile = this.newProfile.name;
+                    this.closeProfileDialog();
+                }
+            }
+        },
         deleteProfile() {
             if (this.deleteConfirmed) {
                 this.profiles = this.profiles.filter(profile => profile.name !== this.selectedProfile);
@@ -168,83 +164,32 @@ export default {
                 if (this.selectedProfile === this.selectedProfile) {
                     this.selectedProfile = null;
                 }
-                this.deleteDialog = false;
                 this.deleteConfirmed = false; // 체크박스 상태 초기화
             }
         },
-        openDeleteProfile() {
-            this.deleteDialog = true;
-        },
         closeProfileDialog() {
+            this.deleteConfirmed = false;
             this.profileDialog = false;
             this.newProfile.name = '';
         },
-        openAddProfile() {
+        openEditProfile() {
             this.profileDialog = true;
         },
         isNameDuplicate(name) {
-            return this.profiles.some(profile => profile.name === name);
+            return !name || this.profiles.some(profile => profile.name === name);
         },
+        sendSelectedProfile() {
+            this.$eventBus.$emit('updateSelectedProfile', this.selectedProfile);
+        }
     },
     beforeDestroy() {
-        this.$eventBus.$off('addProfile', this.openAddProfile);
-        this.$eventBus.$off('deleteProfile', this.openDeleteProfile);
+        this.$eventBus.$off('editProfile', this.openEditProfile);
     }
 }
 </script>
 <style>
-.profile-box {
-    width: 100%;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    /* border-bottom: 1px dashed #ccc; */
-    /* border-radius: 5px;
-    padding: 10px; */
-    /* box-shadow: 0 4px 4px -4px #333; */
-    /* box-shadow: 0 1px 2px 1px #ddd; */
-}
-.profile-box-in {
-    width: 86%;
-    display: flex;
-    align-items: center;
-}
-.ml10, .btn-reg {
-    margin-left: 10px;
-}
 .profile-input-field .v-messages__message {
     line-height: 18px;
 }
-
-@media only screen and (max-width:1440px) {
-    .profile-box > h2 {
-        font-size: 22px;
-    }
-    .profile-box-in {
-        width: 82%;
-    }
-}
-@media only screen and (max-width:1024px) {
-    .profile-box-in {
-        width: 75%;
-    }
-}
-@media only screen and (max-width:750px) {
-  .profile-box {
-    height: 90px;
-    display: block;
-  }
-  .profile-box-in {
-    width: 100%;
-  }
-  .ml10 {
-    margin: 0;
-  }
-  .btn-reg {
-    margin-top: -10px;
-  }
-} 
 </style>
   
