@@ -6,7 +6,16 @@
                 max-width="400"
             >
                 <v-card class="pa-5">
-                    <v-card-title class="pa-0">프로필 관리</v-card-title>
+                    <v-row>
+                        <v-card-title class="pa-0">프로필 관리</v-card-title>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="closeProfileDialog()"
+                            style="margin-left: 10px;"
+                            icon
+                        >
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-row>
                     <v-form @submit.prevent="registerProfile">
                         <v-text-field class="profile-input-field"
                             label="프로필 입력"
@@ -22,7 +31,7 @@
                                 :items="profiles"
                                 :item-text="profileDisplayText"
                                 item-value="name"
-                                label="프로필 선택"
+                                label="프로필"
                                 v-model="selectedProfile"
                             ></v-select>
                         </v-col>
@@ -36,11 +45,6 @@
                     <v-card-actions class="ma-0 pa-0">
                         <v-spacer></v-spacer>
                         <div>
-                            <v-btn @click="closeProfileDialog"
-                                style="margin-left: 10px;"
-                                text
-                            >취소
-                            </v-btn>
                             <v-btn @click="deleteProfile()"
                                 color="red darken-1"
                                 text

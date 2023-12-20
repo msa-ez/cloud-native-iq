@@ -7,7 +7,7 @@
 					src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" 
 				/>
 				<v-spacer></v-spacer>
-				<v-card-title>선택된 프로필 : {{ selectedProfile }}</v-card-title>
+				<v-card-title>프로필 : {{ selectedProfile }}</v-card-title>
 				<v-tooltip bottom>
 					<template v-slot:activator="{ on }">
 						<v-btn @click="addRegisteredProfile()"
