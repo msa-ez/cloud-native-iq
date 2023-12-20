@@ -8,6 +8,7 @@
             >
                 <v-card :to="level.path"
                     :style="checkPathMatch(level.path)"
+                    style="padding:10px;"
                 >
                     <div>
                         <div style="font-size:20px; font-weight:700;">{{ guideItem.name }}</div>
