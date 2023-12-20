@@ -30,7 +30,7 @@
 			</v-row>
 			<v-footer fixed style="background-color: transparent;">
 				<v-row>
-					<v-btn text>전환가이드 전체 보기</v-btn>
+					<v-btn @click="goToStep('/all-guide')" text>전환가이드 전체 보기</v-btn>
 					<v-divider vertical class="mx-2"></v-divider> 
 					<v-btn text>About</v-btn>
 				</v-row>

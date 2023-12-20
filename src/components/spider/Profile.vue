@@ -107,11 +107,18 @@ export default {
         }
     },
     mounted() {
-        if (this.profiles.length > 0) {
-        this.selectedProfile = this.profiles[0].name;
-    } else {
-        this.selectedProfile = null;
-    }
+        // localStorage에서 선택된 프로필을 불러옵니다.
+        const getProfileName = localStorage.getItem('selectedProfile');
+        if (getProfileName) {
+            // localStorage에 저장된 프로필이 있다면, 해당 프로필을 선택합니다.
+            this.selectedProfile = getProfileName;
+        } else if (this.profiles.length > 0) {
+            // localStorage에 프로필이 없지만 profiles 배열에 프로필이 있다면, 첫 번째 프로필을 선택합니다.
+            this.selectedProfile = this.profiles[0].name;
+        } else {
+            // 프로필이 없는 경우
+            this.selectedProfile = null;
+        }
         this.$eventBus.$on('editProfile', this.openEditProfile);
     },
     created() {
@@ -127,6 +134,7 @@ export default {
     },
     methods: {
         saveProfiles() {
+            // 프로필을 저장한 후 Vuex 스토어의 상태를 업데이트합니다.
             localStorage.setItem('registeredProfiles', JSON.stringify(this.profiles));
         },
         loadProfiles() {
@@ -183,8 +191,12 @@ export default {
             return !name || this.profiles.some(profile => profile.name === name);
         },
         sendSelectedProfile() {
-            this.$eventBus.$emit('updateSelectedProfile', this.selectedProfile);
-        }
+            this.selectProfile(this.selectedProfile)
+        },
+        selectProfile(profile) {
+            // Vuex 스토어의 액션을 디스패치합니다.
+            this.$store.dispatch('updateSelectedProfile', profile);
+        },
     },
     beforeDestroy() {
         this.$eventBus.$off('editProfile', this.openEditProfile);

@@ -32,16 +32,15 @@ export default {
 	components: {
 	},
 	computed: {
+		selectedProfile() {
+            return this.$store.state.selectedProfile;
+        }
 	},
 	data() {
 		return {
-			selectedProfile: null
 		}
 	},
 	created() {
-		this.$eventBus.$on('updateSelectedProfile', (profile) => {
-            this.selectedProfile = profile;
-        });
 	},
 	mounted() {
 		document.title = 'cloudiq';
