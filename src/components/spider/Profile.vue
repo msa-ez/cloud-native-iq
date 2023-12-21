@@ -139,8 +139,10 @@ export default {
         },
         loadProfiles() {
             const profiles = localStorage.getItem('registeredProfiles');
-            if (profiles) {
-                this.profiles = JSON.parse(profiles);
+            this.profiles = profiles ? JSON.parse(profiles) : [];
+            // 프로필이 비어 있는 경우 다이얼로그를 엽니다.
+            if (this.profiles.length === 0) {
+                this.profileDialog = true;
             }
         },
         profileDisplayText(item) {

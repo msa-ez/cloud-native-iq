@@ -10,7 +10,13 @@ export default new Vuex.Store({
   mutations: {
     setSelectedProfile(state, profile) {
       state.selectedProfile = profile;
-      localStorage.setItem('selectedProfile', profile); // localStorage에 저장
+      // profile 값이 유효한 경우에만 localStorage에 저장
+      if (profile) {
+        localStorage.setItem('selectedProfile', profile);
+      } else {
+        // profile이 null이나 undefined인 경우, localStorage에서 해당 항목을 제거
+        localStorage.removeItem('selectedProfile');
+      }
     },
   },
   actions: {
