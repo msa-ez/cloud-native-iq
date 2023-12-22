@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div style="padding:0px 30px 0px 30px;">
-			<v-card-title class="text-center justify-center main-title">클라우드 네이티브 전환 가이드라인<br><br>(Beta)</v-card-title>
+			<v-card-title class="text-center justify-center main-title">클라우드 네이티브 전환 가이드라인<br>(Beta)</v-card-title>
 			<v-row justify="center">
 				<v-col cols="6" md="4" lg="3">
 					<v-img src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" />
@@ -28,7 +28,7 @@
 					</v-card>
 				</v-col>
 			</v-row>
-			<v-footer fixed style="background-color: transparent;">
+			<v-footer class="footer" style="background-color: transparent;">
 				<v-row>
 					<v-btn @click="goToStep('/all-guide')" text>전환가이드 전체 보기</v-btn>
 					<v-divider vertical class="mx-2"></v-divider> 
@@ -83,6 +83,7 @@ export default {
 <style>
 .main-title {
 	font-size: 2.4rem;
+	line-height: 1.5;
 	font-weight: bold;
 	color: #003669;
 	text-align: center;
@@ -116,6 +117,24 @@ export default {
 .step-name-en {
 	font-size: 1.25rem; 
 	margin-top: 10px;
+}
+.footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	margin-left: 5px;
+}
+
+@media only screen and (max-width:768px) {
+	.main-title {
+		font-size: 2rem;
+		line-height: 1.2;
+		font-weight: bold;
+	}
+	.footer {
+		position: relative;
+		margin-left: -20px;
+	}
 }
 </style>
 
