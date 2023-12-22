@@ -285,10 +285,7 @@ export default {
 }
 
 @media all and (min-width:1520px) and (max-height:779px) { 
-    .conversion-img-box > div > h3, .conversion-img-box > div > img {
-        width: 90%;
-        font-size: 1.1rem;
-    }
+    .conversion-img-box > div > h3, .conversion-img-box > div > img,
     .reference-img-box > h3, .reference-img-box > img {
         width: 90%;
         font-size: 1.1rem;
@@ -298,9 +295,7 @@ export default {
     }
 }
 @media only screen and (max-width:1024px) {
-    .conversion-img-box > div > h3, .conversion-img-box > div > img {
-        font-size: 1.05rem;
-    }
+    .conversion-img-box > div > h3, .conversion-img-box > div > img,
     .reference-img-box > h3, .reference-img-box > img {
         font-size: 1.05rem;
     }
@@ -319,7 +314,8 @@ export default {
         width: 100%;
         padding-bottom: 20px;
     }
-    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img,
+    .reference-img-box > h3, .reference-img-box > img {
         width: 100%;
     }
     .reference-img-box {
@@ -327,9 +323,6 @@ export default {
         height: 100%;
         justify-content: flex-start;
         margin-top: 20px;
-    }
-    .reference-img-box > h3, .reference-img-box > img {
-        width: 100%;
     }
 }
 </style>
