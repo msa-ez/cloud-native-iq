@@ -107,6 +107,7 @@ export default {
         }
     },
     mounted() {
+        this.loadProfiles();
         // localStorage에서 선택된 프로필을 불러옵니다.
         const getProfileName = localStorage.getItem('selectedProfile');
         if (getProfileName) {
@@ -120,9 +121,6 @@ export default {
             this.selectedProfile = null;
         }
         this.$eventBus.$on('editProfile', this.openEditProfile);
-    },
-    created() {
-        this.loadProfiles();
     },
     watch: {
         selectedProfile: {
@@ -140,9 +138,17 @@ export default {
         loadProfiles() {
             const profiles = localStorage.getItem('registeredProfiles');
             this.profiles = profiles ? JSON.parse(profiles) : [];
-            // 프로필이 비어 있는 경우 다이얼로그를 엽니다.
+            // 프로필이 비어 있는 경우 기본 프로필을 생성합니다.
             if (this.profiles.length === 0) {
-                this.profileDialog = true;
+                // 기본 프로필 생성
+                let defaultProfile = {
+                    name: 'cloudIq',
+                    perspectives: JSON.parse(JSON.stringify(this.perspectives)),
+                    topics: JSON.parse(JSON.stringify(this.topics))
+                };
+                this.profiles.push(defaultProfile);  // 기본 프로필을 프로필 배열에 추가합니다.
+                this.selectedProfile = defaultProfile.name;  // 기본 프로필을 선택합니다.
+                this.saveProfiles();  // 변경사항을 저장합니다.
             }
         },
         profileDisplayText(item) {
