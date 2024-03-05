@@ -23,10 +23,11 @@
                                 <img v-if="slaResult.conversionGoal === 'ready'" src="../../../../src/image/conversionGoal/01ready.png" />
                                 <img v-if="slaResult.conversionGoal === 'optimized'" src="../../../../src/image/conversionGoal/02optimized.png" />
                                 <img v-if="slaResult.conversionGoal === 'native'" src="../../../../src/image/conversionGoal/03native.png" />
-                                <div class="conversion-txt-box">
-                                    <div>"서비스에 대한 클라우드 네이티브 적합성 검토결과, <span style="font-weight: 700; color:#ff7800;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여 <span style="font-weight: 700; color:#ff7800;">{{ slaResult.cloudStatus }}</span> 도입 필요로 검토됨"</div>
-                                    <div>"정보시스템 등급에 따른 SLA 수준은 <span style="font-weight: 700; color:#ff7800;">{{ slaResult.percentage }}</span>로, 년 허용가능 다운타임 <span style="font-weight: 700; color:#ff7800;">약 {{ slaResult.time }}</span>정도"</div>
-                                    <!-- #da3a15, orangered -->
+                                <div style="text-align: center;">
+                                    <div>"서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
+                                    <span style="font-weight: 700; color:orange;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여 <span style="font-weight: 700; color:orange;">{{ slaResult.cloudStatus }}</span> 도입 필요로 검토됨"</div>
+                                    <div>"정보시스템 등급에 따른 SLA 수준은 <span style="font-weight: 700; color:orange;">{{ slaResult.percentage }}</span>로,<br>
+                                    </span>년 허용가능 다운타임 <span style="font-weight: 700; color:orange;">약 {{ slaResult.time }}</span>정도"</div>
                                 </div>
                             </div>
                             <br>
@@ -35,7 +36,7 @@
                                 <img v-if="slaResult.conversionMethod === 'reHost'" src="../../../../src/image/conversionMethod/02rehost.png" />
                                 <img v-if="slaResult.conversionMethod === 'rePlatform'" src="../../../../src/image/conversionMethod/04replatform.png" />
                                 <img v-if="slaResult.conversionMethod === 'reArchitect'" src="../../../../src/image/conversionMethod/07rearchitect.png" />
-                                <div class="conversion-txt-box">
+                                <div style="margin:0 auto;">
                                     <div>{{ slaResult.conversionText }}</div>
                                 </div>
                             </div>
@@ -263,44 +264,74 @@ export default {
     margin: 0 auto;
     display: flex;
     align-items: flex-start; 
-    justify-content: space-around;
+    justify-content: center;
 }
 .conversion-img-box {
     max-width: 720px;
-    width: 45%;
-}
-.conversion-img-box > div > img, .reference-img-box > img {
-    max-width: 100%;
-	height: auto;
-}
-.conversion-txt-box {
-    margin-top: 5px;
-}
-.reference-img-box {
-    max-width: 720px;
-    width: 45%;
+    width: 40%;
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
+.conversion-img-box > div {
+    width: 100%;
+    max-height: 100%;
+}
+.conversion-img-box > div > h3 {
+    width: 70%;
+    margin: 0 auto;
+}
+.conversion-img-box > div > img {
+    display: block;
+    max-width: 100%;
+    width: 70%;
+	height: auto;
+    margin: 0 auto;
+}
+.reference-img-box {
+    max-width: 760px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.reference-img-box > h3 {
+    width: 60%;
+    margin: 0 auto;
+}
+.reference-img-box > img {
+    max-width: 100%;
+    width: 60%;
+	height: auto;
+    margin: 0 auto;
+}
 
 @media all and (min-width:1520px) and (max-height:779px) { 
-    .conversion-img-box > div > h3, .conversion-img-box > div > img,
-    .reference-img-box > h3, .reference-img-box > img {
-        width: 90%;
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+        width: 55%;
         font-size: 1.1rem;
     }
-    .conversion-txt-box {
-        font-size: 0.95rem;
+    .reference-img-box > h3, .reference-img-box > img {
+        width: 53%;
+        font-size: 1.1rem;
+    }
+}
+@media only screen and (max-width:1280px) {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+        width: 80%;
+    }
+    .reference-img-box > h3, .reference-img-box > img {
+        width: 70%;
     }
 }
 @media only screen and (max-width:1024px) {
-    .conversion-img-box > div > h3, .conversion-img-box > div > img,
-    .reference-img-box > h3, .reference-img-box > img {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
+        width: 90%;
         font-size: 1.05rem;
     }
-    .conversion-txt-box {
-        font-size: 0.9rem;
+    .reference-img-box > h3, .reference-img-box > img {
+        width: 80%;
+        font-size: 1.05rem;
     }
 }
 @media only screen and (max-width:768px) {
@@ -314,8 +345,7 @@ export default {
         width: 100%;
         padding-bottom: 20px;
     }
-    .conversion-img-box > div > h3, .conversion-img-box > div > img,
-    .reference-img-box > h3, .reference-img-box > img {
+    .conversion-img-box > div > h3, .conversion-img-box > div > img {
         width: 100%;
     }
     .reference-img-box {
@@ -323,6 +353,9 @@ export default {
         height: 100%;
         justify-content: flex-start;
         margin-top: 20px;
+    }
+    .reference-img-box > h3, .reference-img-box > img {
+        width: 100%;
     }
 }
 </style>

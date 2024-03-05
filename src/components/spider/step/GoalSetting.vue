@@ -83,10 +83,16 @@ export default {
             this.selectedProfile.topics.forEach(function (topic, index) {
                 const count = topic.questions.filter(q => q.value >= 3).length;
                 if (count < topic.goalCheckCount) return
-                topic.goalLevels.forEach(function(goalLevel, goalIndex) {
-                    if(goalLevelResult[goalIndex] < goalLevel) {
-                        goalLevelResult[goalIndex] = goalLevel
-                    } 
+                topic.questions.forEach(function (question, index) {
+                    const goalLevelObject = question.goalLevelsList.find(g => g.goalCheckLevel == question.value);
+                    if(goalLevelObject) {
+                        var gLevels = goalLevelObject.goalLevels
+                        gLevels.forEach(function(gLevel, goalIndex) {
+                            if(goalLevelResult[goalIndex] < gLevel) {
+                                goalLevelResult[goalIndex] = gLevel
+                            }
+                        });
+                    }
                 });
             });
             goalLevelResult.forEach(function (goalLevel ,index){
