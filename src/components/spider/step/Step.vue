@@ -29,7 +29,11 @@
                     :step="n"
                 >
                     <v-card class="mb-12 step-box-in">
-                        <component @saveProfiles="saveProfiles" :selectedProfile="selectedProfile" :is="components[n - 1].component" />
+                        <component @saveProfiles="saveProfiles"
+                            :selectedProfile="selectedProfile"
+                            :chartData="chartData"
+                            :is="components[n - 1].component"
+                        />
                     </v-card>
                     
                 </v-stepper-content>
@@ -55,6 +59,7 @@ export default {
     },
     props: {
         selectedProfile: null,
+        chartData: null
     },
     data () {
         return {

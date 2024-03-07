@@ -4,7 +4,7 @@
             <v-col>
                 <div class="qna-box goal-box">
                     <div class="tab-info">본 단계에서는 클라우드 기반 공공 서비스 도입이 필요한 수요기관에서 As-Is 분석과 To-Be 모델을 기반으로 클라우드 서비스 구축사업의 기능/비기능적 요구사항을 정의 합니다. 아래 목표수준 설정에 필요한 클라우드 역량항목에 응답해 주시기 바랍니다.</div>
-                    <div v-for="(topic, topicIndex) in selectedProfile.topics" :key="topicIndex" style="margin-bottom: 40px;">
+                    <div v-for="(topic, topicIndex) in chartData.topics" :key="topicIndex" style="margin-bottom: 40px;">
                         <h3 style="margin-bottom: 10px;">{{ topic.name }}</h3>
                         <div v-for="(question, questionIndex) in topic.questions" :key="questionIndex" style="margin-bottom: 10px;padding:10px 10px 0 0;border-bottom: 1px solid #ccc;">
                             <div style="font-weight: 700;">{{ question.title }}</div>
@@ -26,6 +26,7 @@
             <v-col>
                 <SpiderChart
                     :selectedProfile="selectedProfile"
+                    :chartData="chartData"
                     :chartWidth="chartWidth"
                     :chartHeight="chartHeight"
                     :chartCenterX="chartCenterX"
@@ -56,6 +57,7 @@ export default {
     },
     props: {
         selectedProfile: null,
+        chartData: null
     },
     data () {
         return {
@@ -77,10 +79,10 @@ export default {
         changeGoalLevel() {
             var me = this
             var goalLevelResult = []
-            me.selectedProfile.perspectives.forEach(function (){
+            me.chartData.perspectives.forEach(function (){
                 goalLevelResult.push(0)
             });
-            this.selectedProfile.topics.forEach(function (topic, index) {
+            this.chartData.topics.forEach(function (topic, index) {
                 const count = topic.questions.filter(q => q.value >= 3).length;
                 if (count < topic.goalCheckCount) return
                 topic.questions.forEach(function (question, index) {
@@ -96,7 +98,7 @@ export default {
                 });
             });
             goalLevelResult.forEach(function (goalLevel ,index){
-                me.selectedProfile.perspectives[index].goalLevel = goalLevel
+                me.chartData.perspectives[index].goalLevel = goalLevel
             });
             this.$emit('saveProfiles')
         },

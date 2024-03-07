@@ -20,12 +20,12 @@
 		</div>
 		<svg :width="chartWidth" :height="chartHeight">
 			<g :transform="`translate(${chartCenterX}, ${chartCenterY})`">
-				<g v-for="(perspective, index) in selectedProfile.perspectives" :key="`perspective-${index}₩`">
+				<g v-for="(perspective, index) in chartData.perspectives" :key="`perspective-${index}₩`">
 					<line
 						:x1="0"
 						:y1="0"
-						:x2="getCoordinate(chartRadius, index, selectedProfile.perspectives.length)[0]"
-						:y2="getCoordinate(chartRadius, index, selectedProfile.perspectives.length)[1]"
+						:x2="getCoordinate(chartRadius, index, chartData.perspectives.length)[0]"
+						:y2="getCoordinate(chartRadius, index, chartData.perspectives.length)[1]"
 						stroke="lightgray"
 					/>
 					<g v-for="level in maxDataValue" :key="`level-line-${index}-${level}`">
@@ -39,8 +39,8 @@
 						/>
 					</g>
 					<text
-						:x="getCoordinate(chartRadius + labelOffset, index, selectedProfile.perspectives.length)[0]"
-						:y="getCoordinate(chartRadius + labelOffset, index, selectedProfile.perspectives.length)[1]"
+						:x="getCoordinate(chartRadius + labelOffset, index, chartData.perspectives.length)[0]"
+						:y="getCoordinate(chartRadius + labelOffset, index, chartData.perspectives.length)[1]"
 						dominant-baseline="middle"
 						text-anchor="middle"
 					>
@@ -49,16 +49,16 @@
 				</g>
 				<g>
 					<polygon
-						:points="getPolygonPoints(selectedProfile.perspectives)"
+						:points="getPolygonPoints(chartData.perspectives)"
 						fill="rgba(75, 192, 192, 0.2)"
 						stroke="rgba(75, 192, 192, 1)"
 					/>
 					<polygon
-						:points="getPolygonPointsGoal(selectedProfile.perspectives)"
+						:points="getPolygonPointsGoal(chartData.perspectives)"
 						fill="rgba(192, 75, 192, 0.1)"
             			stroke="rgba(192, 75, 192, 1)"
 					/>
-					<g v-for="(perspective, index) in selectedProfile.perspectives">
+					<g v-for="(perspective, index) in chartData.perspectives">
 						<circle
 							:cx="getCoordinateForCircle(perspective, index)[0]"
 							:cy="getCoordinateForCircle(perspective, index)[1]"
@@ -91,6 +91,10 @@ export default {
             type: Object,
             required: true
         },
+		chartData: {
+            type: Object,
+            required: true
+		},
 		chartWidth: Number,
 		chartHeight: Number,
 		chartCenterX: Number,
@@ -107,15 +111,16 @@ export default {
 		}
     },
 	created() {
-		this.getSLAPercentage(this.selectedProfile);
+		this.getSLAPercentage(this.chartData);
 	},
 	watch: {
 		selectedProfile: {
             deep: true,
             handler() {
-                this.getSLAPercentage(this.selectedProfile);
+                this.getSLAPercentage(this.chartData);
+				console.log('스파이더차트 this.chartData : ', this.chartData)
             }
-        }
+        },
     },
     methods: {
 		getDataLength(perspectives) {
@@ -131,11 +136,11 @@ export default {
 		getCoordinateForCircle(perspective, index) {
 			const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
 			const radius = this.chartRadius * (completedLevels / this.maxDataValue);
-			return this.getCoordinate(radius, index, this.selectedProfile.perspectives.length);
+			return this.getCoordinate(radius, index, this.chartData.perspectives.length);
 		},
 		getCoordinateForCircleGoal(perspective, index) {
 			const radius = this.chartRadius * (perspective.goalLevel / this.maxDataValue);
-			return this.getCoordinate(radius, index, this.selectedProfile.perspectives.length);
+			return this.getCoordinate(radius, index, this.chartData.perspectives.length);
 		},
 		getCoordinate(radius, index, total) {
 			const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
@@ -145,7 +150,7 @@ export default {
 		},
 		getLevelLineCoordinate(index, level) {
 			// 각도 계산
-			const angle = (Math.PI * 2 * index) / this.selectedProfile.perspectives.length - Math.PI / 2;
+			const angle = (Math.PI * 2 * index) / this.chartData.perspectives.length - Math.PI / 2;
 			// 해당 레벨에서의 반지름 계산
 			const radius = this.chartRadius * (level / this.maxDataValue);
 			// 축의 좌표를 계산
