@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "4994c988862f3b3d7a9f";
+/******/ 	var hotCurrentHash = "30f48b484cca558185ef";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9478,9 +9478,8 @@ __webpack_require__.r(__webpack_exports__);
         loadProfiles() {
             const profiles = localStorage.getItem('registeredProfiles');
             this.profiles = profiles ? JSON.parse(profiles) : [];
-            // 프로필이 비어 있는 경우 기본 프로필을 생성합니다.
+            // 프로필이 비어 있는 경우 기본 프로필을 생성하고 선택합니다.
             if (this.profiles.length === 0) {
-                // 기본 프로필 생성
                 let defaultProfile = {
                     name: 'cloudIq',
                     perspectives: JSON.parse(JSON.stringify(this.perspectives)),
@@ -9488,8 +9487,20 @@ __webpack_require__.r(__webpack_exports__);
                     users: [],
                 };
                 this.profiles.push(defaultProfile);  // 기본 프로필을 프로필 배열에 추가합니다.
-                this.selectedProfile = defaultProfile.name;  // 기본 프로필을 선택합니다.
                 this.saveProfiles();  // 변경사항을 저장합니다.
+                // 기본 프로필을 localStorage에 저장합니다.
+                localStorage.setItem('selectedProfile', defaultProfile.name);
+                // Vuex 스토어를 업데이트합니다.
+                this.$store.dispatch('updateSelectedProfile', defaultProfile.name);
+                // 컴포넌트의 상태를 업데이트합니다.
+                this.selectedProfile = defaultProfile.name;
+            } else {
+                // 프로필이 이미 존재하는 경우, 첫 번째 프로필을 선택합니다.
+                if (!this.selectedProfile && this.profiles.length > 0) {
+                    this.selectedProfile = this.profiles[0].name;
+                    localStorage.setItem('selectedProfile', this.selectedProfile);
+                    this.$store.dispatch('updateSelectedProfile', this.selectedProfile);
+                }
             }
         },
         profileDisplayText(item) {
