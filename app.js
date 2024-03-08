@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "13a4bb48059e8b0c2cde";
+/******/ 	var hotCurrentHash = "ff3958c9e6946de90ec1";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9400,9 +9400,24 @@ __webpack_require__.r(__webpack_exports__);
     watch: {
         selectedProfile: {
             handler(selectedProfile) {
+                var me = this
+                if(!selectedProfile)  return
                 this.profile = this.profiles.find(profile => profile.name === selectedProfile);
                 this.selectedProfileUsers = this.profile ? this.profile.users : [];
+                
+                // 하위에 등록된 유저가 있는 경우 로직
+                if(this.profile.users.length > 0) {
+                    this.initProfile();
+                    this.profile.users.forEach(function(user) {
+                        user.topics.forEach(function(userTopic, userTopicIndex){
+                            userTopic.questions.forEach(function(userQuestion, userQuestionIndex){
+                                me.profile.topics[userTopicIndex].questions[userQuestionIndex].value += (userQuestion.value/me.profile.users.length) 
+                            })
+                        })
+                    });
+                }
                 this.chartData = this.profile;
+                this.$eventBus.$emit('changeChartData')
             },
             deep: true, // 객체 내부까지 감시하려면 deep 옵션을 true로 설정합니다.
             immediate: true // 컴포넌트가 마운트될 때 핸들러를 즉시 실행합니다.
@@ -9419,6 +9434,13 @@ __webpack_require__.r(__webpack_exports__);
         }
     },
     methods: {
+        initProfile() {
+            this.profile.topics.forEach(function(chartDataTopic){
+                chartDataTopic.questions.forEach(function(chartDataQuestion){
+                    chartDataQuestion.value = 0;
+                })
+            });
+        },
         addProfile() {
             this.addUserStatus = false
             this.addProfileStatus = true
@@ -9929,7 +9951,7 @@ __webpack_require__.r(__webpack_exports__);
         this.getSLAPercentage(this.chartData);
     },
     watch: {
-        selectedProfile: {
+        chartData: {
             handler(){
                 this.markdownContentFolders = {}
                 this.loadProfilePerspectives();
@@ -10058,6 +10080,12 @@ __webpack_require__.r(__webpack_exports__);
         }
     },
     created() {
+    },
+    mounted() {
+        this.$eventBus.$on('changeChartData', this.onSliderChange);
+    },
+    beforeDestroy() {
+        this.$eventBus.$off('changeChartData', this.onSliderChange);
     },
     watch: {
     },
@@ -10255,7 +10283,6 @@ __webpack_require__.r(__webpack_exports__);
             deep: true,
             handler() {
                 this.getSLAPercentage(this.chartData);
-				console.log('스파이더차트 this.chartData : ', this.chartData)
             }
         },
     },
@@ -10271,7 +10298,11 @@ __webpack_require__.r(__webpack_exports__);
 			return count;
 		},
 		getCoordinateForCircle(perspective, index) {
-			const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
+			// 각 level의 checkpoints 중 하나라도 checked가 true인 경우를 찾아서 해당 level을 완료된 것으로 간주
+			const completedLevels = perspective.levels.reduce((acc, level) => {
+				const hasCheckedCheckpoint = level.checkpoints.some(checkpoint => checkpoint.checked);
+				return acc + (hasCheckedCheckpoint ? 1 : 0);
+			}, 0);
 			const radius = this.chartRadius * (completedLevels / this.maxDataValue);
 			return this.getCoordinate(radius, index, this.chartData.perspectives.length);
 		},
@@ -10314,7 +10345,13 @@ __webpack_require__.r(__webpack_exports__);
 			}
 			var perspectiveArray = perspectives
 				.map((perspective, index) => {
-					const completedLevels = perspective.levels.filter(level => level.isCompleted).length;
+					// 각 perspective의 levels를 순회하면서 checkpoints 배열 중 하나라도 checked가 true인지 확인하여
+					// 해당 level을 완료된 것으로 간주
+					const completedLevels = perspective.levels.reduce((acc, level) => {
+						const hasCheckedCheckpoint = level.checkpoints.some(checkpoint => checkpoint.checked);
+						return acc + (hasCheckedCheckpoint ? 1 : 0);
+					}, 0);
+					// 완료된 levels의 수에 따라 radius 계산
 					const radius = this.chartRadius * (completedLevels / this.maxDataValue);
 					return this.getCoordinate(radius, index, perspectives.length).join(',');
 				})
@@ -10334,17 +10371,6 @@ __webpack_require__.r(__webpack_exports__);
 			.join(' ');
 
 			return perspectiveArray
-		},
-		checkAllLevelsCompletion(perspective) {
-			perspective.isCompleted = perspective.levels.every((level) => level.isCompleted);
-		
-			const perspectiveIndex = this.chartData.labels.findIndex((label) => label === perspective.name);
-			if (perspectiveIndex !== -1) {
-				const lastCompletedLevelIndex = perspective.levels.findIndex((level) => !level.isCompleted) - 1;
-				const value = lastCompletedLevelIndex !== -1 ? lastCompletedLevelIndex + 1 : this.chartData.labels.length;
-				this.chartData.data[perspectiveIndex] = value;
-				this.chartData.data2[perspectiveIndex] = value;
-			}
 		},
 	}
 });
@@ -10464,7 +10490,7 @@ var render = function render() {
             _c(
               "v-tooltip",
               {
-                attrs: { bottom: "" },
+                attrs: { right: "" },
                 scopedSlots: _vm._u([
                   {
                     key: "activator",
@@ -11235,39 +11261,69 @@ var render = function render() {
                     }),
                     !_vm.addUserStatus
                       ? _c(
-                          "v-card",
+                          "v-tooltip",
                           {
-                            staticClass: "add-card",
-                            attrs: { outlined: "" },
-                            on: {
-                              click: function ($event) {
-                                return _vm.addUser()
-                              },
-                            },
-                          },
-                          [
-                            _c(
-                              "div",
-                              {
-                                staticStyle: {
-                                  display: "flex",
-                                  "justify-content": "center",
-                                  "align-items": "center",
-                                },
-                              },
+                            attrs: { bottom: "" },
+                            scopedSlots: _vm._u(
                               [
-                                _c("Icon", {
-                                  staticStyle: { color: "#5EB2E8" },
-                                  attrs: {
-                                    icon: "tdesign:user-add",
-                                    width: "20",
-                                    height: "20",
+                                {
+                                  key: "activator",
+                                  fn: function ({ on, attrs }) {
+                                    return [
+                                      _c(
+                                        "v-card",
+                                        _vm._g(
+                                          _vm._b(
+                                            {
+                                              staticClass: "add-card",
+                                              attrs: { outlined: "" },
+                                              on: {
+                                                click: function ($event) {
+                                                  return _vm.addUser()
+                                                },
+                                              },
+                                            },
+                                            "v-card",
+                                            attrs,
+                                            false
+                                          ),
+                                          on
+                                        ),
+                                        [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticStyle: {
+                                                display: "flex",
+                                                "justify-content": "center",
+                                                "align-items": "center",
+                                              },
+                                            },
+                                            [
+                                              _c("Icon", {
+                                                staticStyle: {
+                                                  color: "#5EB2E8",
+                                                },
+                                                attrs: {
+                                                  icon: "tdesign:user-add",
+                                                  width: "20",
+                                                  height: "20",
+                                                },
+                                              }),
+                                            ],
+                                            1
+                                          ),
+                                        ]
+                                      ),
+                                    ]
                                   },
-                                }),
+                                },
                               ],
-                              1
+                              null,
+                              true
                             ),
-                          ]
+                          },
+                          [_c("span", [_vm._v("사용자 추가")])]
                         )
                       : _c(
                           "div",
@@ -11338,39 +11394,68 @@ var render = function render() {
               }),
               !_vm.addProfileStatus
                 ? _c(
-                    "v-card",
+                    "v-tooltip",
                     {
-                      staticClass: "add-card",
-                      attrs: { outlined: "" },
-                      on: {
-                        click: function ($event) {
-                          return _vm.addProfile()
-                        },
-                      },
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticStyle: {
-                            display: "flex",
-                            "justify-content": "center",
-                            "align-items": "center",
-                          },
-                        },
+                      attrs: { bottom: "" },
+                      scopedSlots: _vm._u(
                         [
-                          _c("Icon", {
-                            staticStyle: { color: "#5EB2E8" },
-                            attrs: {
-                              icon: "ant-design:usergroup-add-outlined",
-                              width: "20",
-                              height: "20",
+                          {
+                            key: "activator",
+                            fn: function ({ on, attrs }) {
+                              return [
+                                _c(
+                                  "v-card",
+                                  _vm._g(
+                                    _vm._b(
+                                      {
+                                        staticClass: "add-card",
+                                        attrs: { outlined: "" },
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.addProfile()
+                                          },
+                                        },
+                                      },
+                                      "v-card",
+                                      attrs,
+                                      false
+                                    ),
+                                    on
+                                  ),
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticStyle: {
+                                          display: "flex",
+                                          "justify-content": "center",
+                                          "align-items": "center",
+                                        },
+                                      },
+                                      [
+                                        _c("Icon", {
+                                          staticStyle: { color: "#5EB2E8" },
+                                          attrs: {
+                                            icon: "ant-design:usergroup-add-outlined",
+                                            width: "20",
+                                            height: "20",
+                                          },
+                                        }),
+                                      ],
+                                      1
+                                    ),
+                                  ]
+                                ),
+                              ]
                             },
-                          }),
+                          },
                         ],
-                        1
+                        null,
+                        false,
+                        1192679212
                       ),
-                    ]
+                    },
+                    [_c("span", [_vm._v("프로필 추가")])]
                   )
                 : _c(
                     "div",
@@ -12173,6 +12258,9 @@ var render = function render() {
                               _c("v-slider", {
                                 staticClass: "tickLabels-txt",
                                 attrs: {
+                                  disabled:
+                                    _vm.chartData.users &&
+                                    _vm.chartData.users.length > 0,
                                   "tick-labels": _vm.getTickLabels(question),
                                   max: _vm.getTickLabels(question).length - 1,
                                   step: "1",
@@ -12728,7 +12816,7 @@ exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/li
 
 
 // module
-exports.push([module.i, "* {\n    font-family: sans-serif;\n}\n\n.clearfix::after {\n    content: \"\";\n    display: block;\n    clear: both;\n}\n\nhtml, body, #app {\n    margin: 0;\n    padding: 0;\n    height: 100%;\n}\n\nsvg {\n    display: block;\n    margin: auto;\n}\n\n.col, .row {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\n.container {\n\tdisplay: flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\n\n.chart-container {\n\tflex: 0.5;\n}\nsvg {\n\tdisplay: block;\n\tmargin: auto;\n}", ""]);
+exports.push([module.i, "* {\n    font-family: sans-serif;\n}\n\n.clearfix::after {\n    content: \"\";\n    display: block;\n    clear: both;\n}\n\nhtml, body, #app {\n    margin: 0;\n    padding: 0;\n    height: 100%;\n}\n\nsvg {\n    display: block;\n    margin: auto;\n}\n\n.col, .row {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\n.container {\n\tdisplay: flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\n\n.chart-container {\n\tflex: 0.5;\n}\nsvg {\n\tdisplay: block;\n\tmargin: auto;\n}\n\n.v-slider--disabled .v-slider__thumb{\n    background:#1976D2 !important;\n}", ""]);
 
 // exports
 
