@@ -474,6 +474,7 @@ export default {
                     name: 'cloudIq',
                     perspectives: JSON.parse(JSON.stringify(this.perspectives)),
                     topics: JSON.parse(JSON.stringify(this.topics)),
+                    users: [],
                 };
                 this.profiles.push(defaultProfile);  // 기본 프로필을 프로필 배열에 추가합니다.
                 this.selectedProfile = defaultProfile.name;  // 기본 프로필을 선택합니다.
