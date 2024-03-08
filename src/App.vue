@@ -6,7 +6,7 @@
                     style="cursor: pointer; align-items: left; width:90px;" 
                     src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" 
                 />
-				<v-tooltip bottom>
+				<v-tooltip right>
                     <template v-slot:activator="{ on }">
                         <v-btn @click="openEditProfile()"
                             icon

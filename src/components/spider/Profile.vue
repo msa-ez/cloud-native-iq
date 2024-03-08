@@ -103,15 +103,22 @@
                         </div>
                     </v-row>
                 </v-list-item>
-                <v-card v-if="!addUserStatus"
-                    @click="addUser()"
-                    class="add-card"
-                    outlined
-                >
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                        <Icon icon="tdesign:user-add" width="20" height="20" style="color: #5EB2E8" />
-                    </div>
-                </v-card>
+                <v-tooltip v-if="!addUserStatus" bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-card
+                            @click="addUser()"
+                            class="add-card"
+                            outlined
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <Icon icon="tdesign:user-add" width="20" height="20" style="color: #5EB2E8" />
+                            </div>
+                        </v-card>
+                    </template>
+                    <span>사용자 추가</span>
+                </v-tooltip>
                 <div v-else>
                     <v-row class="ma-0 pa-0 d-flex align-center">
                         <v-text-field
@@ -139,15 +146,22 @@
                     </v-row>
                 </div>
             </v-list-group>
-            <v-card v-if="!addProfileStatus"
-                @click="addProfile()"
-                class="add-card"
-                outlined
-            >
-                <div style="display: flex; justify-content: center; align-items: center;">
-                    <Icon icon="ant-design:usergroup-add-outlined" width="20" height="20" style="color: #5EB2E8" />
-                </div>
-            </v-card>
+            <v-tooltip v-if="!addProfileStatus" bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-card
+                        @click="addProfile()"
+                        class="add-card"
+                        outlined
+                        v-bind="attrs"
+                        v-on="on"
+                    >
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <Icon icon="ant-design:usergroup-add-outlined" width="20" height="20" style="color: #5EB2E8" />
+                        </div>
+                    </v-card>
+                </template>
+                <span>프로필 추가</span>
+            </v-tooltip>
             <div v-else>
                 <v-row class="ma-0 pa-0">
                     <v-text-field 
@@ -375,9 +389,24 @@ export default {
     watch: {
         selectedProfile: {
             handler(selectedProfile) {
+                var me = this
+                if(!selectedProfile)  return
                 this.profile = this.profiles.find(profile => profile.name === selectedProfile);
                 this.selectedProfileUsers = this.profile ? this.profile.users : [];
+                
+                // 하위에 등록된 유저가 있는 경우 로직
+                if(this.profile.users.length > 0) {
+                    this.initProfile();
+                    this.profile.users.forEach(function(user) {
+                        user.topics.forEach(function(userTopic, userTopicIndex){
+                            userTopic.questions.forEach(function(userQuestion, userQuestionIndex){
+                                me.profile.topics[userTopicIndex].questions[userQuestionIndex].value += (userQuestion.value/me.profile.users.length) 
+                            })
+                        })
+                    });
+                }
                 this.chartData = this.profile;
+                this.$eventBus.$emit('changeChartData')
             },
             deep: true, // 객체 내부까지 감시하려면 deep 옵션을 true로 설정합니다.
             immediate: true // 컴포넌트가 마운트될 때 핸들러를 즉시 실행합니다.
@@ -394,6 +423,13 @@ export default {
         }
     },
     methods: {
+        initProfile() {
+            this.profile.topics.forEach(function(chartDataTopic){
+                chartDataTopic.questions.forEach(function(chartDataQuestion){
+                    chartDataQuestion.value = 0;
+                })
+            });
+        },
         addProfile() {
             this.addUserStatus = false
             this.addProfileStatus = true

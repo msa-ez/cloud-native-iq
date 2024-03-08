@@ -10,6 +10,7 @@
                             <div style="font-weight: 700;">{{ question.title }}</div>
                             <div>{{ question.text }}</div>
                             <v-slider
+                                :disabled="chartData.users && chartData.users.length > 0"
                                 v-model="question.value"
                                 :tick-labels="getTickLabels(question)"
                                 :max="getTickLabels(question).length - 1"
@@ -64,6 +65,12 @@ export default {
         }
     },
     created() {
+    },
+    mounted() {
+        this.$eventBus.$on('changeChartData', this.onSliderChange);
+    },
+    beforeDestroy() {
+        this.$eventBus.$off('changeChartData', this.onSliderChange);
     },
     watch: {
     },

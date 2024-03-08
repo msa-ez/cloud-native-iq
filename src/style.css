@@ -38,3 +38,7 @@ svg {
 	display: block;
 	margin: auto;
 }
+
+.v-slider--disabled .v-slider__thumb{
+    background:#1976D2 !important;
+}
