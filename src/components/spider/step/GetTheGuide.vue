@@ -161,7 +161,7 @@ export default {
         this.getSLAPercentage(this.chartData);
     },
     watch: {
-        selectedProfile: {
+        chartData: {
             handler(){
                 this.markdownContentFolders = {}
                 this.loadProfilePerspectives();
