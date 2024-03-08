@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "ff3958c9e6946de90ec1";
+/******/ 	var hotCurrentHash = "4994c988862f3b3d7a9f";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9485,6 +9485,7 @@ __webpack_require__.r(__webpack_exports__);
                     name: 'cloudIq',
                     perspectives: JSON.parse(JSON.stringify(this.perspectives)),
                     topics: JSON.parse(JSON.stringify(this.topics)),
+                    users: [],
                 };
                 this.profiles.push(defaultProfile);  // 기본 프로필을 프로필 배열에 추가합니다.
                 this.selectedProfile = defaultProfile.name;  // 기본 프로필을 선택합니다.
