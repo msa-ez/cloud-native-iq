@@ -130,7 +130,7 @@ export default {
             if (this.registeredProfileGoalPath.includes(path)) {
                 // 조건을 만족하는 경우 사용자 정의 스타일 객체 반환
                 return {
-                    backgroundColor: 'rgba(192, 75, 192, 1)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'rgb(25,118,210)', // 여기에 원하는 배경색을 지정
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
             } else

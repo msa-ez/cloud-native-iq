@@ -133,11 +133,19 @@ export default {
 			return count;
 		},
 		getCoordinateForCircle(perspective, index) {
-			// 각 level의 checkpoints 중 하나라도 checked가 true인 경우를 찾아서 해당 level을 완료된 것으로 간주
-			const completedLevels = perspective.levels.reduce((acc, level) => {
+			// 첫 번째로 true를 만나면 그 이후 모든 levels를 true로 간주
+			let firstTrueFound = false;
+			let completedLevels = 0;
+			for (let i = perspective.levels.length - 1; i >= 0; i--) {
+				const level = perspective.levels[i];
 				const hasCheckedCheckpoint = level.checkpoints.some(checkpoint => checkpoint.checked);
-				return acc + (hasCheckedCheckpoint ? 1 : 0);
-			}, 0);
+				if (hasCheckedCheckpoint) {
+					firstTrueFound = true;
+				}
+				if (firstTrueFound) {
+					completedLevels++;
+				}
+			}
 			const radius = this.chartRadius * (completedLevels / this.maxDataValue);
 			return this.getCoordinate(radius, index, this.chartData.perspectives.length);
 		},
@@ -180,12 +188,19 @@ export default {
 			}
 			var perspectiveArray = perspectives
 				.map((perspective, index) => {
-					// 각 perspective의 levels를 순회하면서 checkpoints 배열 중 하나라도 checked가 true인지 확인하여
-					// 해당 level을 완료된 것으로 간주
-					const completedLevels = perspective.levels.reduce((acc, level) => {
+					// 첫 번째로 true를 만나면 그 이후 모든 levels를 true로 간주
+					let firstTrueFound = false;
+					let completedLevels = 0;
+					for (let i = perspective.levels.length - 1; i >= 0; i--) {
+						const level = perspective.levels[i];
 						const hasCheckedCheckpoint = level.checkpoints.some(checkpoint => checkpoint.checked);
-						return acc + (hasCheckedCheckpoint ? 1 : 0);
-					}, 0);
+						if (hasCheckedCheckpoint) {
+							firstTrueFound = true;
+						}
+						if (firstTrueFound) {
+							completedLevels++;
+						}
+					}
 					// 완료된 levels의 수에 따라 radius 계산
 					const radius = this.chartRadius * (completedLevels / this.maxDataValue);
 					return this.getCoordinate(radius, index, perspectives.length).join(',');

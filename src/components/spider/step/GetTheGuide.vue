@@ -14,70 +14,53 @@
         <v-tabs-items v-model="tab" class="guide-box">
             <!-- 새로운 고정 탭 컨텐츠 -->
             <v-tab-item key="fixed-tab-content">
-                <v-card flat style="padding:20px;">
+                <div flat style="padding:0px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <div class="img-box-wrap">
                         <div class="conversion-img-box">
                             <div>
                                 <h3>ㆍ목표 성숙도 모델</h3>
-                                <img v-if="slaResult.conversionGoal === 'ready'" src="../../../../src/image/conversionGoal/01ready.png" />
-                                <img v-if="slaResult.conversionGoal === 'optimized'" src="../../../../src/image/conversionGoal/02optimized.png" />
-                                <img v-if="slaResult.conversionGoal === 'native'" src="../../../../src/image/conversionGoal/03native.png" />
-                                <div style="text-align: center;">
+                                <img :src="conversionGoalImage(slaResult.conversionGoal)" />
+                                <div style="text-align: start; margin-left:16%;">
                                     <div>"서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
-                                    <span style="font-weight: 700; color:orange;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여 <span style="font-weight: 700; color:orange;">{{ slaResult.cloudStatus }}</span> 도입 필요로 검토됨"</div>
-                                    <div>"정보시스템 등급에 따른 SLA 수준은 <span style="font-weight: 700; color:orange;">{{ slaResult.percentage }}</span>로,<br>
-                                    </span>년 허용가능 다운타임 <span style="font-weight: 700; color:orange;">약 {{ slaResult.time }}</span>정도"</div>
+                                        <span style="font-weight: 700; color:orange;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여
+                                        <span style="font-weight: 700; color:orange;">{{ slaResult.cloudStatus }}{{ getConversionResult(slaResult.conversionGoal) }}</span>
+                                    </div>
+                                    <div>
+                                        - 목표 시스템 레벨에 따른 SLA 수준 : <span style="font-weight: 700; color:orange;">{{ slaResult.percentage }}</span>
+                                        <br>
+                                        - 년 허용가능 장애시간 : <span style="font-weight: 700; color:orange;">약 {{ slaResult.time }}</span>
+                                    </div>
                                 </div>
                             </div>
                             <br>
                             <div>
-                                <h3>ㆍ전환 및 모더나이즈 방법론</h3>
-                                <img v-if="slaResult.conversionMethod === 'reHost'" src="../../../../src/image/conversionMethod/02rehost.png" />
-                                <img v-if="slaResult.conversionMethod === 'rePlatform'" src="../../../../src/image/conversionMethod/04replatform.png" />
-                                <img v-if="slaResult.conversionMethod === 'reArchitect'" src="../../../../src/image/conversionMethod/07rearchitect.png" />
-                                <div style="margin:0 auto;">
+                                <h3>ㆍ전환 및 모더나이즈 방법론 : {{ getConversionMethodInfo(slaResult.conversionMethod).text }}</h3>
+                                <img :src="getConversionMethodInfo(slaResult.conversionMethod).imagePath" />
+                                <div style="text-align: start; margin-left:16%;">
                                     <div>{{ slaResult.conversionText }}</div>
                                 </div>
                             </div>
                         </div>
                         <div class="reference-img-box">
                             <h3>ㆍ참조 아키텍처</h3>
-                            
-                            <!-- Frontend Images -->
-                            <img v-if="frontEnd.micro" src="../../../../src/image/referenceArchitecture/mic-frontend.png" />
-                            <img v-if="frontEnd.monolith" src="../../../../src/image/referenceArchitecture/mono-frontend.png" />
-
-                            <!-- Gateway Image -->
-                            <img  v-if="gateway" src="../../../../src/image/referenceArchitecture/api.png" />
-
-                            <!-- Inner Architecture Images -->
-                            <img  v-else-if="serviceType.monolith" src="../../../../src/image/referenceArchitecture/inner1.png" />
-                            <img  v-else-if="serviceType.mini" src="../../../../src/image/referenceArchitecture/inner2.png" />
-                            <img  v-else-if="serviceType.micro" src="../../../../src/image/referenceArchitecture/inner3.png" />
-                            <img  v-if="serviceType.sidecar" src="../../../../src/image/referenceArchitecture/inner4.png" />
-
-                            <!-- Messaging Channel Image -->
-                            <img  v-if="messagingChannel" src="../../../../src/image/referenceArchitecture/Messaging.png" />
-
-                            <!-- Infrastructure Images -->
-                            <img  v-if="infra.kubernetes" src="../../../../src/image/referenceArchitecture/Kubernetes.png" />
-                            <img  v-else-if="infra.virtualMachine" src="../../../../src/image/referenceArchitecture/vm.png" />
-                            <img  v-else-if="infra.bareMetal" src="../../../../src/image/referenceArchitecture/bare.png" />
+                            <template v-for="(path) in referenceArchitecturegetImagePath()">
+                                <img :src="path" />
+                            </template>
                         </div>
                     </div>
-                </v-card>
+                </div>
             </v-tab-item>
             <!-- 기존 v-for를 사용한 탭 컨텐츠들 -->
             <v-tab-item v-for="item in items" :key="item.tab">
-                <v-card flat style="padding:20px;">
+                <div flat style="padding:20px;">
                     <div v-if="goalLevels[item.tab_en] > 0 && Object.keys(markdownContentFolders).length > 0"
                         v-html="markdownContentFolders[item.tab_en][goalLevels[item.tab_en]]">
                     </div>
                     <div v-else>
                         전환목표가 없습니다.
                     </div>
-                </v-card>
+                </div>
             </v-tab-item>
         </v-tabs-items>
     </div>
@@ -187,6 +170,96 @@ export default {
         }
     },
     methods: {
+        referenceArchitecturegetImagePath() {
+            let paths = [];
+
+            // Frontend Images
+            if (this.frontEnd.micro) {
+                paths.push(require('../../../../src/image/referenceArchitecture/mic-frontend.png')); // Microservice Frontend Image
+            }
+            if (this.frontEnd.monolith) {
+                paths.push(require('../../../../src/image/referenceArchitecture/mono-frontend.png')); // Monolith Frontend Image
+            }
+
+            // Gateway Image
+            if (this.gateway) {
+                paths.push(require('../../../../src/image/referenceArchitecture/api.png')); // API Gateway Image
+            }
+
+            // Inner Architecture Images
+            if (this.serviceType.monolith) {
+                paths.push(require('../../../../src/image/referenceArchitecture/inner1.png')); // Monolith Inner Architecture Image
+            }
+            if (this.serviceType.mini) {
+                paths.push(require('../../../../src/image/referenceArchitecture/inner2.png')); // Mini Inner Architecture Image
+            }
+            if (this.serviceType.micro) {
+                paths.push(require('../../../../src/image/referenceArchitecture/inner3.png')); // Microservice Inner Architecture Image
+            }
+            if (this.serviceType.sidecar) {
+                paths.push(require('../../../../src/image/referenceArchitecture/inner4.png')); // Sidecar Inner Architecture Image
+            }
+
+            // Messaging Channel Image
+            if (this.messagingChannel) {
+                paths.push(require('../../../../src/image/referenceArchitecture/Messaging.png')); // Messaging Channel Image
+            }
+
+            // Infrastructure Images
+            if (this.infra.kubernetes) {
+                paths.push(require('../../../../src/image/referenceArchitecture/Kubernetes.png')); // Kubernetes Infrastructure Image
+            }
+            if (this.infra.virtualMachine) {
+                paths.push(require('../../../../src/image/referenceArchitecture/vm.png')); // Virtual Machine Infrastructure Image
+            }
+            if (this.infra.bareMetal) {
+                paths.push(require('../../../../src/image/referenceArchitecture/bare.png')); // Bare Metal Infrastructure Image
+            }
+
+            return paths;
+        },
+        conversionGoalImage(type) {
+            switch (type) {
+                case 'keep':
+                    return require('../../../../src/image/conversionGoal/00keep.png');
+                case 'ready':
+                    return require('../../../../src/image/conversionGoal/01ready.png');
+                case 'optimized':
+                    return require('../../../../src/image/conversionGoal/02optimized.png');
+                case 'native':
+                    return require('../../../../src/image/conversionGoal/03native.png');
+            }
+        },
+        getConversionMethodInfo(type) {
+            const info = {
+                'retain': {
+                    text: 'Retain',
+                    imagePath:  require('../../../../src/image/conversionMethod/00retain.png')
+                },
+                'reHost': {
+                    text: 'ReHost',
+                    imagePath:  require('../../../../src/image/conversionMethod/02rehost.png')
+                },
+                'rePlatform': {
+                    text: 'RePlatform',
+                    imagePath:  require('../../../../src/image/conversionMethod/04replatform.png')
+                },
+                'reArchitect': {
+                    text: 'ReArchitect',
+                    imagePath:  require('../../../../src/image/conversionMethod/07rearchitect.png')
+                }
+            };
+
+            return info[type] || { text: '', imagePath: '' }; // 기본값 처리
+        },
+        getConversionResult(type) {
+            switch (type) {
+                case 'keep':
+                    return '로 검토됨';
+                default :
+                    return '로의 전환이 요구됨';
+            }
+        },
         checkReferenceArchitecture() {
             const swArchitecture = this.chartData.perspectives.find(p => p.name_en === 'application');
             const decomposition = this.chartData.perspectives.find(p => p.name_en === 'development');
@@ -253,6 +326,10 @@ export default {
 }
 </script>
 <style>
+.guide-box {
+    padding:20px;
+    overflow: auto;
+}
 .tab-title {
     font-size: 16px;
     font-weight: 700;
@@ -260,7 +337,6 @@ export default {
 .img-box-wrap {
     max-width: 1920px;
     width: 100%;
-    height: calc(100vh - 270px);
     margin: 0 auto;
     display: flex;
     align-items: flex-start; 
@@ -278,7 +354,7 @@ export default {
     max-height: 100%;
 }
 .conversion-img-box > div > h3 {
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
 }
 .conversion-img-box > div > img {
@@ -296,7 +372,7 @@ export default {
     flex-direction: column;
 }
 .reference-img-box > h3 {
-    width: 60%;
+    width: 70%;
     margin: 0 auto;
 }
 .reference-img-box > img {
@@ -308,7 +384,6 @@ export default {
 
 @media all and (min-width:1520px) and (max-height:779px) { 
     .conversion-img-box > div > h3, .conversion-img-box > div > img {
-        width: 55%;
         font-size: 1.1rem;
     }
     .reference-img-box > h3, .reference-img-box > img {

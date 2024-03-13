@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-stepper v-model="currentStep" class="box-wrap">
+        <v-stepper v-model="currentStep">
             <v-stepper-header>
                 <template v-for="n in components.length">
                     <v-stepper-step
@@ -27,14 +27,15 @@
                     v-for="n in components.length"
                     :key="`${n}-content`"
                     :step="n"
+                    style="padding:0px;"
                 >
-                    <v-card class="mb-12 step-box-in">
+                    <div class="step-box-in">
                         <component @saveProfiles="saveProfiles"
                             :selectedProfile="selectedProfile"
                             :chartData="chartData"
                             :is="components[n - 1].component"
                         />
-                    </v-card>
+                    </div>
                     
                 </v-stepper-content>
             </v-stepper-items>
@@ -104,51 +105,4 @@ export default {
 </script>
 
 <style>
-.box-wrap {
-    height:calc(100vh - 60px);
-    /* border:1px solid blue; */
-}
-.step-box {
-    /* overflow: auto; */
-    height:calc(100vh - 60px);
-    /* background-color: lightgoldenrodyellow; */
-}
-.step-box-in { 
-    /* step-box 안의 흰 박스 */
-    height:calc(100vh - 180px);
-	/* background-color: lightpink; */
-}
-.qna-box {
-    /* width: 130%; */
-    height: calc(100vh - 180px);
-	overflow: auto;
-    padding: 20px;
-	/* border: 1px solid pink; */
-}
-.btn-box {
-    text-align: right;
-    margin-top: 10px;
-}
-.guide-box {
-    height: calc(100vh - 230px);
-    overflow: auto;
-}
-
-@media only screen and (max-width:1100px) {
-    .qna-box {
-        /* width: 100%; */
-    }
-}
-@media only screen and (max-width:700px) {
-    .box-wrap, .step-box, .step-box-in {
-        height:100%;
-    }
-    .qna-box {
-        height: 50vh;
-        padding: 0;
-    }
-    .btn-bot {
-        margin-bottom:10px;
-    }
-}
 </style>

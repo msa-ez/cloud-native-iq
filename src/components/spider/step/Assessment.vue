@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-row>
+		<v-row style="padding:20px;">
 			<v-col>
 				<div class="qna-box assess-box" >
 					<div class="tab-info">본 단계에서는 클라우드 네이티브 앱이 가져야 할 주요 관점별 현 수준을 평가하여 목표 수준과의 Gap을 가시화 (개발조직이 내부에 있을 때 - 발주기관이, 개발 조직이 내부에 없을 때 - 수행기관이 평가 가능) 합니다. 아래 현 수준에 해당하는 역량별 체크포인트에 체크해 주시기 바랍니다.</div>

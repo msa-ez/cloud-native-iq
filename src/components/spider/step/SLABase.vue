@@ -83,8 +83,8 @@ export default {
                 this.slaResult.cloudStatus = 'Cloud Ready';
                 this.slaResult.conversionText = '이를 다른 말로 ‘Rift and Shift’라고 부르기도 합니다. 번역하면 들어서 옮긴다는 의미입니다. 기존의 시스템에서 별다른 수정 없이 환경만 클라우드로 이전하는 것을 말합니다. 클라우드 마이그레이션 타입 중에서 가장 쉬운 방법이라고 볼 수 있지만, 클라우드 제공 업체에서 제공하는 다양한 기능들을 활용하지 못한다는 단점이 있을 수 있습니다.'
             } else {
-                this.slaResult.conversionGoal = 'ready'
-                this.slaResult.conversionMethod = 'reHost'
+                this.slaResult.conversionGoal = 'keep'
+                this.slaResult.conversionMethod = 'retain'
                 this.slaResult.cloudStatus = '기존 시스템 유지';
                 this.slaResult.conversionText = '클라우드로 옮기거나 하지 않고 현재 상태로 유지하는 것을 말합니다. 기존의 시스템 중에는 기존 거버넌스, 컴플라이언스, 보안 등의 이유로 기존대로 유지하는 것이 적합할 경우도 많이 있습니다. 이 부분도 클라우드 마이그레이션 타입에 포함될 필요는 없다고 생각되지만, 클라우드 마이그레이션 계획 수립 시 정리가 필요한 부분이기에 포함된 것이라는 생각이 듭니다. 그리고 이 경우에는 추후 전체적인 준비가 된 후에 클라우드 마이그레이션을 수행하게 될 수도 있습니다.';
             }
