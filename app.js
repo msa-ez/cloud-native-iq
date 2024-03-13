@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "56ad0af2d2421cac5f9b";
+/******/ 	var hotCurrentHash = "0551fa2c4345146e20b6";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -10277,19 +10277,19 @@ __webpack_require__.r(__webpack_exports__);
                     switch (slaQuestion.value) {
                         case 0:
                             percentage = '99.5%';
-                            time = '43시간 48분'
+                            time = '43.8시간'
                             break;
                         case 1:
                             percentage = '99.9%';
-                            time = '8시간 45분'
+                            time = '8.76시간'
                             break;
                         case 2:
-                            percentage = '99.95%';
-                            time = '4시간 12분'
+                            percentage = '99.99%';
+                            time = '52.56분'
                             break;
                         default:
-                            percentage = '99.99%';
-                            time = '52분'
+                            percentage = '99.999%';
+                            time = '5.26분'
                             break;
                     }
                     break; // 질문을 찾으면 루프를 종료합니다.
@@ -12091,7 +12091,7 @@ var render = function render() {
                         [
                           _c("div", [
                             _vm._v(
-                              '"서비스에 대한 클라우드 네이티브 적합성 검토결과,'
+                              "서비스에 대한 클라우드 네이티브 적합성 검토결과,"
                             ),
                             _c("br"),
                             _c(
