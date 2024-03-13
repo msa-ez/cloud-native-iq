@@ -22,7 +22,7 @@
                                 <h3>ㆍ목표 성숙도 모델</h3>
                                 <img :src="conversionGoalImage(slaResult.conversionGoal)" />
                                 <div style="text-align: start; margin-left:16%;">
-                                    <div>"서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
+                                    <div>서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
                                         <span style="font-weight: 700; color:orange;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여
                                         <span style="font-weight: 700; color:orange;">{{ slaResult.cloudStatus }}{{ getConversionResult(slaResult.conversionGoal) }}</span>
                                     </div>
