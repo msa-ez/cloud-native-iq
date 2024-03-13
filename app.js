@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "30f48b484cca558185ef";
+/******/ 	var hotCurrentHash = "56ad0af2d2421cac5f9b";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9812,7 +9812,7 @@ __webpack_require__.r(__webpack_exports__);
             if (this.registeredProfileGoalPath.includes(path)) {
                 // 조건을 만족하는 경우 사용자 정의 스타일 객체 반환
                 return {
-                    backgroundColor: 'rgba(192, 75, 192, 1)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'rgb(25,118,210)', // 여기에 원하는 배경색을 지정
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
             } else
@@ -9989,6 +9989,96 @@ __webpack_require__.r(__webpack_exports__);
         }
     },
     methods: {
+        referenceArchitecturegetImagePath() {
+            let paths = [];
+
+            // Frontend Images
+            if (this.frontEnd.micro) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/mic-frontend.png */ "./src/image/referenceArchitecture/mic-frontend.png")); // Microservice Frontend Image
+            }
+            if (this.frontEnd.monolith) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/mono-frontend.png */ "./src/image/referenceArchitecture/mono-frontend.png")); // Monolith Frontend Image
+            }
+
+            // Gateway Image
+            if (this.gateway) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/api.png */ "./src/image/referenceArchitecture/api.png")); // API Gateway Image
+            }
+
+            // Inner Architecture Images
+            if (this.serviceType.monolith) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner1.png */ "./src/image/referenceArchitecture/inner1.png")); // Monolith Inner Architecture Image
+            }
+            if (this.serviceType.mini) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner2.png */ "./src/image/referenceArchitecture/inner2.png")); // Mini Inner Architecture Image
+            }
+            if (this.serviceType.micro) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner3.png */ "./src/image/referenceArchitecture/inner3.png")); // Microservice Inner Architecture Image
+            }
+            if (this.serviceType.sidecar) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner4.png */ "./src/image/referenceArchitecture/inner4.png")); // Sidecar Inner Architecture Image
+            }
+
+            // Messaging Channel Image
+            if (this.messagingChannel) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/Messaging.png */ "./src/image/referenceArchitecture/Messaging.png")); // Messaging Channel Image
+            }
+
+            // Infrastructure Images
+            if (this.infra.kubernetes) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/Kubernetes.png */ "./src/image/referenceArchitecture/Kubernetes.png")); // Kubernetes Infrastructure Image
+            }
+            if (this.infra.virtualMachine) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/vm.png */ "./src/image/referenceArchitecture/vm.png")); // Virtual Machine Infrastructure Image
+            }
+            if (this.infra.bareMetal) {
+                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/bare.png */ "./src/image/referenceArchitecture/bare.png")); // Bare Metal Infrastructure Image
+            }
+
+            return paths;
+        },
+        conversionGoalImage(type) {
+            switch (type) {
+                case 'keep':
+                    return __webpack_require__(/*! ../../../../src/image/conversionGoal/00keep.png */ "./src/image/conversionGoal/00keep.png");
+                case 'ready':
+                    return __webpack_require__(/*! ../../../../src/image/conversionGoal/01ready.png */ "./src/image/conversionGoal/01ready.png");
+                case 'optimized':
+                    return __webpack_require__(/*! ../../../../src/image/conversionGoal/02optimized.png */ "./src/image/conversionGoal/02optimized.png");
+                case 'native':
+                    return __webpack_require__(/*! ../../../../src/image/conversionGoal/03native.png */ "./src/image/conversionGoal/03native.png");
+            }
+        },
+        getConversionMethodInfo(type) {
+            const info = {
+                'retain': {
+                    text: 'Retain',
+                    imagePath:  __webpack_require__(/*! ../../../../src/image/conversionMethod/00retain.png */ "./src/image/conversionMethod/00retain.png")
+                },
+                'reHost': {
+                    text: 'ReHost',
+                    imagePath:  __webpack_require__(/*! ../../../../src/image/conversionMethod/02rehost.png */ "./src/image/conversionMethod/02rehost.png")
+                },
+                'rePlatform': {
+                    text: 'RePlatform',
+                    imagePath:  __webpack_require__(/*! ../../../../src/image/conversionMethod/04replatform.png */ "./src/image/conversionMethod/04replatform.png")
+                },
+                'reArchitect': {
+                    text: 'ReArchitect',
+                    imagePath:  __webpack_require__(/*! ../../../../src/image/conversionMethod/07rearchitect.png */ "./src/image/conversionMethod/07rearchitect.png")
+                }
+            };
+
+            return info[type] || { text: '', imagePath: '' }; // 기본값 처리
+        },
+        getConversionResult(type) {
+            switch (type) {
+                case 'keep':
+                    return '로 검토됨';
+                default :
+                    return '로의 전환이 요구됨';
+            }
+        },
         checkReferenceArchitecture() {
             const swArchitecture = this.chartData.perspectives.find(p => p.name_en === 'application');
             const decomposition = this.chartData.perspectives.find(p => p.name_en === 'development');
@@ -10231,8 +10321,8 @@ __webpack_require__.r(__webpack_exports__);
                 this.slaResult.cloudStatus = 'Cloud Ready';
                 this.slaResult.conversionText = '이를 다른 말로 ‘Rift and Shift’라고 부르기도 합니다. 번역하면 들어서 옮긴다는 의미입니다. 기존의 시스템에서 별다른 수정 없이 환경만 클라우드로 이전하는 것을 말합니다. 클라우드 마이그레이션 타입 중에서 가장 쉬운 방법이라고 볼 수 있지만, 클라우드 제공 업체에서 제공하는 다양한 기능들을 활용하지 못한다는 단점이 있을 수 있습니다.'
             } else {
-                this.slaResult.conversionGoal = 'ready'
-                this.slaResult.conversionMethod = 'reHost'
+                this.slaResult.conversionGoal = 'keep'
+                this.slaResult.conversionMethod = 'retain'
                 this.slaResult.cloudStatus = '기존 시스템 유지';
                 this.slaResult.conversionText = '클라우드로 옮기거나 하지 않고 현재 상태로 유지하는 것을 말합니다. 기존의 시스템 중에는 기존 거버넌스, 컴플라이언스, 보안 등의 이유로 기존대로 유지하는 것이 적합할 경우도 많이 있습니다. 이 부분도 클라우드 마이그레이션 타입에 포함될 필요는 없다고 생각되지만, 클라우드 마이그레이션 계획 수립 시 정리가 필요한 부분이기에 포함된 것이라는 생각이 듭니다. 그리고 이 경우에는 추후 전체적인 준비가 된 후에 클라우드 마이그레이션을 수행하게 될 수도 있습니다.';
             }
@@ -10310,11 +10400,19 @@ __webpack_require__.r(__webpack_exports__);
 			return count;
 		},
 		getCoordinateForCircle(perspective, index) {
-			// 각 level의 checkpoints 중 하나라도 checked가 true인 경우를 찾아서 해당 level을 완료된 것으로 간주
-			const completedLevels = perspective.levels.reduce((acc, level) => {
+			// 첫 번째로 true를 만나면 그 이후 모든 levels를 true로 간주
+			let firstTrueFound = false;
+			let completedLevels = 0;
+			for (let i = perspective.levels.length - 1; i >= 0; i--) {
+				const level = perspective.levels[i];
 				const hasCheckedCheckpoint = level.checkpoints.some(checkpoint => checkpoint.checked);
-				return acc + (hasCheckedCheckpoint ? 1 : 0);
-			}, 0);
+				if (hasCheckedCheckpoint) {
+					firstTrueFound = true;
+				}
+				if (firstTrueFound) {
+					completedLevels++;
+				}
+			}
 			const radius = this.chartRadius * (completedLevels / this.maxDataValue);
 			return this.getCoordinate(radius, index, this.chartData.perspectives.length);
 		},
@@ -10357,12 +10455,19 @@ __webpack_require__.r(__webpack_exports__);
 			}
 			var perspectiveArray = perspectives
 				.map((perspective, index) => {
-					// 각 perspective의 levels를 순회하면서 checkpoints 배열 중 하나라도 checked가 true인지 확인하여
-					// 해당 level을 완료된 것으로 간주
-					const completedLevels = perspective.levels.reduce((acc, level) => {
+					// 첫 번째로 true를 만나면 그 이후 모든 levels를 true로 간주
+					let firstTrueFound = false;
+					let completedLevels = 0;
+					for (let i = perspective.levels.length - 1; i >= 0; i--) {
+						const level = perspective.levels[i];
 						const hasCheckedCheckpoint = level.checkpoints.some(checkpoint => checkpoint.checked);
-						return acc + (hasCheckedCheckpoint ? 1 : 0);
-					}, 0);
+						if (hasCheckedCheckpoint) {
+							firstTrueFound = true;
+						}
+						if (firstTrueFound) {
+							completedLevels++;
+						}
+					}
 					// 완료된 levels의 수에 따라 radius 계산
 					const radius = this.chartRadius * (completedLevels / this.maxDataValue);
 					return this.getCoordinate(radius, index, perspectives.length).join(',');
@@ -11714,6 +11819,7 @@ var render = function render() {
     [
       _c(
         "v-row",
+        { staticStyle: { padding: "20px" } },
         [
           _c("v-col", [
             _c(
@@ -11958,40 +12064,31 @@ var render = function render() {
           },
         },
         [
-          _c(
-            "v-tab-item",
-            { key: "fixed-tab-content" },
-            [
-              _c(
-                "v-card",
-                { staticStyle: { padding: "20px" }, attrs: { flat: "" } },
-                [
-                  _c("div", { staticClass: "img-box-wrap" }, [
-                    _c("div", { staticClass: "conversion-img-box" }, [
-                      _c("div", [
-                        _c("h3", [_vm._v("ㆍ목표 성숙도 모델")]),
-                        _vm.slaResult.conversionGoal === "ready"
-                          ? _c("img", {
-                              attrs: {
-                                src: __webpack_require__(/*! ../../../../src/image/conversionGoal/01ready.png */ "./src/image/conversionGoal/01ready.png"),
-                              },
-                            })
-                          : _vm._e(),
-                        _vm.slaResult.conversionGoal === "optimized"
-                          ? _c("img", {
-                              attrs: {
-                                src: __webpack_require__(/*! ../../../../src/image/conversionGoal/02optimized.png */ "./src/image/conversionGoal/02optimized.png"),
-                              },
-                            })
-                          : _vm._e(),
-                        _vm.slaResult.conversionGoal === "native"
-                          ? _c("img", {
-                              attrs: {
-                                src: __webpack_require__(/*! ../../../../src/image/conversionGoal/03native.png */ "./src/image/conversionGoal/03native.png"),
-                              },
-                            })
-                          : _vm._e(),
-                        _c("div", { staticStyle: { "text-align": "center" } }, [
+          _c("v-tab-item", { key: "fixed-tab-content" }, [
+            _c(
+              "div",
+              { staticStyle: { padding: "0px" }, attrs: { flat: "" } },
+              [
+                _c("div", { staticClass: "img-box-wrap" }, [
+                  _c("div", { staticClass: "conversion-img-box" }, [
+                    _c("div", [
+                      _c("h3", [_vm._v("ㆍ목표 성숙도 모델")]),
+                      _c("img", {
+                        attrs: {
+                          src: _vm.conversionGoalImage(
+                            _vm.slaResult.conversionGoal
+                          ),
+                        },
+                      }),
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            "text-align": "start",
+                            "margin-left": "16%",
+                          },
+                        },
+                        [
                           _c("div", [
                             _vm._v(
                               '"서비스에 대한 클라우드 네이티브 적합성 검토결과,'
@@ -12007,7 +12104,9 @@ var render = function render() {
                               },
                               [_vm._v(_vm._s(_vm.slaResult.count))]
                             ),
-                            _vm._v("개 이상 항목에서 적합성 조건을 충족하여 "),
+                            _vm._v(
+                              "개 이상 항목에서 적합성 조건을 충족하여\n                                    "
+                            ),
                             _c(
                               "span",
                               {
@@ -12016,12 +12115,22 @@ var render = function render() {
                                   color: "orange",
                                 },
                               },
-                              [_vm._v(_vm._s(_vm.slaResult.cloudStatus))]
+                              [
+                                _vm._v(
+                                  _vm._s(_vm.slaResult.cloudStatus) +
+                                    _vm._s(
+                                      _vm.getConversionResult(
+                                        _vm.slaResult.conversionGoal
+                                      )
+                                    )
+                                ),
+                              ]
                             ),
-                            _vm._v(' 도입 필요로 검토됨"'),
                           ]),
                           _c("div", [
-                            _vm._v('"정보시스템 등급에 따른 SLA 수준은 '),
+                            _vm._v(
+                              "\n                                    - 목표 시스템 레벨에 따른 SLA 수준 : "
+                            ),
                             _c(
                               "span",
                               {
@@ -12032,9 +12141,10 @@ var render = function render() {
                               },
                               [_vm._v(_vm._s(_vm.slaResult.percentage))]
                             ),
-                            _vm._v("로,"),
                             _c("br"),
-                            _vm._v("년 허용가능 다운타임 "),
+                            _vm._v(
+                              "\n                                    - 년 허용가능 장애시간 : "
+                            ),
                             _c(
                               "span",
                               {
@@ -12045,152 +12155,88 @@ var render = function render() {
                               },
                               [_vm._v("약 " + _vm._s(_vm.slaResult.time))]
                             ),
-                            _vm._v('정도"'),
                           ]),
-                        ]),
+                        ]
+                      ),
+                    ]),
+                    _c("br"),
+                    _c("div", [
+                      _c("h3", [
+                        _vm._v(
+                          "ㆍ전환 및 모더나이즈 방법론 : " +
+                            _vm._s(
+                              _vm.getConversionMethodInfo(
+                                _vm.slaResult.conversionMethod
+                              ).text
+                            )
+                        ),
                       ]),
-                      _c("br"),
-                      _c("div", [
-                        _c("h3", [_vm._v("ㆍ전환 및 모더나이즈 방법론")]),
-                        _vm.slaResult.conversionMethod === "reHost"
-                          ? _c("img", {
-                              attrs: {
-                                src: __webpack_require__(/*! ../../../../src/image/conversionMethod/02rehost.png */ "./src/image/conversionMethod/02rehost.png"),
-                              },
-                            })
-                          : _vm._e(),
-                        _vm.slaResult.conversionMethod === "rePlatform"
-                          ? _c("img", {
-                              attrs: {
-                                src: __webpack_require__(/*! ../../../../src/image/conversionMethod/04replatform.png */ "./src/image/conversionMethod/04replatform.png"),
-                              },
-                            })
-                          : _vm._e(),
-                        _vm.slaResult.conversionMethod === "reArchitect"
-                          ? _c("img", {
-                              attrs: {
-                                src: __webpack_require__(/*! ../../../../src/image/conversionMethod/07rearchitect.png */ "./src/image/conversionMethod/07rearchitect.png"),
-                              },
-                            })
-                          : _vm._e(),
-                        _c("div", { staticStyle: { margin: "0 auto" } }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.getConversionMethodInfo(
+                            _vm.slaResult.conversionMethod
+                          ).imagePath,
+                        },
+                      }),
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            "text-align": "start",
+                            "margin-left": "16%",
+                          },
+                        },
+                        [
                           _c("div", [
                             _vm._v(_vm._s(_vm.slaResult.conversionText)),
                           ]),
-                        ]),
-                      ]),
-                    ]),
-                    _c("div", { staticClass: "reference-img-box" }, [
-                      _c("h3", [_vm._v("ㆍ참조 아키텍처")]),
-                      _vm.frontEnd.micro
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/mic-frontend.png */ "./src/image/referenceArchitecture/mic-frontend.png"),
-                            },
-                          })
-                        : _vm._e(),
-                      _vm.frontEnd.monolith
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/mono-frontend.png */ "./src/image/referenceArchitecture/mono-frontend.png"),
-                            },
-                          })
-                        : _vm._e(),
-                      _vm.gateway
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/api.png */ "./src/image/referenceArchitecture/api.png"),
-                            },
-                          })
-                        : _vm.serviceType.monolith
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner1.png */ "./src/image/referenceArchitecture/inner1.png"),
-                            },
-                          })
-                        : _vm.serviceType.mini
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner2.png */ "./src/image/referenceArchitecture/inner2.png"),
-                            },
-                          })
-                        : _vm.serviceType.micro
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner3.png */ "./src/image/referenceArchitecture/inner3.png"),
-                            },
-                          })
-                        : _vm._e(),
-                      _vm.serviceType.sidecar
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/inner4.png */ "./src/image/referenceArchitecture/inner4.png"),
-                            },
-                          })
-                        : _vm._e(),
-                      _vm.messagingChannel
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/Messaging.png */ "./src/image/referenceArchitecture/Messaging.png"),
-                            },
-                          })
-                        : _vm._e(),
-                      _vm.infra.kubernetes
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/Kubernetes.png */ "./src/image/referenceArchitecture/Kubernetes.png"),
-                            },
-                          })
-                        : _vm.infra.virtualMachine
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/vm.png */ "./src/image/referenceArchitecture/vm.png"),
-                            },
-                          })
-                        : _vm.infra.bareMetal
-                        ? _c("img", {
-                            attrs: {
-                              src: __webpack_require__(/*! ../../../../src/image/referenceArchitecture/bare.png */ "./src/image/referenceArchitecture/bare.png"),
-                            },
-                          })
-                        : _vm._e(),
+                        ]
+                      ),
                     ]),
                   ]),
+                  _c(
+                    "div",
+                    { staticClass: "reference-img-box" },
+                    [
+                      _c("h3", [_vm._v("ㆍ참조 아키텍처")]),
+                      _vm._l(
+                        _vm.referenceArchitecturegetImagePath(),
+                        function (path) {
+                          return [_c("img", { attrs: { src: path } })]
+                        }
+                      ),
+                    ],
+                    2
+                  ),
+                ]),
+              ]
+            ),
+          ]),
+          _vm._l(_vm.items, function (item) {
+            return _c("v-tab-item", { key: item.tab }, [
+              _c(
+                "div",
+                { staticStyle: { padding: "20px" }, attrs: { flat: "" } },
+                [
+                  _vm.goalLevels[item.tab_en] > 0 &&
+                  Object.keys(_vm.markdownContentFolders).length > 0
+                    ? _c("div", {
+                        domProps: {
+                          innerHTML: _vm._s(
+                            _vm.markdownContentFolders[item.tab_en][
+                              _vm.goalLevels[item.tab_en]
+                            ]
+                          ),
+                        },
+                      })
+                    : _c("div", [
+                        _vm._v(
+                          "\n                    전환목표가 없습니다.\n                "
+                        ),
+                      ]),
                 ]
               ),
-            ],
-            1
-          ),
-          _vm._l(_vm.items, function (item) {
-            return _c(
-              "v-tab-item",
-              { key: item.tab },
-              [
-                _c(
-                  "v-card",
-                  { staticStyle: { padding: "20px" }, attrs: { flat: "" } },
-                  [
-                    _vm.goalLevels[item.tab_en] > 0 &&
-                    Object.keys(_vm.markdownContentFolders).length > 0
-                      ? _c("div", {
-                          domProps: {
-                            innerHTML: _vm._s(
-                              _vm.markdownContentFolders[item.tab_en][
-                                _vm.goalLevels[item.tab_en]
-                              ]
-                            ),
-                          },
-                        })
-                      : _c("div", [
-                          _vm._v(
-                            "\n                    전환목표가 없습니다.\n                "
-                          ),
-                        ]),
-                  ]
-                ),
-              ],
-              1
-            )
+            ])
           }),
         ],
         2
@@ -12225,6 +12271,7 @@ var render = function render() {
     [
       _c(
         "v-row",
+        { staticStyle: { padding: "20px" } },
         [
           _c("v-col", [
             _c(
@@ -12580,7 +12627,6 @@ var render = function render() {
       _c(
         "v-stepper",
         {
-          staticClass: "box-wrap",
           model: {
             value: _vm.currentStep,
             callback: function ($$v) {
@@ -12626,11 +12672,15 @@ var render = function render() {
             _vm._l(_vm.components.length, function (n) {
               return _c(
                 "v-stepper-content",
-                { key: `${n}-content`, attrs: { step: n } },
+                {
+                  key: `${n}-content`,
+                  staticStyle: { padding: "0px" },
+                  attrs: { step: n },
+                },
                 [
                   _c(
-                    "v-card",
-                    { staticClass: "mb-12 step-box-in" },
+                    "div",
+                    { staticClass: "step-box-in" },
                     [
                       _c(_vm.components[n - 1].component, {
                         tag: "component",
@@ -12643,8 +12693,7 @@ var render = function render() {
                     ],
                     1
                   ),
-                ],
-                1
+                ]
               )
             }),
             1
@@ -12752,7 +12801,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.tab-title {\n    font-size: 16px;\n    font-weight: 700;\n}\n.img-box-wrap {\n    max-width: 1920px;\n    width: 100%;\n    height: calc(100vh - 270px);\n    margin: 0 auto;\n    display: flex;\n    align-items: flex-start; \n    justify-content: center;\n}\n.conversion-img-box {\n    max-width: 720px;\n    width: 40%;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n}\n.conversion-img-box > div {\n    width: 100%;\n    max-height: 100%;\n}\n.conversion-img-box > div > h3 {\n    width: 70%;\n    margin: 0 auto;\n}\n.conversion-img-box > div > img {\n    display: block;\n    max-width: 100%;\n    width: 70%;\n\theight: auto;\n    margin: 0 auto;\n}\n.reference-img-box {\n    max-width: 760px;\n    width: 50%;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n}\n.reference-img-box > h3 {\n    width: 60%;\n    margin: 0 auto;\n}\n.reference-img-box > img {\n    max-width: 100%;\n    width: 60%;\n\theight: auto;\n    margin: 0 auto;\n}\n@media all and (min-width:1520px) and (max-height:779px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 55%;\n        font-size: 1.1rem;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 53%;\n        font-size: 1.1rem;\n}\n}\n@media only screen and (max-width:1280px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 80%;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 70%;\n}\n}\n@media only screen and (max-width:1024px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 90%;\n        font-size: 1.05rem;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 80%;\n        font-size: 1.05rem;\n}\n}\n@media only screen and (max-width:768px) {\n.img-box-wrap {\n        height: 100%;\n        padding: 10px;\n        flex-direction: column;\n        justify-content: flex-start;\n}\n.conversion-img-box{\n        width: 100%;\n        padding-bottom: 20px;\n}\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 100%;\n}\n.reference-img-box {\n        width: 100%;\n        height: 100%;\n        justify-content: flex-start;\n        margin-top: 20px;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 100%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.guide-box {\n    padding:20px;\n    overflow: auto;\n}\n.tab-title {\n    font-size: 16px;\n    font-weight: 700;\n}\n.img-box-wrap {\n    max-width: 1920px;\n    width: 100%;\n    margin: 0 auto;\n    display: flex;\n    align-items: flex-start; \n    justify-content: center;\n}\n.conversion-img-box {\n    max-width: 720px;\n    width: 40%;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n}\n.conversion-img-box > div {\n    width: 100%;\n    max-height: 100%;\n}\n.conversion-img-box > div > h3 {\n    width: 80%;\n    margin: 0 auto;\n}\n.conversion-img-box > div > img {\n    display: block;\n    max-width: 100%;\n    width: 70%;\n\theight: auto;\n    margin: 0 auto;\n}\n.reference-img-box {\n    max-width: 760px;\n    width: 50%;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n}\n.reference-img-box > h3 {\n    width: 70%;\n    margin: 0 auto;\n}\n.reference-img-box > img {\n    max-width: 100%;\n    width: 60%;\n\theight: auto;\n    margin: 0 auto;\n}\n@media all and (min-width:1520px) and (max-height:779px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        font-size: 1.1rem;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 53%;\n        font-size: 1.1rem;\n}\n}\n@media only screen and (max-width:1280px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 80%;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 70%;\n}\n}\n@media only screen and (max-width:1024px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 90%;\n        font-size: 1.05rem;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 80%;\n        font-size: 1.05rem;\n}\n}\n@media only screen and (max-width:768px) {\n.img-box-wrap {\n        height: 100%;\n        padding: 10px;\n        flex-direction: column;\n        justify-content: flex-start;\n}\n.conversion-img-box{\n        width: 100%;\n        padding-bottom: 20px;\n}\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 100%;\n}\n.reference-img-box {\n        width: 100%;\n        height: 100%;\n        justify-content: flex-start;\n        margin-top: 20px;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 100%;\n}\n}\n", ""]);
 
 // exports
 
@@ -12772,25 +12821,6 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, "\n.tickLabels-txt {\n    font-size: 14px;\n}\n@media only screen and (max-width:1100px) {\n.tickLabels-txt {\n    font-size: 12px;\n}\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css":
-/*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.box-wrap {\n    height:calc(100vh - 60px);\n    /* border:1px solid blue; */\n}\n.step-box {\n    /* overflow: auto; */\n    height:calc(100vh - 60px);\n    /* background-color: lightgoldenrodyellow; */\n}\n.step-box-in { \n    /* step-box 안의 흰 박스 */\n    height:calc(100vh - 180px);\n\t/* background-color: lightpink; */\n}\n.qna-box {\n    /* width: 130%; */\n    height: calc(100vh - 180px);\n\toverflow: auto;\n    padding: 20px;\n\t/* border: 1px solid pink; */\n}\n.btn-box {\n    text-align: right;\n    margin-top: 10px;\n}\n.guide-box {\n    height: calc(100vh - 230px);\n    overflow: auto;\n}\n@media only screen and (max-width:1100px) {\n.qna-box {\n        /* width: 100%; */\n}\n}\n@media only screen and (max-width:700px) {\n.box-wrap, .step-box, .step-box-in {\n        height:100%;\n}\n.qna-box {\n        height: 50vh;\n        padding: 0;\n}\n.btn-bot {\n        margin-bottom:10px;\n}\n}\n", ""]);
 
 // exports
 
@@ -19545,40 +19575,6 @@ if(true) {
  if(!content.locals) {
    module.hot.accept(/*! !../../../../node_modules/css-loader??ref--6-oneOf-1-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/cache-loader/dist/cjs.js??ref--0-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./GoalSetting.vue?vue&type=style&index=0&id=388d3ee4&lang=css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/GoalSetting.vue?vue&type=style&index=0&id=388d3ee4&lang=css", function() {
      var newContent = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-oneOf-1-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/cache-loader/dist/cjs.js??ref--0-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./GoalSetting.vue?vue&type=style&index=0&id=388d3ee4&lang=css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/GoalSetting.vue?vue&type=style&index=0&id=388d3ee4&lang=css");
-     if(newContent.__esModule) newContent = newContent.default;
-     if(typeof newContent === 'string') newContent = [[module.i, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/index.js?!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css":
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-oneOf-1-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/cache-loader/dist/cjs.js??ref--0-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css");
-if(content.__esModule) content = content.default;
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__(/*! ../../../../node_modules/vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("194e7b14", content, false, {"sourceMap":false,"shadowMode":false});
-// Hot Module Replacement
-if(true) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept(/*! !../../../../node_modules/css-loader??ref--6-oneOf-1-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/cache-loader/dist/cjs.js??ref--0-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css", function() {
-     var newContent = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-oneOf-1-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/cache-loader/dist/cjs.js??ref--0-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css");
      if(newContent.__esModule) newContent = newContent.default;
      if(typeof newContent === 'string') newContent = [[module.i, newContent, '']];
      update(newContent);
@@ -78454,9 +78450,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Step_vue_vue_type_template_id_4c9f9f35__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Step.vue?vue&type=template&id=4c9f9f35 */ "./src/components/spider/step/Step.vue?vue&type=template&id=4c9f9f35");
 /* harmony import */ var _Step_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Step.vue?vue&type=script&lang=js */ "./src/components/spider/step/Step.vue?vue&type=script&lang=js");
-/* empty/unused harmony star reexport *//* harmony import */ var _Step_vue_vue_type_style_index_0_id_4c9f9f35_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css */ "./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -78464,7 +78458,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _Step_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
   _Step_vue_vue_type_template_id_4c9f9f35__WEBPACK_IMPORTED_MODULE_0__["render"],
   _Step_vue_vue_type_template_id_4c9f9f35__WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -78514,22 +78508,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css":
-/*!*****************************************************************************************!*\
-  !*** ./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css ***!
-  \*****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Step_vue_vue_type_style_index_0_id_4c9f9f35_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-style-loader??ref--6-oneOf-1-0!../../../../node_modules/css-loader??ref--6-oneOf-1-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/cache-loader/dist/cjs.js??ref--0-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css */ "./node_modules/vue-style-loader/index.js?!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/spider/step/Step.vue?vue&type=style&index=0&id=4c9f9f35&lang=css");
-/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Step_vue_vue_type_style_index_0_id_4c9f9f35_lang_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Step_vue_vue_type_style_index_0_id_4c9f9f35_lang_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Step_vue_vue_type_style_index_0_id_4c9f9f35_lang_css__WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Step_vue_vue_type_style_index_0_id_4c9f9f35_lang_css__WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-
-
-/***/ }),
-
 /***/ "./src/components/spider/step/Step.vue?vue&type=template&id=4c9f9f35":
 /*!***************************************************************************!*\
   !*** ./src/components/spider/step/Step.vue?vue&type=template&id=4c9f9f35 ***!
@@ -78548,6 +78526,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/image/conversionGoal/00keep.png":
+/*!*********************************************!*\
+  !*** ./src/image/conversionGoal/00keep.png ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/00keep.dc90fc79.png";
+
+/***/ }),
+
 /***/ "./src/image/conversionGoal/01ready.png":
 /*!**********************************************!*\
   !*** ./src/image/conversionGoal/01ready.png ***!
@@ -78555,7 +78544,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "img/01ready.c68d64af.png";
+module.exports = __webpack_require__.p + "img/01ready.f56835a0.png";
 
 /***/ }),
 
@@ -78566,7 +78555,7 @@ module.exports = __webpack_require__.p + "img/01ready.c68d64af.png";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "img/02optimized.1712195d.png";
+module.exports = __webpack_require__.p + "img/02optimized.ca5516e1.png";
 
 /***/ }),
 
@@ -78577,7 +78566,18 @@ module.exports = __webpack_require__.p + "img/02optimized.1712195d.png";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "img/03native.6f1b16b5.png";
+module.exports = __webpack_require__.p + "img/03native.357aa7ae.png";
+
+/***/ }),
+
+/***/ "./src/image/conversionMethod/00retain.png":
+/*!*************************************************!*\
+  !*** ./src/image/conversionMethod/00retain.png ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/00retain.4f932bfa.png";
 
 /***/ }),
 
