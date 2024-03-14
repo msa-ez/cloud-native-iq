@@ -39,19 +39,19 @@ export default {
                     switch (slaQuestion.value) {
                         case 0:
                             percentage = '99.5%';
-                            time = '43시간 48분'
+                            time = '3시간 36분'
                             break;
                         case 1:
                             percentage = '99.9%';
-                            time = '8시간 45분 36초'
+                            time = '43분 12초'
                             break;
                         case 2:
                             percentage = '99.99%';
-                            time = '52분 34초'
+                            time = '4분 19초'
                             break;
                         default:
                             percentage = '99.999%';
-                            time = '5분 15초'
+                            time = '26초'
                             break;
                     }
                     break; // 질문을 찾으면 루프를 종료합니다.
