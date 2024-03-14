@@ -6,7 +6,7 @@
                 검토결과
             </v-tab>
             <!-- 기존 v-for를 사용한 탭들 -->
-            <v-tab class="tab-title" v-for="item in items" :key="item.tab">
+            <v-tab class="tab-title" v-for="item in guideTabs" :key="item.tab">
                 {{ item.tab }}
             </v-tab>
         </v-tabs>
@@ -52,7 +52,7 @@
                 </div>
             </v-tab-item>
             <!-- 기존 v-for를 사용한 탭 컨텐츠들 -->
-            <v-tab-item v-for="item in items" :key="item.tab">
+            <v-tab-item v-for="item in guideTabs" :key="item.tab">
                 <div flat style="padding:20px;">
                     <div v-if="goalLevels[item.tab_en] > 0 && Object.keys(markdownContentFolders).length > 0"
                         v-html="markdownContentFolders[item.tab_en][goalLevels[item.tab_en]]">
@@ -101,7 +101,7 @@ export default {
                 virtualMachine: false,
                 bareMetal: false,
             },
-            items: [
+            guideTabs: [
                 {
                     tab: '애플리케이션 영역',
                     tab_en: 'application',
@@ -161,7 +161,7 @@ export default {
             }
 
             // 기존 탭들에 대한 처리
-            const tabName = this.items[newVal - 1].tab_en; // 인덱스 조정
+            const tabName = this.guideTabs[newVal - 1].tab_en; // 인덱스 조정
             this.chartData.perspectives.forEach(p => {
                 if (p.name_en === tabName) {
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
@@ -291,7 +291,7 @@ export default {
         },
         async getAllMarkdownContentFolders() {
             try {
-                const response = await axios.get(`https://api.github.com/repos/msa-ez/cloud-iq/contents/get-the-guide-md2`);
+                const response = await axios.get(`https://api.github.com/repos/msa-ez/cloud-iq-md/contents/get-the-guide-md2`);
                 const markdownContentFolders = response.data.filter(item => item.type === 'dir');
                 for (const folder of markdownContentFolders) {
                     await this.getFolderContents(folder.name);
@@ -305,7 +305,7 @@ export default {
             try {
                 let folderFiles = {};
                 for (let i = 1; i <= 4; i++) {
-                    const fileResponse = await axios.get(`https://raw.githubusercontent.com/msa-ez/cloud-iq/main/get-the-guide-md2/${folderName}/level${i}.md`);
+                    const fileResponse = await axios.get(`https://raw.githubusercontent.com/msa-ez/cloud-iq-md/main/get-the-guide-md2/${folderName}/level${i}.md`);
                     const markdownContent = marked(fileResponse.data);
                     folderFiles[i] =  markdownContent ;
                 }

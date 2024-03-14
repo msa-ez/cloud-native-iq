@@ -1,24 +1,30 @@
 <template>
     <div>
-        <v-row v-for="(guideItem, guideIndex) in guide" :key="guideIndex">
-            <v-col 
-                v-for="(level, levelIndex) in guideItem.levels" 
-                :key="levelIndex"
-                cols="12" sm="6" md="3"
-            >
-                <v-card :to="level.path"
-                    :style="checkPathMatch(level.path)"
-                    style="padding:10px;"
-                >
-                    <div>
-                        <div style="font-size:20px; font-weight:700;">{{ guideItem.name }}</div>
-                        <div>Level {{ level.level }}</div>
-                    </div>
-                </v-card>
-            </v-col>
-        </v-row>
+      <v-simple-table>
+        <thead>
+          <tr>
+            <th class="text-left">구분</th>
+            <th class="text-left">Level 1</th>
+            <th class="text-left">Level 2</th>
+            <th class="text-left">Level 3</th>
+            <th class="text-left">Level 4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(guideItem, guideIndex) in guide" :key="guideIndex">
+            <td>{{ guideItem.name }}</td>
+            <td v-for="level in guideItem.levels" :key="level.level"
+                class="all-guide-view"
+                :style="checkPathMatch(level.path)"
+                @click="navigate(level.path)"
+                style="cursor: pointer;"
+            >전환 가이드 보기
+            </td>
+          </tr>
+        </tbody>
+      </v-simple-table>
     </div>
-</template>
+  </template>
 
 <script>
 export default {
@@ -112,6 +118,9 @@ export default {
         this.loadGoalPath();
     },
     methods: {
+        navigate(path) {
+            this.$router.push(path);
+        },
         loadGoalPath() {
             const profilesData = localStorage.getItem('registeredProfiles');
             if (profilesData) {
@@ -144,4 +153,11 @@ export default {
 </script>
 
 <style>
+.all-guide-view {
+    cursor: pointer;
+    opacity: 0.8;
+}
+.all-guide-view:hover {
+    opacity: 1;
+}
 </style>
