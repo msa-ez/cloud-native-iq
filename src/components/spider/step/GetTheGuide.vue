@@ -29,7 +29,7 @@
                                     <div>
                                         - 목표 시스템 레벨에 따른 SLA 수준 : <span style="font-weight: 700; color:orange;">{{ slaResult.percentage }}</span>
                                         <br>
-                                        - 년 허용가능 장애시간 : <span style="font-weight: 700; color:orange;">약 {{ slaResult.time }}</span>
+                                        - 월 허용가능 장애시간 : <span style="font-weight: 700; color:orange;">약 {{ slaResult.time }}</span>
                                     </div>
                                 </div>
                             </div>
