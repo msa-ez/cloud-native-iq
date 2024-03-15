@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "394e1fc276a56c148894";
+/******/ 	var hotCurrentHash = "1d31116c005e8186be42";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9740,16 +9740,6 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '인프라스트럭처 관점',
-					name_en: 'infrastructure',
-                    levels: [
-                        { level: 1, path: '/infrastructure/level1' },
-                        { level: 2, path: '/infrastructure/level2' },
-                        { level: 3, path: '/infrastructure/level3' },
-                        { level: 4, path: '/infrastructure/level4' }
-                    ]
-                },
-                {
 					name: '개발 관점',
 					name_en: 'development',
                     levels: [
@@ -9779,16 +9769,29 @@ __webpack_require__.r(__webpack_exports__);
                         { level: 4, path: '/scalability/level4' }
                     ]
                 },
+                {
+					name: '가시성 관점',
+					name_en: 'visibility',
+                    levels: [
+                        { level: 1, path: '/visibility/level1' },
+                        { level: 2, path: '/visibility/level2' },
+                        { level: 3, path: '/visibility/level3' },
+                        { level: 4, path: '/visibility/level4' }
+                    ]
+                },
             ],
             registeredProfiles: null,
-            registeredProfileGoalPath: [],
+            registeredTargetGoalPath: [],
             goalLevels: 0,
         }
     },
     computed: {
         selectedProfile() {
             return this.$store.state.selectedProfile;
-        }
+        },
+        selectedUser() {
+            return this.$store.state.selectedUser;
+        },
     },
     created() {
         this.loadGoalPath();
@@ -9803,16 +9806,24 @@ __webpack_require__.r(__webpack_exports__);
                 this.registeredProfiles = JSON.parse(profilesData);
                 // Vuex에서 가져온 selectedProfile과 일치하는 프로필을 찾습니다.
                 const matchedProfile = this.registeredProfiles.find(profile => profile.name === this.selectedProfile);
-                if (matchedProfile && matchedProfile.perspectives) {
-                    this.registeredProfileGoalPath = matchedProfile.perspectives.map(perspective => {
-                        return `/${perspective.name_en}/level${perspective.goalLevel}`;
-                    });
+                let target = matchedProfile; // 기본적으로 matchedProfile을 대상으로 설정합니다.
+                // selectedUser가 있고, matchedProfile에 users가 정의되어 있다면, 해당 사용자를 대상으로 설정합니다.
+                if (this.selectedUser && matchedProfile.users) {
+                    const matchedUser = matchedProfile.users.find(user => user.name === this.selectedUser);
+                    if (matchedUser) {
+                        target = matchedUser; // 대상을 matchedUser로 변경합니다.
+                    }
                 }
+                // 대상(target)의 perspectives를 기반으로 경로를 설정합니다.
+                this.registeredTargetGoalPath = target.perspectives.map(perspective => {
+                    return `/${perspective.name_en}/level${perspective.goalLevel}`;
+                });
+                
                 this.isDataLoaded = true;
             }
         },
         checkPathMatch(path) {
-            if (this.registeredProfileGoalPath.includes(path)) {
+            if (this.registeredTargetGoalPath.includes(path)) {
                 // 조건을 만족하는 경우 사용자 정의 스타일 객체 반환
                 return {
                     backgroundColor: 'rgb(25,118,210)', // 여기에 원하는 배경색을 지정
@@ -11757,12 +11768,12 @@ var render = function render() {
     [
       _c("v-simple-table", [
         _c("thead", [
-          _c("tr", [
-            _c("th", { staticClass: "text-left" }, [_vm._v("구분")]),
-            _c("th", { staticClass: "text-left" }, [_vm._v("Level 1")]),
-            _c("th", { staticClass: "text-left" }, [_vm._v("Level 2")]),
-            _c("th", { staticClass: "text-left" }, [_vm._v("Level 3")]),
-            _c("th", { staticClass: "text-left" }, [_vm._v("Level 4")]),
+          _c("tr", { staticClass: "all-guide-table-head" }, [
+            _c("th", { staticStyle: { "text-align": "left !important" } }),
+            _c("th", [_vm._v("Level 1")]),
+            _c("th", [_vm._v("Level 2")]),
+            _c("th", [_vm._v("Level 3")]),
+            _c("th", [_vm._v("Level 4")]),
           ]),
         ]),
         _c(
@@ -11779,15 +11790,27 @@ var render = function render() {
                     {
                       key: level.level,
                       staticClass: "all-guide-view",
-                      staticStyle: { cursor: "pointer" },
-                      style: _vm.checkPathMatch(level.path),
                       on: {
                         click: function ($event) {
                           return _vm.navigate(level.path)
                         },
                       },
                     },
-                    [_vm._v("전환 가이드 보기\n        ")]
+                    [
+                      _c(
+                        "v-card",
+                        {
+                          staticStyle: {
+                            padding: "20px",
+                            margin: "10px",
+                            "text-align": "center",
+                          },
+                          style: _vm.checkPathMatch(level.path),
+                        },
+                        [_vm._v("전환 가이드 보기\n                ")]
+                      ),
+                    ],
+                    1
                   )
                 }),
               ],
@@ -12790,7 +12813,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.all-guide-view {\n    cursor: pointer;\n    opacity: 0.8;\n}\n.all-guide-view:hover {\n    opacity: 1;\n}\n", ""]);
+exports.push([module.i, "\n.all-guide-view {\n    cursor: pointer;\n    opacity: 0.8;\n}\n.all-guide-view:hover {\n    opacity: 1;\n}\n.all-guide-table-head th {\n    font-size: 20px !important;\n    font-weight: 900 !important;\n    text-align: center !important;\n}\n", ""]);
 
 // exports
 
