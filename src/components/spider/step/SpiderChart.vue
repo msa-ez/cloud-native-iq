@@ -3,7 +3,7 @@
 		<div style="position:relative">
 			<div style="margin-left:10px;">
 				<v-row>
-					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(192, 75, 192, 0.5); margin:4px 5px 0px 0px;"></div>
+					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgb(25,118,210); margin:4px 5px 0px 0px;"></div>
 					<v-row style="font-size:20px;">
 						<div>목표수준 - </div>
 						<div style="font-weight: 700;">&nbsp;Maturity Level:&nbsp;</div>
@@ -13,7 +13,7 @@
 					</v-row>
 				</v-row>
 				<v-row>
-					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(75, 192, 192, 1); margin:4px 5px 0px 0px;"></div>
+					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(255, 183, 77, 1); margin:4px 5px 0px 0px;"></div>
 					<div style="font-size:20px;">현수준</div>
 				</v-row>
 			</div>
@@ -50,26 +50,26 @@
 				<g>
 					<polygon
 						:points="getPolygonPoints(chartData.perspectives)"
-						fill="rgba(75, 192, 192, 0.2)"
-						stroke="rgba(75, 192, 192, 1)"
+						fill="rgba(255, 183, 77,0.2)"
+						stroke="rgba(255, 183, 77, 1)"
 					/>
 					<polygon
 						:points="getPolygonPointsGoal(chartData.perspectives)"
-						fill="rgba(192, 75, 192, 0.1)"
-            			stroke="rgba(192, 75, 192, 1)"
+						fill="rgb(25, 118, 210, 0.2)"
+            			stroke="rgb(25, 118, 210, 1)"
 					/>
 					<g v-for="(perspective, index) in chartData.perspectives">
 						<circle
 							:cx="getCoordinateForCircle(perspective, index)[0]"
 							:cy="getCoordinateForCircle(perspective, index)[1]"
 							:r="pointRadius"
-							fill="rgba(75, 192, 192, 1)"
+							fill="rgba(255, 183, 77, 1)"
 						/>
 						<circle
 							:cx="getCoordinateForCircleGoal(perspective, index)[0]"
 							:cy="getCoordinateForCircleGoal(perspective, index)[1]"
 							:r="pointRadius"
-							fill="rgba(192, 75, 192, 0.5)"
+							fill="rgb(25, 118, 210, 1)"
 						/>
 					</g>
 				</g>
