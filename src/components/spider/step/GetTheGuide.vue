@@ -23,13 +23,13 @@
                                 <img :src="conversionGoalImage(slaResult.conversionGoal)" />
                                 <div style="text-align: start; margin-left:16%;">
                                     <div>서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
-                                        <span style="font-weight: 700; color:orange;">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여
-                                        <span style="font-weight: 700; color:orange;">{{ slaResult.cloudStatus }}{{ getConversionResult(slaResult.conversionGoal) }}</span>
+                                        <span style="font-weight: 700;" class="text-primary">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여
+                                        <span style="font-weight: 700;" class="text-primary">{{ slaResult.cloudStatus }}{{ getConversionResult(slaResult.conversionGoal) }}</span>
                                     </div>
                                     <div>
-                                        - 목표 시스템 레벨에 따른 SLA 수준 : <span style="font-weight: 700; color:orange;">{{ slaResult.percentage }}</span>
+                                        - 목표 시스템 레벨에 따른 SLA 수준 : <span style="font-weight: 700;" class="text-primary">{{ slaResult.percentage }}</span>
                                         <br>
-                                        - 월 허용가능 장애시간 : <span style="font-weight: 700; color:orange;">약 {{ slaResult.time }}</span>
+                                        - 월 허용가능 장애시간 : <span style="font-weight: 700;" class="text-primary">약 {{ slaResult.time }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -326,6 +326,9 @@ export default {
 }
 </script>
 <style>
+.text-primary {
+    color:#1976D2
+}
 .guide-box {
     padding:20px;
     overflow: auto;

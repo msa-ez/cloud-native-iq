@@ -6,7 +6,7 @@
                     style="cursor: pointer; align-items: left; width:90px;" 
                     src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" 
                 />
-				<v-tooltip right>
+				<!-- <v-tooltip right>
                     <template v-slot:activator="{ on }">
                         <v-btn @click="openEditProfile()"
                             icon
@@ -16,13 +16,22 @@
                             <Icon icon="carbon:user-profile" width="30" height="30" />
                         </v-btn>
                     </template>
-                    <span>프로필 관리</span>
-                </v-tooltip>
+                    <span>그룹 관리</span>
+                </v-tooltip> -->
                 <v-spacer></v-spacer>
-                <!-- 조건부 렌더링을 사용하여 selectedUser가 있을 때만 출력하도록 변경 -->
-                <v-card-title v-if="selectedUser">프로필 : {{ selectedProfile }} > {{ selectedUser }}</v-card-title>
-                <!-- selectedUser가 없을 경우에는 selectedProfile만 출력 -->
-                <v-card-title v-else>프로필 : {{ selectedProfile }}</v-card-title>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on" @click="openEditProfile()"
+                            style="cursor: pointer;"
+                        >
+                            <!-- 조건부 렌더링을 사용하여 selectedUser가 있을 때만 출력하도록 변경 -->
+                            <v-card-title v-if="selectedUser">프로필 : {{ selectedProfile }} > {{ selectedUser }}</v-card-title>
+                            <!-- selectedUser가 없을 경우에는 selectedProfile만 출력 -->
+                            <v-card-title v-else>그룹 : {{ selectedProfile }}</v-card-title>
+                        </div>
+                    </template>
+                    <span>그룹 관리</span>
+                </v-tooltip>
             </v-app-bar>
             <v-main>
                 <router-view style="height: calc(100vh - 64px);"></router-view>
