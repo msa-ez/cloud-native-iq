@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-list v-if="openEditProfile"
-            style="position: absolute; left:0px; top:0px; height:100vh; z-index:999; border-right:solid 1px gray;"
+            style="position: absolute; left:0px; top:0px; height:100vh; z-index:999; border-right:solid 1px gray; overflow: auto;"
         >
             <v-row class="ma-0 pa-0">
                 <v-spacer></v-spacer>
@@ -50,7 +50,7 @@
                             <v-row v-else class="ma-0 pa-0" style="margin-left:30px !important;">
                                 <v-spacer></v-spacer>
                                 <div>
-                                    <v-btn icon @click.stop="addUser(index)">
+                                    <v-btn icon @click.stop="addUser(index, profile.name)">
                                         <v-icon small>mdi-plus</v-icon>
                                     </v-btn>
                                     <v-btn icon @click.stop="editProfile(index, profile.name)">
@@ -122,7 +122,6 @@
                         ></v-text-field>
                         <v-btn style="margin-top:10px;"
                             @click="registerProfile()"
-                            color="primary"
                             icon
                             :disabled="!checkModified()"
                         >
@@ -158,11 +157,10 @@
                     ></v-text-field>
                     <v-btn style="margin-top:10px;"
                         @click="registerProfile()"
-                        color="primary"
                         icon
                         :disabled="!checkModified()"
                     >
-                        <Icon icon="ant-design:usergroup-add-outlined" width="20" height="20"/>
+                        <v-icon>mdi-plus</v-icon>
                     </v-btn>
                     <v-btn style="margin:10px 10px 0px 0px;"
                         @click="addProfileStatus = false"
@@ -254,29 +252,8 @@ export default {
         }
     },
     mounted() {
-        this.loadProfiles();
-        // localStorage에서 선택된 그룹을 불러옵니다.
-        const getProfileName = localStorage.getItem('selectedProfile');
-        // localStorage에서 선택된 프로필를 불러옵니다.
-        const getUserName = localStorage.getItem('selectedUser');
         
-        if (getProfileName) {
-            // localStorage에 저장된 그룹이 있다면, 해당 그룹을 선택합니다.
-            this.selectedProfile = getProfileName;
-        } else if (this.profiles.length > 0) {
-            // localStorage에 그룹이 없지만 profiles 배열에 그룹이 있다면, 첫 번째 그룹을 선택합니다.
-            this.selectedProfile = this.profiles[0].name;
-        } else {
-            // 그룹이 없는 경우
-            this.selectedProfile = null;
-        }
-        // localStorage에 저장된 프로필가 있다면, 해당 프로필를 선택합니다.
-        if (getUserName) {
-            this.selectedUser = getUserName;
-        } else {
-            // 프로필 정보가 없는 경우
-            this.selectedUser = null;
-        }
+        this.loadProfiles();
         this.$eventBus.$on('openEditProfile', () => {
             this.openEditProfile = !this.openEditProfile; // 이벤트 발생 시 상태 토글
         });
@@ -350,7 +327,22 @@ export default {
             localStorage.setItem('registeredProfiles', JSON.stringify(this.profiles));
         },
         loadProfiles() {
+            const getProfileName = localStorage.getItem('selectedProfile');
+            const getUserName = localStorage.getItem('selectedUser');
             const profiles = localStorage.getItem('registeredProfiles');
+            
+            if (getProfileName) {
+                this.selectedProfile = getProfileName;
+            } else if (this.profiles.length > 0) {
+                this.selectedProfile = this.profiles[0].name;
+            } else {
+                this.selectedProfile = null;
+            }
+            if (getUserName) {
+                this.selectedUser = getUserName;
+            } else {
+                this.selectedUser = null;
+            }
             this.profiles = profiles ? JSON.parse(profiles) : [];
             // 그룹이 비어 있는 경우 기본 그룹을 생성하고 선택합니다.
             if (this.profiles.length === 0) {
@@ -442,7 +434,6 @@ export default {
             this.addProfileStatus = false
             this.newUser.name = '';
             this.newProfile.name = '';
-            
         },
         updateProfile() {
             // 그룹 편집 상태인 경우
@@ -523,13 +514,18 @@ export default {
             this.newUser.name = '';
             this.newProfile.name = '';
         },
-        addUser(index) {
+        addUser(index, profile) {
             this.addProfileStatus = false;
             this.addUserStatus = true;
             this.newUser.name = '';
             this.newProfile.name = '';
             // 특정 인덱스의 그룹을 확장합니다.
             this.$set(this.expandedGroup, index, true);
+            this.selectedProfile = profile;
+            // 로컬 스토리지에 selectedProfile 업데이트
+            localStorage.setItem('selectedProfile', this.selectedProfile);
+            this.$store.dispatch('updateSelectedProfile', profile);
+
         },
         editProfile(index, groupName) {
             event.stopPropagation();

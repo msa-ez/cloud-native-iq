@@ -1,25 +1,13 @@
 <template>
     <v-app>
         <div style="height: 100vh;">
-            <v-app-bar elevation="0" outlined left style="height:60px;">
+            <v-app-bar elevation="0" outlined left app style="height:60px;">
                 <img @click="goHome()" 
                     style="cursor: pointer; align-items: left; width:90px;" 
                     src="https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6" 
                 />
-				<!-- <v-tooltip right>
-                    <template v-slot:activator="{ on }">
-                        <v-btn @click="openEditProfile()"
-                            icon
-                            v-on="on"
-							style="margin-left:10px;"
-                        >
-                            <Icon icon="carbon:user-profile" width="30" height="30" />
-                        </v-btn>
-                    </template>
-                    <span>그룹 관리</span>
-                </v-tooltip> -->
                 <v-spacer></v-spacer>
-                <v-tooltip bottom>
+                <v-tooltip bottom v-if="showProfileInfo">
                     <template v-slot:activator="{ on }">
                         <div v-on="on" @click="openEditProfile()"
                             style="cursor: pointer;"
@@ -44,19 +32,31 @@
 export default {
 	components: {
 	},
+	data() {
+		return {
+            showProfileInfo: false,
+		}
+	},
+	watch: {
+        // $route 객체를 감시하여 라우터 변경 시 로직을 실행
+        '$route'(to, from) {
+            // 특정 경로들을 배열로 정의
+            const specificPaths = ['/goal-setting', '/assessment', '/get-the-guide'];
+            // 현재 경로가 specificPaths 배열에 포함되어 있는지 확인
+            this.showProfileInfo = specificPaths.includes(to.path);
+        }
+    },
+    created() {
+        // 컴포넌트 생성 시 현재 경로를 기반으로 showProfileInfo 초기화
+        this.showProfileInfo = this.$route.path !== '/';
+    },
 	computed: {
 		selectedProfile() {
             return this.$store.state.selectedProfile;
         },
 		selectedUser() {
             return this.$store.state.selectedUser;
-        }
-	},
-	data() {
-		return {
-		}
-	},
-	created() {
+        },
 	},
 	mounted() {
 		document.title = 'cloudiq';

@@ -7,9 +7,9 @@
 					<v-row style="font-size:20px;">
 						<div>목표수준 - </div>
 						<div style="font-weight: 700;">&nbsp;Maturity Level:&nbsp;</div>
-						<div style="color:blue">{{ slaResult.cloudStatus }},</div>
+						<div style="color:#1976D2; font-weight: 700;">{{ slaResult.cloudStatus }},</div>
 						<div style="font-weight: 700;">&nbsp;SLA:&nbsp;</div>
-						<div style="color:red">{{ slaResult.percentage }}</div>
+						<div style="color:#1976D2; font-weight: 700;">{{ slaResult.percentage }}</div>
 					</v-row>
 				</v-row>
 				<v-row>
