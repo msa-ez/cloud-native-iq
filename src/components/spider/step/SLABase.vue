@@ -34,7 +34,15 @@ export default {
             // 클라우드 상태 평가 로직
             let count = 0;
             chartData.topics.forEach(topic => {
-                count += topic.questions.filter(question => question.value >= 3).length;
+                topic.questions.forEach(question => {
+                    if (question.value >= 3) {
+                        if (typeof question.importantCount === 'number') {
+                            count += question.importantCount; // importantCount의 숫자만큼 count 증가
+                        } else {
+                            count += 1; // importantCount가 숫자가 아니면 count를 1만큼 증가
+                        }
+                    }
+                });
             });
 
             // count 값에 따라 slaResult 설정

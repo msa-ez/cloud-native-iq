@@ -146,6 +146,7 @@ export default {
                             text: '제공하는 공공서비스들의 정보시스템 보안 위상은 행안부에서 구분하고 있는 5등급 중 어디에 해당 됩니까?',
                             tickLabels: ['공개 정보', '기관 단순정보', '중요정보', '유사제어', '국가존립'],
                             value: 0,
+                            importantCount : 2,
                             goalLevelsList:[
                                 {
                                     goalCheckLevel: 2,
@@ -166,6 +167,7 @@ export default {
                             text: '서비스 장애시, 이로 인한 타 서비스(기관으)로의 비즈니스 영향도가 어느 정도입니까?',
                             tickLabels: ['영향도 없음', '매우낮음', '낮음', '높음', '매우높음'],
                             value: 0,
+                            importantCount : 2,
                             goalLevelsList:[
                                 {
                                     goalCheckLevel: 3,

@@ -44,13 +44,15 @@
                                 </div>
                             </div>
                         </v-col>
-                        <v-col class="get-the-guide-col-padding-right ma-"
+                        <v-col class="get-the-guide-col-padding-right ma-0"
                             cols="6"
                         >
-                            <h3>ㆍ참조 아키텍처</h3>
-                            <template v-for="(path) in referenceArchitecturegetImagePath()">
-                                <v-img :src="path" />
-                            </template>
+                            <div>
+                                <h3>ㆍ참조 아키텍처</h3>
+                                <template v-for="(path) in referenceArchitecturegetImagePath()">
+                                    <v-img :src="path" />
+                                </template>
+                            </div>
                         </v-col>
                     </v-row>
                 </div>
@@ -59,7 +61,9 @@
             <v-tab-item v-for="item in guideTabs" :key="item.tab">
                 <div flat style="padding:20px;">
                     <div v-if="goalLevels[item.tab_en] > 0 && Object.keys(markdownContentFolders).length > 0"
-                        v-html="markdownContentFolders[item.tab_en][goalLevels[item.tab_en]]">
+                        v-html="markdownContentFolders[item.tab_en][goalLevels[item.tab_en]]"
+                        class="markdown-body"    
+                    >
                     </div>
                     <div v-else>
                         전환목표가 없습니다.
