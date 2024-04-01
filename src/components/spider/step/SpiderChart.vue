@@ -3,7 +3,7 @@
 		<div style="position:relative">
 			<div style="margin-left:10px;">
 				<v-row>
-					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgb(25,118,210); margin:4px 5px 0px 0px;"></div>
+					<div class="color-box-style" style="background-color:rgb(25,118,210); "></div>
 					<v-row style="font-size:20px;">
 						<div>목표수준 - </div>
 						<div style="font-weight: 700;">&nbsp;Maturity Level:&nbsp;</div>
@@ -13,7 +13,7 @@
 					</v-row>
 				</v-row>
 				<v-row>
-					<div style="width:20px; height:20px; border-radius: 5px; background-color:rgba(255, 183, 77, 1); margin:4px 5px 0px 0px;"></div>
+					<div style="background-color:rgba(255, 183, 77, 1); "></div>
 					<div style="font-size:20px;">현수준</div>
 				</v-row>
 			</div>

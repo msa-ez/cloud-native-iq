@@ -70,8 +70,28 @@ export default {
     },
 	methods: {
 		updateLevelCompletion(perspective, level) {
-			level.isCompleted = level.checkpoints.every(checkpoint => checkpoint.checked);
-			this.$emit('saveProfiles')
+			// 현재 level의 isCompleted 상태 업데이트
+			level.isCompleted = level.checkpoints.some(checkpoint => checkpoint.checked);
+
+			// 마지막으로 체크된 level의 index 찾기
+			let lastTrueIndex = -1;
+			perspective.levels.forEach((lvl, index) => {
+				if (lvl.checkpoints.some(cp => cp.checked)) {
+					lastTrueIndex = index;
+				}
+			});
+			// 마지막으로 체크된 level의 index 이전의 모든 levels을 isCompleted = true로 설정
+			if (lastTrueIndex !== -1) {
+				perspective.levels.forEach((lvl, index) => {
+					if (index <= lastTrueIndex) {
+						lvl.isCompleted = true;
+					} else {
+						// 선택적으로, lastTrueIndex 이후의 levels을 isCompleted = false로 설정할 수 있습니다.
+						lvl.isCompleted = false;
+					}
+				});
+			}
+			this.$emit('saveProfiles');
 		},
 	}
 };

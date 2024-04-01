@@ -1,34 +1,43 @@
 <template>
     <div>
-      <v-simple-table>
-        <thead>
-          <tr class="all-guide-table-head">
-            <th style="text-align: left !important;"></th>
-            <th>Level 1</th>
-            <th>Level 2</th>
-            <th>Level 3</th>
-            <th>Level 4</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(guideItem, guideIndex) in guide" :key="guideIndex">
-            <td>{{ guideItem.name }}</td>
-                <td v-for="level in guideItem.levels" :key="level.level"
-                    class="all-guide-view"
-                    @click="navigate(level.path)"
-                >
-                    <v-card style="padding:20px;
-                        margin:10px;
-                        text-align: center;"
-                        :style="checkPathMatch(level.path)"
+        <v-simple-table>
+            <thead>
+                <tr class="all-guide-table-head">
+                    <th style="text-align: left !important;">
+                    <v-row>
+                        <div>목표수준</div>
+                        <div class="color-box-style" style="background-color:rgb(25, 118, 210); margin-left: 4px;"></div>&nbsp;/
+                        <div>현수준</div>
+                        <div class="color-box-style" style="background-color:rgba(255, 183, 77, 1); margin-left: 4px;"></div>&nbsp;/
+                        <div>달성수준</div>
+                        <div class="color-box-style" style="background-color:green; margin-left: 4px;"></div>
+                    </v-row>
+                    </th>
+                    <th>Level 1</th>
+                    <th>Level 2</th>
+                    <th>Level 3</th>
+                    <th>Level 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(guideItem, guideIndex) in guide" :key="guideIndex">
+                    <td>{{ guideItem.name }}</td>
+                    <td v-for="level in guideItem.levels" :key="level.level"
+                        class="all-guide-view"
+                        @click="navigate(level.path)"
                     >
-                        <div>전환 가이드 보기</div>
-                        <div style="font-weight: 900;">{{ level.name }}</div>
-                    </v-card>
-                </td>
-          </tr>
-        </tbody>
-      </v-simple-table>
+                        <v-card style="padding:20px;
+                            margin:10px;
+                            text-align: center;"
+                            :style="checkPathMatch(level.path)"
+                        >
+                            <div>전환 가이드 보기</div>
+                            <div style="font-weight: 900;">{{ level.name }}</div>
+                        </v-card>
+                    </td>
+                </tr>
+            </tbody>
+        </v-simple-table>
     </div>
   </template>
 
@@ -111,7 +120,8 @@ export default {
                 },
             ],
             registeredProfiles: null,
-            registeredTargetGoalPath: [],
+            goalLevelAssessmentPaths: [],
+            currentLevelAssessmentPaths: [],
             goalLevels: 0,
         }
     },
@@ -144,19 +154,41 @@ export default {
                         target = matchedUser; // 대상을 matchedUser로 변경합니다.
                     }
                 }
-                // 대상(target)의 perspectives를 기반으로 경로를 설정합니다.
-                this.registeredTargetGoalPath = target.perspectives.map(perspective => {
+                // 목표수준에 대한 path
+                this.goalLevelAssessmentPaths = target.perspectives.map(perspective => {
                     return `/${perspective.name_en}/level${perspective.goalLevel}`;
+                });
+
+                
+                // 현 수준에 대한 path
+                this.currentLevelAssessmentPaths = target.perspectives.map(perspective => {
+                    // isCompleted가 true인 level의 개수를 계산합니다.
+                    const completedLevelsCount = perspective.levels.filter(level => level.isCompleted).length;
+                    // 계산된 개수를 바탕으로 path를 설정합니다.
+                    return `/${perspective.name_en}/level${completedLevelsCount}`;
                 });
                 
                 this.isDataLoaded = true;
             }
         },
         checkPathMatch(path) {
-            if (this.registeredTargetGoalPath.includes(path)) {
-                // 조건을 만족하는 경우 사용자 정의 스타일 객체 반환
+            if(this.goalLevelAssessmentPaths.includes(path)&& this.currentLevelAssessmentPaths.includes(path)) {
+                //겹치는 부분 색상 변경
                 return {
-                    backgroundColor: 'rgb(25,118,210)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'green', // 여기에 원하는 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+            }
+            else if (this.goalLevelAssessmentPaths.includes(path)) {
+                // 목표수준 색상 변경
+                return {
+                    backgroundColor: 'rgb(25, 118, 210)', // 여기에 원하는 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+            } else if (this.currentLevelAssessmentPaths.includes(path)) {
+                // 현수준 색상 변경
+                return {
+                    backgroundColor: 'rgba(255, 183, 77, 1)', // 여기에 원하는 배경색을 지정
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
             } else

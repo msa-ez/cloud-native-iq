@@ -84,30 +84,36 @@ export default {
             this.changeGoalLevel();
         },
         changeGoalLevel() {
-            var me = this
-            var goalLevelResult = []
+            var me = this;
+            var goalLevelResult = [];
             me.chartData.perspectives.forEach(function (){
-                goalLevelResult.push(0)
+                goalLevelResult.push(0);
             });
             this.chartData.topics.forEach(function (topic, index) {
                 const count = topic.questions.filter(q => q.value >= 3).length;
-                if (count < topic.goalCheckCount) return
+                if (count < topic.goalCheckCount) return;
                 topic.questions.forEach(function (question, index) {
-                    const goalLevelObject = question.goalLevelsList.find(g => g.goalCheckLevel == question.value);
-                    if(goalLevelObject) {
-                        var gLevels = goalLevelObject.goalLevels
-                        gLevels.forEach(function(gLevel, goalIndex) {
-                            if(goalLevelResult[goalIndex] < gLevel) {
-                                goalLevelResult[goalIndex] = gLevel
-                            }
-                        });
+                    // goalCheckLevel이 없는 경우를 처리하기 위해 find 대신 filter 사용
+                    const goalLevelObjects = question.goalLevelsList.filter(g => g.goalCheckLevel == question.value);
+                    var gLevels;
+                    if(goalLevelObjects.length > 0) {
+                        // goalCheckLevel이 있는 경우
+                        gLevels = goalLevelObjects[0].goalLevels;
+                    } else {
+                        // goalCheckLevel이 없는 경우, 모든 gLevels 값을 1로 설정
+                        gLevels = [1, 1, 1, 1, 1, 1, 1];
                     }
+                    gLevels.forEach(function(gLevel, goalIndex) {
+                        if(goalLevelResult[goalIndex] < gLevel) {
+                            goalLevelResult[goalIndex] = gLevel;
+                        }
+                    });
                 });
             });
-            goalLevelResult.forEach(function (goalLevel ,index){
-                me.chartData.perspectives[index].goalLevel = goalLevel
+            goalLevelResult.forEach(function (goalLevel, index){
+                me.chartData.perspectives[index].goalLevel = goalLevel;
             });
-            this.$emit('saveProfiles')
+            this.$emit('saveProfiles');
         },
     },
 }
