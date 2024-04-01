@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "1d31116c005e8186be42";
+/******/ 	var hotCurrentHash = "c1fbc665411bfe770328";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9172,19 +9172,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
 	},
+	data() {
+		return {
+            showProfileInfo: false,
+		}
+	},
+	watch: {
+        // $route 객체를 감시하여 라우터 변경 시 로직을 실행
+        '$route'(to, from) {
+            // 특정 경로들을 배열로 정의
+            const specificPaths = ['/goal-setting', '/assessment', '/get-the-guide'];
+            // 현재 경로가 specificPaths 배열에 포함되어 있는지 확인
+            this.showProfileInfo = specificPaths.includes(to.path);
+        }
+    },
+    created() {
+        // 컴포넌트 생성 시 현재 경로를 기반으로 showProfileInfo 초기화
+        this.showProfileInfo = this.$route.path !== '/';
+    },
 	computed: {
 		selectedProfile() {
             return this.$store.state.selectedProfile;
         },
 		selectedUser() {
             return this.$store.state.selectedUser;
-        }
-	},
-	data() {
-		return {
-		}
-	},
-	created() {
+        },
 	},
 	mounted() {
 		document.title = 'cloudiq';
@@ -9338,8 +9350,6 @@ __webpack_require__.r(__webpack_exports__);
             addUserStatus: false,
             editingIndex: null,
             deleteDialog: false,
-            hoverProfileIndex: null,
-            hoverUserIndex: null,
             openEditProfile: false,
             deleteUserName: null,
             deleteProfileName: null,
@@ -9348,7 +9358,7 @@ __webpack_require__.r(__webpack_exports__);
             newProfile: {
                 name: '',
                 nameRules: [
-                    v => (v && v.trim() !== '') ? !this.isNameDuplicate(v) || '이미 등록된 프로필입니다.' : true
+                    v => (v && v.trim() !== '') ? !this.isNameDuplicate(v) || '이미 등록된 그룹입니다.' : true
                 ],
                 perspectives: [],
                 topics: [],
@@ -9357,40 +9367,20 @@ __webpack_require__.r(__webpack_exports__);
             newUser: {
                 name: '',
                 nameRules: [
-                    v => (v && v.trim() !== '') ? !this.isNameDuplicate(v) || '이미 등록된 이름입니다.' : true
+                    v => (v && v.trim() !== '') ? !this.isNameDuplicate(v) || '이미 등록된 프로필입니다.' : true
                 ],
                 perspectives: [],
                 topics: [],
             },
             chartData: null,
             selectedProfile: null,
-            selectedUser: null
+            selectedUser: null,
+            expandedGroup: {},
         }
     },
     mounted() {
-        this.loadProfiles();
-        // localStorage에서 선택된 프로필을 불러옵니다.
-        const getProfileName = localStorage.getItem('selectedProfile');
-        // localStorage에서 선택된 사용자를 불러옵니다.
-        const getUserName = localStorage.getItem('selectedUser');
         
-        if (getProfileName) {
-            // localStorage에 저장된 프로필이 있다면, 해당 프로필을 선택합니다.
-            this.selectedProfile = getProfileName;
-        } else if (this.profiles.length > 0) {
-            // localStorage에 프로필이 없지만 profiles 배열에 프로필이 있다면, 첫 번째 프로필을 선택합니다.
-            this.selectedProfile = this.profiles[0].name;
-        } else {
-            // 프로필이 없는 경우
-            this.selectedProfile = null;
-        }
-        // localStorage에 저장된 사용자가 있다면, 해당 사용자를 선택합니다.
-        if (getUserName) {
-            this.selectedUser = getUserName;
-        } else {
-            // 사용자 정보가 없는 경우
-            this.selectedUser = null;
-        }
+        this.loadProfiles();
         this.$eventBus.$on('openEditProfile', () => {
             this.openEditProfile = !this.openEditProfile; // 이벤트 발생 시 상태 토글
         });
@@ -9441,18 +9431,6 @@ __webpack_require__.r(__webpack_exports__);
                 })
             });
         },
-        addProfile() {
-            this.addUserStatus = false
-            this.addProfileStatus = true
-            this.newUser.name = '';
-            this.newProfile.name = '';
-        },
-        addUser() {
-            this.addProfileStatus = false
-            this.addUserStatus = true
-            this.newUser.name = '';
-            this.newProfile.name = '';
-        },
         isEditingClose() {
             event.stopPropagation();
             this.isEditingProfile = false
@@ -9466,19 +9444,34 @@ __webpack_require__.r(__webpack_exports__);
             }
         },
         handleProfileChange() {
-            // 사용자가 프로필을 변경했을 때 실행될 로직
+            // 프로필가 그룹을 변경했을 때 실행될 로직
             this.selectedUser = null;
             // Vuex 스토어의 액션을 호출하여 selectedUser를 업데이트합니다.
             this.$store.dispatch('updateSelectedUser', null);
         },
         saveProfiles() {
-            // 프로필을 저장한 후 Vuex 스토어의 상태를 업데이트합니다.
+            // 그룹을 저장한 후 Vuex 스토어의 상태를 업데이트합니다.
             localStorage.setItem('registeredProfiles', JSON.stringify(this.profiles));
         },
         loadProfiles() {
+            const getProfileName = localStorage.getItem('selectedProfile');
+            const getUserName = localStorage.getItem('selectedUser');
             const profiles = localStorage.getItem('registeredProfiles');
+            
+            if (getProfileName) {
+                this.selectedProfile = getProfileName;
+            } else if (this.profiles.length > 0) {
+                this.selectedProfile = this.profiles[0].name;
+            } else {
+                this.selectedProfile = null;
+            }
+            if (getUserName) {
+                this.selectedUser = getUserName;
+            } else {
+                this.selectedUser = null;
+            }
             this.profiles = profiles ? JSON.parse(profiles) : [];
-            // 프로필이 비어 있는 경우 기본 프로필을 생성하고 선택합니다.
+            // 그룹이 비어 있는 경우 기본 그룹을 생성하고 선택합니다.
             if (this.profiles.length === 0) {
                 let defaultProfile = {
                     name: 'cloudIq',
@@ -9486,16 +9479,16 @@ __webpack_require__.r(__webpack_exports__);
                     topics: JSON.parse(JSON.stringify(this.topics)),
                     users: [],
                 };
-                this.profiles.push(defaultProfile);  // 기본 프로필을 프로필 배열에 추가합니다.
+                this.profiles.push(defaultProfile);  // 기본 그룹을 그룹 배열에 추가합니다.
                 this.saveProfiles();  // 변경사항을 저장합니다.
-                // 기본 프로필을 localStorage에 저장합니다.
+                // 기본 그룹을 localStorage에 저장합니다.
                 localStorage.setItem('selectedProfile', defaultProfile.name);
                 // Vuex 스토어를 업데이트합니다.
                 this.$store.dispatch('updateSelectedProfile', defaultProfile.name);
                 // 컴포넌트의 상태를 업데이트합니다.
                 this.selectedProfile = defaultProfile.name;
             } else {
-                // 프로필이 이미 존재하는 경우, 첫 번째 프로필을 선택합니다.
+                // 그룹이 이미 존재하는 경우, 첫 번째 그룹을 선택합니다.
                 if (!this.selectedProfile && this.profiles.length > 0) {
                     this.selectedProfile = this.profiles[0].name;
                     localStorage.setItem('selectedProfile', this.selectedProfile);
@@ -9507,10 +9500,10 @@ __webpack_require__.r(__webpack_exports__);
             return `${item.name}`;
         },
         userDisplayText(user) {
-            return user.name;  // 사용자 객체에서 이름을 반환
+            return user.name;  // 프로필 객체에서 프로필을 반환
         },
         registerProfile() {
-            // 1. 새로운 프로필만 등록하는 경우
+            // 1. 새로운 그룹만 등록하는 경우
             if (this.newProfile.name && !this.newUser.name) {
                 if (!this.isNameDuplicate(this.newProfile.name)) {
                     let newProfile = {
@@ -9524,7 +9517,7 @@ __webpack_require__.r(__webpack_exports__);
                     this.selectedProfile = newProfile.name;
                 }
             } 
-            // 2. 새로운 프로필에 사용자도 함께 등록하는 경우
+            // 2. 새로운 그룹에 프로필도 함께 등록하는 경우
             else if (this.newProfile.name && this.newUser.name) {
                 if (!this.isNameDuplicate(this.newProfile.name)) {
                     let newProfile = {
@@ -9548,7 +9541,7 @@ __webpack_require__.r(__webpack_exports__);
                     }
                 }
             } 
-            // 3. 선택된 프로필에 새로운 사용자를 추가하는 경우
+            // 3. 선택된 그룹에 새로운 프로필를 추가하는 경우
             else if (!this.newProfile.name && this.selectedProfile && this.newUser.name) {
                 let profile = this.profiles.find(profile => profile.name === this.selectedProfile);
                 if (profile && !this.isNameDuplicate(this.newUser.name)) {
@@ -9568,25 +9561,24 @@ __webpack_require__.r(__webpack_exports__);
             this.addProfileStatus = false
             this.newUser.name = '';
             this.newProfile.name = '';
-            
         },
         updateProfile() {
-            // 프로필 편집 상태인 경우
+            // 그룹 편집 상태인 경우
             if (this.isEditingProfile) {
                 let profile = this.profiles[this.editingIndex];
                 if (profile && this.newProfile.name.trim() && !this.isNameDuplicate(this.newProfile.name, true)) {
                     profile.name = this.newProfile.name;
-                    this.selectedProfile = this.newProfile.name; // 업데이트된 프로필 이름으로 selectedProfile 업데이트
+                    this.selectedProfile = this.newProfile.name; // 업데이트된 그룹 프로필으로 selectedProfile 업데이트
                 }
             }
-            // 사용자 편집 상태인 경우
+            // 프로필 편집 상태인 경우
             else if (this.isEditingUser && this.selectedProfile) {
                 let profile = this.profiles.find(profile => profile.name === this.selectedProfile);
                 if (profile) {
                     let user = profile.users[this.editingIndex];
                     if (user && this.newUser.name.trim() && !this.isNameDuplicate(this.newUser.name)) {
                         user.name = this.newUser.name;
-                        this.selectedUser = this.newUser.name; // 업데이트된 사용자 이름으로 selectedUser 업데이트
+                        this.selectedUser = this.newUser.name; // 업데이트된 프로필 프로필으로 selectedUser 업데이트
                     }
                 }
             }
@@ -9597,24 +9589,24 @@ __webpack_require__.r(__webpack_exports__);
         deleteProfile() {
             if (this.deleteConfirmed) {
                 if (this.deleteUserName) {
-                    // 선택된 사용자를 포함하는 프로필 찾기
+                    // 선택된 프로필를 포함하는 그룹 찾기
                     let profileIndex = this.profiles.findIndex(profile => profile.name === this.deleteProfileName);
                     if (profileIndex !== -1) {
-                        // 프로필에서 해당 사용자 삭제
+                        // 그룹에서 해당 프로필 삭제
                         let userIndex = this.profiles[profileIndex].users.findIndex(user => user.name === this.deleteUserName);
                         if (userIndex !== -1) {
                             this.profiles[profileIndex].users.splice(userIndex, 1);
-                            // 남아 있는 사용자 중 마지막 사용자를 선택
+                            // 남아 있는 프로필 중 마지막 프로필를 선택
                             if (this.profiles[profileIndex].users.length > 0) {
                                 const lastUser = this.profiles[profileIndex].users[this.profiles[profileIndex].users.length - 1];
                                 this.selectedUser = lastUser.name;
                             } else {
-                                this.selectedUser = null; // 사용자가 더 이상 없으면 null로 설정
+                                this.selectedUser = null; // 프로필가 더 이상 없으면 null로 설정
                             }
                         }
                     }
                 } else {
-                    // 프로필 삭제 로직
+                    // 그룹 삭제 로직
                     this.profiles = this.profiles.filter(profile => profile.name !== this.deleteProfileName);
                     if (this.profiles.length > 0) {
                         const lastProfile = this.profiles[this.profiles.length - 1];
@@ -9643,29 +9635,52 @@ __webpack_require__.r(__webpack_exports__);
             this.deleteProfileName = profile.name
             this.deleteUserName = user.name
         },
-        editProfile(index) {
+        addProfile() {
+            this.addUserStatus = false
+            this.addProfileStatus = true
+            this.newUser.name = '';
+            this.newProfile.name = '';
+        },
+        addUser(index, profile) {
+            this.addProfileStatus = false;
+            this.addUserStatus = true;
+            this.newUser.name = '';
+            this.newProfile.name = '';
+            // 특정 인덱스의 그룹을 확장합니다.
+            this.$set(this.expandedGroup, index, true);
+            this.selectedProfile = profile;
+            // 로컬 스토리지에 selectedProfile 업데이트
+            localStorage.setItem('selectedProfile', this.selectedProfile);
+            this.$store.dispatch('updateSelectedProfile', profile);
+
+        },
+        editProfile(index, groupName) {
             event.stopPropagation();
             this.editingIndex = index
             this.isEditingUser = false
             this.isEditingProfile = true
-            this.newProfile.name = '';
+            this.newProfile.name = groupName;
             this.newUser.name = '';
+            this.addUserStatus = false
+            this.addProfileStatus = false
         },
-        editUser(index) {
-            event.stopPropagation();
+        editUser(index, userName) {
+            event.stopPropagation(); 
             this.editingIndex = index
             this.isEditingProfile = false
             this.isEditingUser = true
-            this.newUser.name = '';
+            this.newUser.name = userName;
             this.newProfile.name = '';
+            this.addUserStatus = false
+            this.addProfileStatus = false
         },
         isNameDuplicate(name) {
-            // 새로운 프로필을 등록하는 경우, 프로필 이름의 중복을 검사합니다.
+            // 새로운 그룹을 등록하는 경우, 그룹 프로필의 중복을 검사합니다.
             if (this.newProfile.name) {
                 return this.profiles.some(profile => profile.name === name);
             }
             
-            // 새로운 사용자를 기존 프로필에 추가하는 경우, 선택된 프로필 내에서 사용자 이름의 중복을 검사합니다.
+            // 새로운 프로필를 기존 그룹에 추가하는 경우, 선택된 그룹 내에서 프로필 프로필의 중복을 검사합니다.
             if (!this.selectedProfile || !name) return false;
             const profile = this.profiles.find(p => p.name === this.selectedProfile);
             return profile && Array.isArray(profile.users) && profile.users.some(user => user.name === name);
@@ -9678,6 +9693,7 @@ __webpack_require__.r(__webpack_exports__);
                 this.selectedUser = null;
                 this.$store.dispatch('updateSelectedProfile', profile);
             });
+            this.addUserStatus = false;
         },
         selectUser(userName) {
             this.selectedUser = userName;
@@ -9713,75 +9729,76 @@ __webpack_require__.r(__webpack_exports__);
                     name: '애플리케이션 관점',
                     name_en: 'application',
                     levels: [
-                        { level: 1, path: '/application/level1' },
-                        { level: 2, path: '/application/level2' },
-                        { level: 3, path: '/application/level3' },
-                        { level: 4, path: '/application/level4' }
+                        { level: 1, path: '/application/level1', name: '모노리식(Monolithic)' },
+                        { level: 2, path: '/application/level2', name: '하이브리드(Monolith & Microservice)' },
+                        { level: 3, path: '/application/level3', name: '마이크로서비스(Microservice)' },
+                        { level: 4, path: '/application/level4', name: '도메인 드리븐 & 이벤트 드리븐(Event driven)' }
                     ]
                 },
                 {
 					name: '데이터베이스 관점',
 					name_en: 'database',
                     levels: [
-                        { level: 1, path: '/database/level1' },
-                        { level: 2, path: '/database/level2' },
-                        { level: 3, path: '/database/level3' },
-                        { level: 4, path: '/database/level4' }
+                        { level: 1, path: '/database/level1', name: '싱글 DBMS 사용' },
+                        { level: 2, path: '/database/level2', name: '개별 스키마 정의(Scheme per Service)' },
+                        { level: 3, path: '/database/level3', name: 'DBMS per Service, 폴리글랏 퍼시스턴스' },
+                        { level: 4, path: '/database/level4', name: 'DBMS per Service & Event Sourcing, CQRS' }
                     ]
                 },
                 {
 					name: '인프라스트럭처 관점',
 					name_en: 'infrastructure',
                     levels: [
-                        { level: 1, path: '/infrastructure/level1' },
-                        { level: 2, path: '/infrastructure/level2' },
-                        { level: 3, path: '/infrastructure/level3' },
-                        { level: 4, path: '/infrastructure/level4' }
+                        { level: 1, path: '/infrastructure/level1', name: '베어 메탈 서버기반 호스팅' },
+                        { level: 2, path: '/infrastructure/level2', name: '가상화 데이터센터 기반 인프라 운영' },
+                        { level: 3, path: '/infrastructure/level3', name: '퍼블릭 및 프라이빗 클라우드 기반 인프라 운영' },
+                        { level: 4, path: '/infrastructure/level4', name: '멀티, 또는 하이브리드 클라우드 기반 자동화 운영' }
                     ]
                 },
                 {
 					name: '개발 관점',
 					name_en: 'development',
                     levels: [
-                        { level: 1, path: '/development/level1' },
-                        { level: 2, path: '/development/level2' },
-                        { level: 3, path: '/development/level3' },
-                        { level: 4, path: '/development/level4' }
+                        { level: 1, path: '/development/level1', name: '폭포수 모델, 구조적 방법론' },
+                        { level: 2, path: '/development/level2', name: '폭포수 모델과 에자일 방법론 혼용(Iteration)' },
+                        { level: 3, path: '/development/level3', name: '에자일 방법론과 마이크로서비스 구현패턴 활용' },
+                        { level: 4, path: '/development/level4', name: '비즈데브옵스(BizDevOps)와 MSA' }
                     ]
                 },
                 {
 					name: '보안 관점',
 					name_en: 'security',
                     levels: [
-                        { level: 1, path: '/security/level1' },
-                        { level: 2, path: '/security/level2' },
-                        { level: 3, path: '/security/level3' },
-                        { level: 4, path: '/security/level4' }
+                        { level: 1, path: '/security/level1', name: '세션기반 인증 & 서버 사이드 렌더링' },
+                        { level: 2, path: '/security/level2', name: '세션 클러스터링 & 서버 사이드 렌더링' },
+                        { level: 3, path: '/security/level3', name: '토큰기반 인증 & 클라이언트 사이드 렌더링' },
+                        { level: 4, path: '/security/level4', name: '토큰기반 인증 & 제로 트러스트 보안' }
                     ]
                 },
                 {
 					name: '확장성 관점',
 					name_en: 'scalability',
                     levels: [
-                        { level: 1, path: '/scalability/level1' },
-                        { level: 2, path: '/scalability/level2' },
-                        { level: 3, path: '/scalability/level3' },
-                        { level: 4, path: '/scalability/level4' }
+                        { level: 1, path: '/scalability/level1', name: '수직 확장(Vertical Scaling)' },
+                        { level: 2, path: '/scalability/level2', name: '수직 확장과 수평 확장의 혼용' },
+                        { level: 3, path: '/scalability/level3', name: '수평 확장(Horizontal Scaling)' },
+                        { level: 4, path: '/scalability/level4', name: '온디맨드 수평적 복제(On-demand Horizontal' }
                     ]
                 },
                 {
 					name: '가시성 관점',
 					name_en: 'visibility',
                     levels: [
-                        { level: 1, path: '/visibility/level1' },
-                        { level: 2, path: '/visibility/level2' },
-                        { level: 3, path: '/visibility/level3' },
-                        { level: 4, path: '/visibility/level4' }
+                        { level: 1, path: '/visibility/level1', name: 'OS, Hardware 및 정적 로그 통계 모니터링' },
+                        { level: 2, path: '/visibility/level2', name: '텔레메트리(Telemetry) 지표 수집에 의한 Observability' },
+                        { level: 3, path: '/visibility/level3', name: '서비스 메쉬 기반 텔레메트리(Telemetry) & Observability' },
+                        { level: 4, path: '/visibility/level4', name: '예측 분석 및 인프라와 서비스에 대한 통합 인사이트' }
                     ]
                 },
             ],
             registeredProfiles: null,
-            registeredTargetGoalPath: [],
+            goalLevelAssessmentPaths: [],
+            currentLevelAssessmentPaths: [],
             goalLevels: 0,
         }
     },
@@ -9814,19 +9831,41 @@ __webpack_require__.r(__webpack_exports__);
                         target = matchedUser; // 대상을 matchedUser로 변경합니다.
                     }
                 }
-                // 대상(target)의 perspectives를 기반으로 경로를 설정합니다.
-                this.registeredTargetGoalPath = target.perspectives.map(perspective => {
+                // 목표수준에 대한 path
+                this.goalLevelAssessmentPaths = target.perspectives.map(perspective => {
                     return `/${perspective.name_en}/level${perspective.goalLevel}`;
+                });
+
+                
+                // 현 수준에 대한 path
+                this.currentLevelAssessmentPaths = target.perspectives.map(perspective => {
+                    // isCompleted가 true인 level의 개수를 계산합니다.
+                    const completedLevelsCount = perspective.levels.filter(level => level.isCompleted).length;
+                    // 계산된 개수를 바탕으로 path를 설정합니다.
+                    return `/${perspective.name_en}/level${completedLevelsCount}`;
                 });
                 
                 this.isDataLoaded = true;
             }
         },
         checkPathMatch(path) {
-            if (this.registeredTargetGoalPath.includes(path)) {
-                // 조건을 만족하는 경우 사용자 정의 스타일 객체 반환
+            if(this.goalLevelAssessmentPaths.includes(path)&& this.currentLevelAssessmentPaths.includes(path)) {
+                //겹치는 부분 색상 변경
                 return {
-                    backgroundColor: 'rgb(25,118,210)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'green', // 여기에 원하는 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+            }
+            else if (this.goalLevelAssessmentPaths.includes(path)) {
+                // 목표수준 색상 변경
+                return {
+                    backgroundColor: 'rgb(25, 118, 210)', // 여기에 원하는 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+            } else if (this.currentLevelAssessmentPaths.includes(path)) {
+                // 현수준 색상 변경
+                return {
+                    backgroundColor: 'rgba(255, 183, 77, 1)', // 여기에 원하는 배경색을 지정
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
             } else
@@ -9877,8 +9916,28 @@ __webpack_require__.r(__webpack_exports__);
     },
 	methods: {
 		updateLevelCompletion(perspective, level) {
-			level.isCompleted = level.checkpoints.every(checkpoint => checkpoint.checked);
-			this.$emit('saveProfiles')
+			// 현재 level의 isCompleted 상태 업데이트
+			level.isCompleted = level.checkpoints.some(checkpoint => checkpoint.checked);
+
+			// 마지막으로 체크된 level의 index 찾기
+			let lastTrueIndex = -1;
+			perspective.levels.forEach((lvl, index) => {
+				if (lvl.checkpoints.some(cp => cp.checked)) {
+					lastTrueIndex = index;
+				}
+			});
+			// 마지막으로 체크된 level의 index 이전의 모든 levels을 isCompleted = true로 설정
+			if (lastTrueIndex !== -1) {
+				perspective.levels.forEach((lvl, index) => {
+					if (index <= lastTrueIndex) {
+						lvl.isCompleted = true;
+					} else {
+						// 선택적으로, lastTrueIndex 이후의 levels을 isCompleted = false로 설정할 수 있습니다.
+						lvl.isCompleted = false;
+					}
+				});
+			}
+			this.$emit('saveProfiles');
 		},
 	}
 });
@@ -10109,9 +10168,14 @@ __webpack_require__.r(__webpack_exports__);
             // Inner Architecture 조건 설정
             this.serviceType.monolith = dataPerspective && dataPerspective.goalLevel <= 1;
             this.serviceType.mini = dataPerspective && dataPerspective.goalLevel === 2;
+            // micro 조건에서는 dataPerspective.goalLevel이 정확히 3일 때만 true가 되도록 합니다.
             this.serviceType.micro = dataPerspective && dataPerspective.goalLevel === 3;
-            if (dataPerspective && dataPerspective.goalLevel >= 3 && swArchitecture && swArchitecture.goalLevel === 4) {
-                this.serviceType.sidecar = true
+            // sidecar 조건에서는 dataPerspective.goalLevel이 3 이상이고, swArchitecture.goalLevel이 4일 때만 true가 되도록 합니다.
+            // 여기서 dataPerspective.goalLevel >= 3 조건을 제거하여 micro와 sidecar가 중복되지 않도록 합니다.
+            if (swArchitecture && swArchitecture.goalLevel === 4) {
+                this.serviceType.sidecar = true;
+            } else {
+                this.serviceType.sidecar = false;
             }
 
             // Messaging Channel 조건 설정
@@ -10215,30 +10279,36 @@ __webpack_require__.r(__webpack_exports__);
             this.changeGoalLevel();
         },
         changeGoalLevel() {
-            var me = this
-            var goalLevelResult = []
+            var me = this;
+            var goalLevelResult = [];
             me.chartData.perspectives.forEach(function (){
-                goalLevelResult.push(0)
+                goalLevelResult.push(0);
             });
             this.chartData.topics.forEach(function (topic, index) {
                 const count = topic.questions.filter(q => q.value >= 3).length;
-                if (count < topic.goalCheckCount) return
+                if (count < topic.goalCheckCount) return;
                 topic.questions.forEach(function (question, index) {
-                    const goalLevelObject = question.goalLevelsList.find(g => g.goalCheckLevel == question.value);
-                    if(goalLevelObject) {
-                        var gLevels = goalLevelObject.goalLevels
-                        gLevels.forEach(function(gLevel, goalIndex) {
-                            if(goalLevelResult[goalIndex] < gLevel) {
-                                goalLevelResult[goalIndex] = gLevel
-                            }
-                        });
+                    // goalCheckLevel이 없는 경우를 처리하기 위해 find 대신 filter 사용
+                    const goalLevelObjects = question.goalLevelsList.filter(g => g.goalCheckLevel == question.value);
+                    var gLevels;
+                    if(goalLevelObjects.length > 0) {
+                        // goalCheckLevel이 있는 경우
+                        gLevels = goalLevelObjects[0].goalLevels;
+                    } else {
+                        // goalCheckLevel이 없는 경우, 모든 gLevels 값을 1로 설정
+                        gLevels = [1, 1, 1, 1, 1, 1, 1];
                     }
+                    gLevels.forEach(function(gLevel, goalIndex) {
+                        if(goalLevelResult[goalIndex] < gLevel) {
+                            goalLevelResult[goalIndex] = gLevel;
+                        }
+                    });
                 });
             });
-            goalLevelResult.forEach(function (goalLevel ,index){
-                me.chartData.perspectives[index].goalLevel = goalLevel
+            goalLevelResult.forEach(function (goalLevel, index){
+                me.chartData.perspectives[index].goalLevel = goalLevel;
             });
-            this.$emit('saveProfiles')
+            this.$emit('saveProfiles');
         },
     },
 });
@@ -10283,65 +10353,52 @@ __webpack_require__.r(__webpack_exports__);
     },
     methods: {
 		getSLAPercentage(chartData) {
-            let percentage = '';
-            let time = '';
-            for (let topic of chartData.topics) {
-                const slaQuestion = topic.questions.find(q => q.title === '[정보시스템 등급]');
-                if (slaQuestion) {
-                    switch (slaQuestion.value) {
-                        case 0:
-                            percentage = '99.5%';
-                            time = '3시간 36분'
-                            break;
-                        case 1:
-                            percentage = '99.9%';
-                            time = '43분 12초'
-                            break;
-                        case 2:
-                            percentage = '99.99%';
-                            time = '4분 19초'
-                            break;
-                        default:
-                            percentage = '99.999%';
-                            time = '26초'
-                            break;
-                    }
-                    break; // 질문을 찾으면 루프를 종료합니다.
-                }
-            }
-
-            this.slaResult.percentage = percentage;
-            this.slaResult.time = time
-
             // 클라우드 상태 평가 로직
             let count = 0;
-            this.chartData.topics.forEach(topic => {
-                count += topic.questions.filter(question => question.value >= 3).length;
+            chartData.topics.forEach(topic => {
+                topic.questions.forEach(question => {
+                    if (question.value >= 3) {
+                        if (typeof question.importantCount === 'number') {
+                            count += question.importantCount; // importantCount의 숫자만큼 count 증가
+                        } else {
+                            count += 1; // importantCount가 숫자가 아니면 count를 1만큼 증가
+                        }
+                    }
+                });
             });
 
+            // count 값에 따라 slaResult 설정
             if (count >= 5) {
-                this.slaResult.conversionGoal = 'native'
-                this.slaResult.conversionMethod = 'reArchitect'
+                this.slaResult.percentage = '99.999%';
+                this.slaResult.time = '26초';
+                this.slaResult.conversionGoal = 'native';
+                this.slaResult.conversionMethod = 'reArchitect';
                 this.slaResult.cloudStatus = 'Cloud Native';
-                this.slaResult.conversionText = '기존 시스템을 대폭 수정하여 클라우드 네이티브 기능의 이점을 활용할 수 있도록 하는 것입니다. 아무래도 클라우드 마이그레이션 방법들 중에서 가장 난이도가 높은 방법입니다.'
+                this.slaResult.conversionText = '기존 시스템을 대폭 수정하여 클라우드 네이티브 기능의 이점을 활용할 수 있도록 하는 것입니다.';
             } else if (count >= 3) {
-                this.slaResult.conversionGoal = 'optimized'
-                this.slaResult.conversionMethod = 'rePlatform'
+                this.slaResult.percentage = '99.99%';
+                this.slaResult.time = '4분 19초';
+                this.slaResult.conversionGoal = 'optimized';
+                this.slaResult.conversionMethod = 'rePlatform';
                 this.slaResult.cloudStatus = 'Cloud Optimized';
-                this.slaResult.conversionText = '이는 기존의 시스템 환경에서 OS나 웹/WAS/DB 등과 같은 미들웨어 환경을 일부 변경해서 이전하는 방식입니다.'
-            } else if (count === 2) {
-                this.slaResult.conversionGoal = 'ready'
-                this.slaResult.conversionMethod = 'reHost'
+                this.slaResult.conversionText = 'OS나 웹/WAS/DB 등과 같은 미들웨어 환경을 일부 변경해서 이전하는 방식입니다.';
+            } else if (count >= 2) {
+                this.slaResult.percentage = '99.9%';
+                this.slaResult.time = '43분 12초';
+                this.slaResult.conversionGoal = 'ready';
+                this.slaResult.conversionMethod = 'reHost';
                 this.slaResult.cloudStatus = 'Cloud Ready';
-                this.slaResult.conversionText = '이를 다른 말로 ‘Rift and Shift’라고 부르기도 합니다. 번역하면 들어서 옮긴다는 의미입니다. 기존의 시스템에서 별다른 수정 없이 환경만 클라우드로 이전하는 것을 말합니다. 클라우드 마이그레이션 타입 중에서 가장 쉬운 방법이라고 볼 수 있지만, 클라우드 제공 업체에서 제공하는 다양한 기능들을 활용하지 못한다는 단점이 있을 수 있습니다.'
+                this.slaResult.conversionText = '기존의 시스템에서 별다른 수정 없이 환경만 클라우드로 이전하는 것을 말합니다.';
             } else {
-                this.slaResult.conversionGoal = 'keep'
-                this.slaResult.conversionMethod = 'retain'
+                this.slaResult.percentage = '99.5%';
+                this.slaResult.time = '3시간 36분';
+                this.slaResult.conversionGoal = 'keep';
+                this.slaResult.conversionMethod = 'retain';
                 this.slaResult.cloudStatus = '기존 시스템 유지';
-                this.slaResult.conversionText = '클라우드로 옮기거나 하지 않고 현재 상태로 유지하는 것을 말합니다. 기존의 시스템 중에는 기존 거버넌스, 컴플라이언스, 보안 등의 이유로 기존대로 유지하는 것이 적합할 경우도 많이 있습니다. 이 부분도 클라우드 마이그레이션 타입에 포함될 필요는 없다고 생각되지만, 클라우드 마이그레이션 계획 수립 시 정리가 필요한 부분이기에 포함된 것이라는 생각이 듭니다. 그리고 이 경우에는 추후 전체적인 준비가 된 후에 클라우드 마이그레이션을 수행하게 될 수도 있습니다.';
+                this.slaResult.conversionText = '클라우드로 옮기거나 하지 않고 현재 상태로 유지하는 것을 말합니다.';
             }
 
-            this.slaResult.count = count
+            this.slaResult.count = count;
         },
 	}
 });
@@ -10600,7 +10657,7 @@ var render = function render() {
           "v-app-bar",
           {
             staticStyle: { height: "60px" },
-            attrs: { elevation: "0", outlined: "", left: "" },
+            attrs: { elevation: "0", outlined: "", left: "", app: "" },
           },
           [
             _c("img", {
@@ -10618,60 +10675,62 @@ var render = function render() {
                 },
               },
             }),
-            _c(
-              "v-tooltip",
-              {
-                attrs: { right: "" },
-                scopedSlots: _vm._u([
-                  {
-                    key: "activator",
-                    fn: function ({ on }) {
-                      return [
-                        _c(
-                          "v-btn",
-                          _vm._g(
-                            {
-                              staticStyle: { "margin-left": "10px" },
-                              attrs: { icon: "" },
-                              on: {
-                                click: function ($event) {
-                                  return _vm.openEditProfile()
-                                },
-                              },
-                            },
-                            on
-                          ),
-                          [
-                            _c("Icon", {
-                              attrs: {
-                                icon: "carbon:user-profile",
-                                width: "30",
-                                height: "30",
-                              },
-                            }),
-                          ],
-                          1
-                        ),
-                      ]
-                    },
-                  },
-                ]),
-              },
-              [_c("span", [_vm._v("프로필 관리")])]
-            ),
             _c("v-spacer"),
-            _vm.selectedUser
-              ? _c("v-card-title", [
-                  _vm._v(
-                    "프로필 : " +
-                      _vm._s(_vm.selectedProfile) +
-                      " > " +
-                      _vm._s(_vm.selectedUser)
-                  ),
-                ])
-              : _c("v-card-title", [
-                  _vm._v("프로필 : " + _vm._s(_vm.selectedProfile)),
-                ]),
+            _vm.showProfileInfo
+              ? _c(
+                  "v-tooltip",
+                  {
+                    attrs: { bottom: "" },
+                    scopedSlots: _vm._u(
+                      [
+                        {
+                          key: "activator",
+                          fn: function ({ on }) {
+                            return [
+                              _c(
+                                "div",
+                                _vm._g(
+                                  {
+                                    staticStyle: { cursor: "pointer" },
+                                    on: {
+                                      click: function ($event) {
+                                        return _vm.openEditProfile()
+                                      },
+                                    },
+                                  },
+                                  on
+                                ),
+                                [
+                                  _vm.selectedUser
+                                    ? _c("v-card-title", [
+                                        _vm._v(
+                                          "프로필 : " +
+                                            _vm._s(_vm.selectedProfile) +
+                                            " > " +
+                                            _vm._s(_vm.selectedUser)
+                                        ),
+                                      ])
+                                    : _c("v-card-title", [
+                                        _vm._v(
+                                          "그룹 : " +
+                                            _vm._s(_vm.selectedProfile)
+                                        ),
+                                      ]),
+                                ],
+                                1
+                              ),
+                            ]
+                          },
+                        },
+                      ],
+                      null,
+                      false,
+                      3753966210
+                    ),
+                  },
+                  [_c("span", [_vm._v("그룹 관리")])]
+                )
+              : _vm._e(),
           ],
           1
         ),
@@ -10995,9 +11054,33 @@ var render = function render() {
                 top: "0px",
                 height: "100vh",
                 "z-index": "999",
+                "border-right": "solid 1px gray",
+                overflow: "auto",
               },
             },
             [
+              _c(
+                "v-row",
+                { staticClass: "ma-0 pa-0" },
+                [
+                  _c("v-spacer"),
+                  _c(
+                    "v-btn",
+                    {
+                      staticStyle: { "margin-right": "10px" },
+                      attrs: { small: "", icon: "" },
+                      on: {
+                        click: function ($event) {
+                          _vm.openEditProfile = false
+                        },
+                      },
+                    },
+                    [_c("v-icon", [_vm._v("mdi-close")])],
+                    1
+                  ),
+                ],
+                1
+              ),
               _vm._l(_vm.profiles, function (profile, index) {
                 return _c(
                   "v-list-group",
@@ -11005,12 +11088,6 @@ var render = function render() {
                     key: profile.name,
                     attrs: { "no-action": "" },
                     on: {
-                      mouseover: function ($event) {
-                        _vm.hoverProfileIndex = index
-                      },
-                      mouseleave: function ($event) {
-                        _vm.hoverProfileIndex = null
-                      },
                       click: function ($event) {
                         return _vm.selectProfile(profile.name)
                       },
@@ -11027,9 +11104,12 @@ var render = function render() {
                                   _c(
                                     "v-list-item-content",
                                     [
-                                      _c("v-list-item-title", [
-                                        _vm._v(_vm._s(profile.name)),
-                                      ]),
+                                      !_vm.isEditingProfile ||
+                                      _vm.editingIndex !== index
+                                        ? _c("v-list-item-title", [
+                                            _vm._v(_vm._s(profile.name)),
+                                          ])
+                                        : _vm._e(),
                                     ],
                                     1
                                   ),
@@ -11050,7 +11130,7 @@ var render = function render() {
                                                 staticClass:
                                                   "profile-input-field",
                                                 attrs: {
-                                                  label: "프로필 입력",
+                                                  label: "그룹 입력",
                                                   rules:
                                                     _vm.newProfile.nameRules,
                                                   required: "",
@@ -11071,7 +11151,6 @@ var render = function render() {
                                                 "v-btn",
                                                 {
                                                   attrs: {
-                                                    color: "green",
                                                     icon: "",
                                                     disabled:
                                                       !_vm.checkModified(),
@@ -11083,13 +11162,9 @@ var render = function render() {
                                                   },
                                                 },
                                                 [
-                                                  _c("Icon", {
-                                                    attrs: {
-                                                      icon: "fluent:people-edit-20-regular",
-                                                      width: "20",
-                                                      height: "20",
-                                                    },
-                                                  }),
+                                                  _c("v-icon", [
+                                                    _vm._v("mdi-plus"),
+                                                  ]),
                                                 ],
                                                 1
                                               ),
@@ -11124,80 +11199,96 @@ var render = function render() {
                                             },
                                             [
                                               _c("v-spacer"),
-                                              _vm.hoverProfileIndex === index
-                                                ? _c(
-                                                    "div",
+                                              _c(
+                                                "div",
+                                                [
+                                                  _c(
+                                                    "v-btn",
+                                                    {
+                                                      attrs: { icon: "" },
+                                                      on: {
+                                                        click: function (
+                                                          $event
+                                                        ) {
+                                                          $event.stopPropagation()
+                                                          return _vm.addUser(
+                                                            index,
+                                                            profile.name
+                                                          )
+                                                        },
+                                                      },
+                                                    },
                                                     [
                                                       _c(
-                                                        "v-btn",
+                                                        "v-icon",
                                                         {
-                                                          attrs: { icon: "" },
-                                                          on: {
-                                                            click: function (
-                                                              $event
-                                                            ) {
-                                                              $event.stopPropagation()
-                                                              return _vm.editProfile(
-                                                                index
-                                                              )
-                                                            },
-                                                          },
+                                                          attrs: { small: "" },
                                                         },
-                                                        [
-                                                          _c(
-                                                            "v-icon",
-                                                            {
-                                                              attrs: {
-                                                                small: "",
-                                                              },
-                                                            },
-                                                            [
-                                                              _vm._v(
-                                                                "mdi-pencil"
-                                                              ),
-                                                            ]
-                                                          ),
-                                                        ],
-                                                        1
-                                                      ),
-                                                      _c(
-                                                        "v-btn",
-                                                        {
-                                                          attrs: { icon: "" },
-                                                          on: {
-                                                            click: function (
-                                                              $event
-                                                            ) {
-                                                              $event.stopPropagation()
-                                                              return _vm.openDeleteProfileDialog(
-                                                                profile,
-                                                                index
-                                                              )
-                                                            },
-                                                          },
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "v-icon",
-                                                            {
-                                                              attrs: {
-                                                                color: "red",
-                                                                small: "",
-                                                              },
-                                                            },
-                                                            [
-                                                              _vm._v(
-                                                                "mdi-delete"
-                                                              ),
-                                                            ]
-                                                          ),
-                                                        ],
-                                                        1
+                                                        [_vm._v("mdi-plus")]
                                                       ),
                                                     ],
                                                     1
-                                                  )
-                                                : _vm._e(),
+                                                  ),
+                                                  _c(
+                                                    "v-btn",
+                                                    {
+                                                      attrs: { icon: "" },
+                                                      on: {
+                                                        click: function (
+                                                          $event
+                                                        ) {
+                                                          $event.stopPropagation()
+                                                          return _vm.editProfile(
+                                                            index,
+                                                            profile.name
+                                                          )
+                                                        },
+                                                      },
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-icon",
+                                                        {
+                                                          attrs: { small: "" },
+                                                        },
+                                                        [_vm._v("mdi-pencil")]
+                                                      ),
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _c(
+                                                    "v-btn",
+                                                    {
+                                                      attrs: { icon: "" },
+                                                      on: {
+                                                        click: function (
+                                                          $event
+                                                        ) {
+                                                          $event.stopPropagation()
+                                                          return _vm.openDeleteProfileDialog(
+                                                            profile,
+                                                            index
+                                                          )
+                                                        },
+                                                      },
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-icon",
+                                                        {
+                                                          attrs: {
+                                                            color: "red",
+                                                            small: "",
+                                                          },
+                                                        },
+                                                        [_vm._v("mdi-delete")]
+                                                      ),
+                                                    ],
+                                                    1
+                                                  ),
+                                                ],
+                                                1
+                                              ),
                                             ],
                                             1
                                           ),
@@ -11215,6 +11306,13 @@ var render = function render() {
                       null,
                       true
                     ),
+                    model: {
+                      value: _vm.expandedGroup[index],
+                      callback: function ($$v) {
+                        _vm.$set(_vm.expandedGroup, index, $$v)
+                      },
+                      expression: "expandedGroup[index]",
+                    },
                   },
                   [
                     _vm._l(profile.users, function (user, index) {
@@ -11224,12 +11322,6 @@ var render = function render() {
                           key: user.name,
                           attrs: { link: "" },
                           on: {
-                            mouseover: function ($event) {
-                              _vm.hoverUserIndex = index
-                            },
-                            mouseleave: function ($event) {
-                              _vm.hoverUserIndex = null
-                            },
                             click: function ($event) {
                               return _vm.selectUser(user.name)
                             },
@@ -11243,15 +11335,17 @@ var render = function render() {
                               _c(
                                 "div",
                                 [
-                                  _c("v-list-item-title", [
-                                    _vm._v(_vm._s(user.name)),
-                                  ]),
+                                  !_vm.isEditingUser ||
+                                  _vm.editingIndex !== index
+                                    ? _c("v-list-item-title", [
+                                        _vm._v(_vm._s(user.name)),
+                                      ])
+                                    : _vm._e(),
                                 ],
                                 1
                               ),
                               _c("v-spacer"),
-                              _vm.isEditingUser == true &&
-                              _vm.editingIndex == index
+                              _vm.isEditingUser && _vm.editingIndex == index
                                 ? _c(
                                     "v-row",
                                     {
@@ -11263,7 +11357,7 @@ var render = function render() {
                                         staticClass: "profile-input-field",
                                         staticStyle: { "margin-left": "20px" },
                                         attrs: {
-                                          label: "이름 입력",
+                                          label: "프로필 입력",
                                           rules: _vm.newUser.nameRules,
                                           required: "",
                                         },
@@ -11282,7 +11376,6 @@ var render = function render() {
                                             "v-btn",
                                             {
                                               attrs: {
-                                                color: "green",
                                                 icon: "",
                                                 disabled: !_vm.checkModified(),
                                               },
@@ -11293,13 +11386,9 @@ var render = function render() {
                                               },
                                             },
                                             [
-                                              _c("Icon", {
-                                                attrs: {
-                                                  icon: "fluent:person-edit-20-regular",
-                                                  width: "20",
-                                                  height: "20",
-                                                },
-                                              }),
+                                              _c("v-icon", [
+                                                _vm._v("mdi-plus"),
+                                              ]),
                                             ],
                                             1
                                           ),
@@ -11326,8 +11415,7 @@ var render = function render() {
                                     ],
                                     1
                                   )
-                                : _vm.hoverUserIndex === index
-                                ? _c(
+                                : _c(
                                     "div",
                                     { staticStyle: { "margin-left": "30px" } },
                                     [
@@ -11338,7 +11426,10 @@ var render = function render() {
                                           on: {
                                             click: function ($event) {
                                               $event.stopPropagation()
-                                              return _vm.editUser(index)
+                                              return _vm.editUser(
+                                                index,
+                                                user.name
+                                              )
                                             },
                                           },
                                         },
@@ -11381,8 +11472,7 @@ var render = function render() {
                                       ),
                                     ],
                                     1
-                                  )
-                                : _vm._e(),
+                                  ),
                             ],
                             1
                           ),
@@ -11390,73 +11480,8 @@ var render = function render() {
                         1
                       )
                     }),
-                    !_vm.addUserStatus
+                    _vm.addUserStatus
                       ? _c(
-                          "v-tooltip",
-                          {
-                            attrs: { bottom: "" },
-                            scopedSlots: _vm._u(
-                              [
-                                {
-                                  key: "activator",
-                                  fn: function ({ on, attrs }) {
-                                    return [
-                                      _c(
-                                        "v-card",
-                                        _vm._g(
-                                          _vm._b(
-                                            {
-                                              staticClass: "add-card",
-                                              attrs: { outlined: "" },
-                                              on: {
-                                                click: function ($event) {
-                                                  return _vm.addUser()
-                                                },
-                                              },
-                                            },
-                                            "v-card",
-                                            attrs,
-                                            false
-                                          ),
-                                          on
-                                        ),
-                                        [
-                                          _c(
-                                            "div",
-                                            {
-                                              staticStyle: {
-                                                display: "flex",
-                                                "justify-content": "center",
-                                                "align-items": "center",
-                                              },
-                                            },
-                                            [
-                                              _c("Icon", {
-                                                staticStyle: {
-                                                  color: "#5EB2E8",
-                                                },
-                                                attrs: {
-                                                  icon: "tdesign:user-add",
-                                                  width: "20",
-                                                  height: "20",
-                                                },
-                                              }),
-                                            ],
-                                            1
-                                          ),
-                                        ]
-                                      ),
-                                    ]
-                                  },
-                                },
-                              ],
-                              null,
-                              true
-                            ),
-                          },
-                          [_c("span", [_vm._v("사용자 추가")])]
-                        )
-                      : _c(
                           "div",
                           [
                             _c(
@@ -11467,7 +11492,7 @@ var render = function render() {
                                   staticClass: "profile-input-field",
                                   staticStyle: { "padding-left": "35px" },
                                   attrs: {
-                                    label: "이름 입력",
+                                    label: "프로필 입력",
                                     rules: _vm.newUser.nameRules,
                                     required: "",
                                   },
@@ -11484,7 +11509,6 @@ var render = function render() {
                                   {
                                     staticStyle: { "margin-top": "10px" },
                                     attrs: {
-                                      color: "primary",
                                       icon: "",
                                       disabled: !_vm.checkModified(),
                                     },
@@ -11494,7 +11518,7 @@ var render = function render() {
                                       },
                                     },
                                   },
-                                  [_c("v-icon", [_vm._v("mdi-account-plus")])],
+                                  [_c("v-icon", [_vm._v("mdi-plus")])],
                                   1
                                 ),
                                 _c(
@@ -11518,75 +11542,37 @@ var render = function render() {
                             ),
                           ],
                           1
-                        ),
+                        )
+                      : _vm._e(),
                   ],
                   2
                 )
               }),
               !_vm.addProfileStatus
                 ? _c(
-                    "v-tooltip",
+                    "v-card",
                     {
-                      attrs: { bottom: "" },
-                      scopedSlots: _vm._u(
-                        [
-                          {
-                            key: "activator",
-                            fn: function ({ on, attrs }) {
-                              return [
-                                _c(
-                                  "v-card",
-                                  _vm._g(
-                                    _vm._b(
-                                      {
-                                        staticClass: "add-card",
-                                        attrs: { outlined: "" },
-                                        on: {
-                                          click: function ($event) {
-                                            return _vm.addProfile()
-                                          },
-                                        },
-                                      },
-                                      "v-card",
-                                      attrs,
-                                      false
-                                    ),
-                                    on
-                                  ),
-                                  [
-                                    _c(
-                                      "div",
-                                      {
-                                        staticStyle: {
-                                          display: "flex",
-                                          "justify-content": "center",
-                                          "align-items": "center",
-                                        },
-                                      },
-                                      [
-                                        _c("Icon", {
-                                          staticStyle: { color: "#5EB2E8" },
-                                          attrs: {
-                                            icon: "ant-design:usergroup-add-outlined",
-                                            width: "20",
-                                            height: "20",
-                                          },
-                                        }),
-                                      ],
-                                      1
-                                    ),
-                                  ]
-                                ),
-                              ]
-                            },
-                          },
-                        ],
-                        null,
-                        false,
-                        1192679212
-                      ),
+                      staticClass: "add-card",
+                      attrs: { outlined: "" },
+                      on: {
+                        click: function ($event) {
+                          return _vm.addProfile()
+                        },
+                      },
                     },
-                    [_c("span", [_vm._v("프로필 추가")])]
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            display: "flex",
+                            "justify-content": "center",
+                            "align-items": "center",
+                          },
+                        },
+                        [_vm._v("\n                그룹 추가\n            ")]
+                      ),
+                    ]
                   )
                 : _c(
                     "div",
@@ -11599,7 +11585,7 @@ var render = function render() {
                             staticClass: "profile-input-field",
                             staticStyle: { "padding-left": "35px" },
                             attrs: {
-                              label: "프로필 입력",
+                              label: "그룹 입력",
                               rules: _vm.newProfile.nameRules,
                               required: "",
                             },
@@ -11616,7 +11602,6 @@ var render = function render() {
                             {
                               staticStyle: { "margin-top": "10px" },
                               attrs: {
-                                color: "primary",
                                 icon: "",
                                 disabled: !_vm.checkModified(),
                               },
@@ -11626,15 +11611,7 @@ var render = function render() {
                                 },
                               },
                             },
-                            [
-                              _c("Icon", {
-                                attrs: {
-                                  icon: "ant-design:usergroup-add-outlined",
-                                  width: "20",
-                                  height: "20",
-                                },
-                              }),
-                            ],
+                            [_c("v-icon", [_vm._v("mdi-plus")])],
                             1
                           ),
                           _c(
@@ -11682,10 +11659,10 @@ var render = function render() {
                 staticClass: "ma-0 pa-0",
                 attrs: {
                   label: _vm.deleteUserName
-                    ? `'${_vm.deleteProfileName} > ${_vm.deleteUserName}' 사용자를 삭제하시겠습니까?`
+                    ? `'${_vm.deleteProfileName} > ${_vm.deleteUserName}' 프로필를 삭제하시겠습니까?`
                     : _vm.deleteProfileName
-                    ? `'${_vm.deleteProfileName}' 프로필을 삭제하시겠습니까?`
-                    : "등록된 프로필이나 사용자가 없습니다.",
+                    ? `'${_vm.deleteProfileName}' 그룹을 삭제하시겠습니까?`
+                    : "등록된 그룹이나 프로필가 없습니다.",
                   disabled: !_vm.deleteProfileName && !_vm.deleteUserName,
                 },
                 model: {
@@ -11769,7 +11746,41 @@ var render = function render() {
       _c("v-simple-table", [
         _c("thead", [
           _c("tr", { staticClass: "all-guide-table-head" }, [
-            _c("th", { staticStyle: { "text-align": "left !important" } }),
+            _c(
+              "th",
+              { staticStyle: { "text-align": "left !important" } },
+              [
+                _c("v-row", [
+                  _c("div", [_vm._v("목표수준")]),
+                  _c("div", {
+                    staticClass: "color-box-style",
+                    staticStyle: {
+                      "background-color": "rgb(25, 118, 210)",
+                      "margin-left": "4px",
+                    },
+                  }),
+                  _vm._v(" /\n                    "),
+                  _c("div", [_vm._v("현수준")]),
+                  _c("div", {
+                    staticClass: "color-box-style",
+                    staticStyle: {
+                      "background-color": "rgba(255, 183, 77, 1)",
+                      "margin-left": "4px",
+                    },
+                  }),
+                  _vm._v(" /\n                    "),
+                  _c("div", [_vm._v("달성수준")]),
+                  _c("div", {
+                    staticClass: "color-box-style",
+                    staticStyle: {
+                      "background-color": "green",
+                      "margin-left": "4px",
+                    },
+                  }),
+                ]),
+              ],
+              1
+            ),
             _c("th", [_vm._v("Level 1")]),
             _c("th", [_vm._v("Level 2")]),
             _c("th", [_vm._v("Level 3")]),
@@ -11807,7 +11818,12 @@ var render = function render() {
                           },
                           style: _vm.checkPathMatch(level.path),
                         },
-                        [_vm._v("전환 가이드 보기\n                ")]
+                        [
+                          _c("div", [_vm._v("전환 가이드 보기")]),
+                          _c("div", { staticStyle: { "font-weight": "900" } }, [
+                            _vm._v(_vm._s(level.name)),
+                          ]),
+                        ]
                       ),
                     ],
                     1
@@ -12098,149 +12114,160 @@ var render = function render() {
           _c("v-tab-item", { key: "fixed-tab-content" }, [
             _c(
               "div",
-              { staticStyle: { padding: "0px" }, attrs: { flat: "" } },
+              { staticStyle: { padding: "0px" } },
               [
-                _c("div", { staticClass: "img-box-wrap" }, [
-                  _c("div", { staticClass: "conversion-img-box" }, [
-                    _c("div", [
-                      _c("h3", [_vm._v("ㆍ목표 성숙도 모델")]),
-                      _c("img", {
-                        attrs: {
-                          src: _vm.conversionGoalImage(
-                            _vm.slaResult.conversionGoal
-                          ),
-                        },
-                      }),
-                      _c(
-                        "div",
-                        {
-                          staticStyle: {
-                            "text-align": "start",
-                            "margin-left": "16%",
-                          },
-                        },
-                        [
-                          _c("div", [
-                            _vm._v(
-                              "서비스에 대한 클라우드 네이티브 적합성 검토결과,"
-                            ),
-                            _c("br"),
-                            _c(
-                              "span",
-                              {
-                                staticStyle: {
-                                  "font-weight": "700",
-                                  color: "orange",
-                                },
-                              },
-                              [_vm._v(_vm._s(_vm.slaResult.count))]
-                            ),
-                            _vm._v(
-                              "개 이상 항목에서 적합성 조건을 충족하여\n                                    "
-                            ),
-                            _c(
-                              "span",
-                              {
-                                staticStyle: {
-                                  "font-weight": "700",
-                                  color: "orange",
-                                },
-                              },
-                              [
-                                _vm._v(
-                                  _vm._s(_vm.slaResult.cloudStatus) +
-                                    _vm._s(
-                                      _vm.getConversionResult(
-                                        _vm.slaResult.conversionGoal
-                                      )
-                                    )
+                _c(
+                  "v-row",
+                  { staticClass: "ma-0 pa-0" },
+                  [
+                    _c(
+                      "v-col",
+                      {
+                        staticClass: "get-the-guide-col-padding-right ma-0",
+                        attrs: { cols: "6" },
+                      },
+                      [
+                        _c(
+                          "div",
+                          [
+                            _c("h3", [_vm._v("ㆍ목표 성숙도 모델")]),
+                            _c("v-img", {
+                              attrs: {
+                                src: _vm.conversionGoalImage(
+                                  _vm.slaResult.conversionGoal
                                 ),
+                              },
+                            }),
+                            _c(
+                              "div",
+                              { staticStyle: { "text-align": "start" } },
+                              [
+                                _c("div", [
+                                  _vm._v(
+                                    "서비스에 대한 클라우드 네이티브 적합성 검토결과,"
+                                  ),
+                                  _c("br"),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-primary",
+                                      staticStyle: { "font-weight": "700" },
+                                    },
+                                    [_vm._v(_vm._s(_vm.slaResult.count))]
+                                  ),
+                                  _vm._v(
+                                    "개 이상 항목에서 적합성 조건을 충족하여\n                                    "
+                                  ),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-primary",
+                                      staticStyle: { "font-weight": "700" },
+                                    },
+                                    [
+                                      _vm._v(
+                                        _vm._s(_vm.slaResult.cloudStatus) +
+                                          _vm._s(
+                                            _vm.getConversionResult(
+                                              _vm.slaResult.conversionGoal
+                                            )
+                                          )
+                                      ),
+                                    ]
+                                  ),
+                                ]),
+                                _c("div", [
+                                  _vm._v(
+                                    "\n                                    - 목표 시스템 레벨에 따른 SLA 수준 : "
+                                  ),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-primary",
+                                      staticStyle: { "font-weight": "700" },
+                                    },
+                                    [_vm._v(_vm._s(_vm.slaResult.percentage))]
+                                  ),
+                                  _c("br"),
+                                  _vm._v(
+                                    "\n                                    - 월 허용가능 장애시간 : "
+                                  ),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "text-primary",
+                                      staticStyle: { "font-weight": "700" },
+                                    },
+                                    [_vm._v("약 " + _vm._s(_vm.slaResult.time))]
+                                  ),
+                                ]),
                               ]
                             ),
-                          ]),
-                          _c("div", [
-                            _vm._v(
-                              "\n                                    - 목표 시스템 레벨에 따른 SLA 수준 : "
-                            ),
-                            _c(
-                              "span",
-                              {
-                                staticStyle: {
-                                  "font-weight": "700",
-                                  color: "orange",
-                                },
-                              },
-                              [_vm._v(_vm._s(_vm.slaResult.percentage))]
-                            ),
-                            _c("br"),
-                            _vm._v(
-                              "\n                                    - 월 허용가능 장애시간 : "
-                            ),
-                            _c(
-                              "span",
-                              {
-                                staticStyle: {
-                                  "font-weight": "700",
-                                  color: "orange",
-                                },
-                              },
-                              [_vm._v("약 " + _vm._s(_vm.slaResult.time))]
-                            ),
-                          ]),
-                        ]
-                      ),
-                    ]),
-                    _c("br"),
-                    _c("div", [
-                      _c("h3", [
-                        _vm._v(
-                          "ㆍ전환 및 모더나이즈 방법론 : " +
-                            _vm._s(
-                              _vm.getConversionMethodInfo(
-                                _vm.slaResult.conversionMethod
-                              ).text
-                            )
+                          ],
+                          1
                         ),
-                      ]),
-                      _c("img", {
-                        attrs: {
-                          src: _vm.getConversionMethodInfo(
-                            _vm.slaResult.conversionMethod
-                          ).imagePath,
-                        },
-                      }),
-                      _c(
-                        "div",
-                        {
-                          staticStyle: {
-                            "text-align": "start",
-                            "margin-left": "16%",
-                          },
-                        },
-                        [
-                          _c("div", [
-                            _vm._v(_vm._s(_vm.slaResult.conversionText)),
-                          ]),
-                        ]
-                      ),
-                    ]),
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "reference-img-box" },
-                    [
-                      _c("h3", [_vm._v("ㆍ참조 아키텍처")]),
-                      _vm._l(
-                        _vm.referenceArchitecturegetImagePath(),
-                        function (path) {
-                          return [_c("img", { attrs: { src: path } })]
-                        }
-                      ),
-                    ],
-                    2
-                  ),
-                ]),
-              ]
+                        _c("br"),
+                        _c(
+                          "div",
+                          [
+                            _c("h3", [
+                              _vm._v(
+                                "ㆍ전환 및 모더나이즈 방법론 : " +
+                                  _vm._s(
+                                    _vm.getConversionMethodInfo(
+                                      _vm.slaResult.conversionMethod
+                                    ).text
+                                  )
+                              ),
+                            ]),
+                            _c("v-img", {
+                              attrs: {
+                                src: _vm.getConversionMethodInfo(
+                                  _vm.slaResult.conversionMethod
+                                ).imagePath,
+                              },
+                            }),
+                            _c(
+                              "div",
+                              { staticStyle: { "text-align": "start" } },
+                              [
+                                _c("div", [
+                                  _vm._v(_vm._s(_vm.slaResult.conversionText)),
+                                ]),
+                              ]
+                            ),
+                          ],
+                          1
+                        ),
+                      ]
+                    ),
+                    _c(
+                      "v-col",
+                      {
+                        staticClass: "get-the-guide-col-padding-right ma-0",
+                        attrs: { cols: "6" },
+                      },
+                      [
+                        _c(
+                          "div",
+                          [
+                            _c("h3", [_vm._v("ㆍ참조 아키텍처")]),
+                            _vm._l(
+                              _vm.referenceArchitecturegetImagePath(),
+                              function (path) {
+                                return [_c("v-img", { attrs: { src: path } })]
+                              }
+                            ),
+                          ],
+                          2
+                        ),
+                      ]
+                    ),
+                  ],
+                  1
+                ),
+              ],
+              1
             ),
           ]),
           _vm._l(_vm.guideTabs, function (item) {
@@ -12252,6 +12279,7 @@ var render = function render() {
                   _vm.goalLevels[item.tab_en] > 0 &&
                   Object.keys(_vm.markdownContentFolders).length > 0
                     ? _c("div", {
+                        staticClass: "markdown-body",
                         domProps: {
                           innerHTML: _vm._s(
                             _vm.markdownContentFolders[item.tab_en][
@@ -12464,41 +12492,34 @@ var render = function render() {
             "v-row",
             [
               _c("div", {
-                staticStyle: {
-                  width: "20px",
-                  height: "20px",
-                  "border-radius": "5px",
-                  "background-color": "rgba(192, 75, 192, 0.5)",
-                  margin: "4px 5px 0px 0px",
-                },
+                staticClass: "color-box-style",
+                staticStyle: { "background-color": "rgb(25,118,210)" },
               }),
               _c("v-row", { staticStyle: { "font-size": "20px" } }, [
                 _c("div", [_vm._v("목표수준 - ")]),
                 _c("div", { staticStyle: { "font-weight": "700" } }, [
                   _vm._v(" Maturity Level: "),
                 ]),
-                _c("div", { staticStyle: { color: "blue" } }, [
-                  _vm._v(_vm._s(_vm.slaResult.cloudStatus) + ","),
-                ]),
+                _c(
+                  "div",
+                  { staticStyle: { color: "#1976D2", "font-weight": "700" } },
+                  [_vm._v(_vm._s(_vm.slaResult.cloudStatus) + ",")]
+                ),
                 _c("div", { staticStyle: { "font-weight": "700" } }, [
                   _vm._v(" SLA: "),
                 ]),
-                _c("div", { staticStyle: { color: "red" } }, [
-                  _vm._v(_vm._s(_vm.slaResult.percentage)),
-                ]),
+                _c(
+                  "div",
+                  { staticStyle: { color: "#1976D2", "font-weight": "700" } },
+                  [_vm._v(_vm._s(_vm.slaResult.percentage))]
+                ),
               ]),
             ],
             1
           ),
           _c("v-row", [
             _c("div", {
-              staticStyle: {
-                width: "20px",
-                height: "20px",
-                "border-radius": "5px",
-                "background-color": "rgba(75, 192, 192, 1)",
-                margin: "4px 5px 0px 0px",
-              },
+              staticStyle: { "background-color": "rgba(255, 183, 77, 1)" },
             }),
             _c("div", { staticStyle: { "font-size": "20px" } }, [
               _vm._v("현수준"),
@@ -12591,15 +12612,15 @@ var render = function render() {
               _c("polygon", {
                 attrs: {
                   points: _vm.getPolygonPoints(_vm.chartData.perspectives),
-                  fill: "rgba(75, 192, 192, 0.2)",
-                  stroke: "rgba(75, 192, 192, 1)",
+                  fill: "rgba(255, 183, 77,0.2)",
+                  stroke: "rgba(255, 183, 77, 1)",
                 },
               }),
               _c("polygon", {
                 attrs: {
                   points: _vm.getPolygonPointsGoal(_vm.chartData.perspectives),
-                  fill: "rgba(192, 75, 192, 0.1)",
-                  stroke: "rgba(192, 75, 192, 1)",
+                  fill: "rgb(25, 118, 210, 0.2)",
+                  stroke: "rgb(25, 118, 210, 1)",
                 },
               }),
               _vm._l(_vm.chartData.perspectives, function (perspective, index) {
@@ -12609,7 +12630,7 @@ var render = function render() {
                       cx: _vm.getCoordinateForCircle(perspective, index)[0],
                       cy: _vm.getCoordinateForCircle(perspective, index)[1],
                       r: _vm.pointRadius,
-                      fill: "rgba(75, 192, 192, 1)",
+                      fill: "rgba(255, 183, 77, 1)",
                     },
                   }),
                   _c("circle", {
@@ -12617,7 +12638,7 @@ var render = function render() {
                       cx: _vm.getCoordinateForCircleGoal(perspective, index)[0],
                       cy: _vm.getCoordinateForCircleGoal(perspective, index)[1],
                       r: _vm.pointRadius,
-                      fill: "rgba(192, 75, 192, 0.5)",
+                      fill: "rgb(25, 118, 210, 1)",
                     },
                   }),
                 ])
@@ -12851,7 +12872,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.guide-box {\n    padding:20px;\n    overflow: auto;\n}\n.tab-title {\n    font-size: 16px;\n    font-weight: 700;\n}\n.img-box-wrap {\n    max-width: 1920px;\n    width: 100%;\n    margin: 0 auto;\n    display: flex;\n    align-items: flex-start; \n    justify-content: center;\n}\n.conversion-img-box {\n    max-width: 720px;\n    width: 40%;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n}\n.conversion-img-box > div {\n    width: 100%;\n    max-height: 100%;\n}\n.conversion-img-box > div > h3 {\n    width: 80%;\n    margin: 0 auto;\n}\n.conversion-img-box > div > img {\n    display: block;\n    max-width: 100%;\n    width: 70%;\n\theight: auto;\n    margin: 0 auto;\n}\n.reference-img-box {\n    max-width: 760px;\n    width: 50%;\n    display: flex;\n    justify-content: center;\n    flex-direction: column;\n}\n.reference-img-box > h3 {\n    width: 70%;\n    margin: 0 auto;\n}\n.reference-img-box > img {\n    max-width: 100%;\n    width: 60%;\n\theight: auto;\n    margin: 0 auto;\n}\n@media all and (min-width:1520px) and (max-height:779px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        font-size: 1.1rem;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 53%;\n        font-size: 1.1rem;\n}\n}\n@media only screen and (max-width:1280px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 80%;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 70%;\n}\n}\n@media only screen and (max-width:1024px) {\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 90%;\n        font-size: 1.05rem;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 80%;\n        font-size: 1.05rem;\n}\n}\n@media only screen and (max-width:768px) {\n.img-box-wrap {\n        height: 100%;\n        padding: 10px;\n        flex-direction: column;\n        justify-content: flex-start;\n}\n.conversion-img-box{\n        width: 100%;\n        padding-bottom: 20px;\n}\n.conversion-img-box > div > h3, .conversion-img-box > div > img {\n        width: 100%;\n}\n.reference-img-box {\n        width: 100%;\n        height: 100%;\n        justify-content: flex-start;\n        margin-top: 20px;\n}\n.reference-img-box > h3, .reference-img-box > img {\n        width: 100%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.get-the-guide-col-padding-right {\n    padding:0px 20% 0px 20px !important;\n}\n.text-primary {\n    color:#1976D2\n}\n.guide-box {\n    padding:20px;\n    overflow: auto;\n}\n.tab-title {\n    font-size: 16px;\n    font-weight: 700;\n}\n", ""]);
 
 // exports
 
@@ -12908,7 +12929,7 @@ exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/li
 
 
 // module
-exports.push([module.i, "* {\n    font-family: sans-serif;\n}\n\n.clearfix::after {\n    content: \"\";\n    display: block;\n    clear: both;\n}\n\nhtml, body, #app {\n    margin: 0;\n    padding: 0;\n    height: 100%;\n}\n\nsvg {\n    display: block;\n    margin: auto;\n}\n\n.col, .row {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\n.container {\n\tdisplay: flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\n\n.chart-container {\n\tflex: 0.5;\n}\nsvg {\n\tdisplay: block;\n\tmargin: auto;\n}\n\n.v-slider--disabled .v-slider__thumb{\n    background:#1976D2 !important;\n}", ""]);
+exports.push([module.i, "* {\n    font-family: sans-serif;\n}\n\n.clearfix::after {\n    content: \"\";\n    display: block;\n    clear: both;\n}\n\nhtml, body, #app {\n    margin: 0;\n    padding: 0;\n    height: 100%;\n}\n\nsvg {\n    display: block;\n    margin: auto;\n}\n\n.col, .row {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\n.container {\n\tdisplay: flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\n\n.chart-container {\n\tflex: 0.5;\n}\nsvg {\n\tdisplay: block;\n\tmargin: auto;\n}\n\n.v-slider--disabled .v-slider__thumb{\n    background:#1976D2 !important;\n}\n\n.color-box-style {\n    width:20px;\n    height:20px;\n    border-radius: 5px;\n    margin:4px 5px 0px 0px;\n}\n\n\n\n\n\n\n/* 마크다운 css */\n@media (prefers-color-scheme: dark) {\n    .markdown-body,\n    [data-theme=\"dark\"] {\n      /*dark*/\n      color-scheme: dark;\n      --color-prettylights-syntax-comment: #8b949e;\n      --color-prettylights-syntax-constant: #79c0ff;\n      --color-prettylights-syntax-entity: #d2a8ff;\n      --color-prettylights-syntax-storage-modifier-import: #c9d1d9;\n      --color-prettylights-syntax-entity-tag: #7ee787;\n      --color-prettylights-syntax-keyword: #ff7b72;\n      --color-prettylights-syntax-string: #a5d6ff;\n      --color-prettylights-syntax-variable: #ffa657;\n      --color-prettylights-syntax-brackethighlighter-unmatched: #f85149;\n      --color-prettylights-syntax-invalid-illegal-text: #f0f6fc;\n      --color-prettylights-syntax-invalid-illegal-bg: #8e1519;\n      --color-prettylights-syntax-carriage-return-text: #f0f6fc;\n      --color-prettylights-syntax-carriage-return-bg: #b62324;\n      --color-prettylights-syntax-string-regexp: #7ee787;\n      --color-prettylights-syntax-markup-list: #f2cc60;\n      --color-prettylights-syntax-markup-heading: #1f6feb;\n      --color-prettylights-syntax-markup-italic: #c9d1d9;\n      --color-prettylights-syntax-markup-bold: #c9d1d9;\n      --color-prettylights-syntax-markup-deleted-text: #ffdcd7;\n      --color-prettylights-syntax-markup-deleted-bg: #67060c;\n      --color-prettylights-syntax-markup-inserted-text: #aff5b4;\n      --color-prettylights-syntax-markup-inserted-bg: #033a16;\n      --color-prettylights-syntax-markup-changed-text: #ffdfb6;\n      --color-prettylights-syntax-markup-changed-bg: #5a1e02;\n      --color-prettylights-syntax-markup-ignored-text: #c9d1d9;\n      --color-prettylights-syntax-markup-ignored-bg: #1158c7;\n      --color-prettylights-syntax-meta-diff-range: #d2a8ff;\n      --color-prettylights-syntax-brackethighlighter-angle: #8b949e;\n      --color-prettylights-syntax-sublimelinter-gutter-mark: #484f58;\n      --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;\n      --color-fg-default: #e6edf3;\n      --color-fg-muted: #848d97;\n      --color-fg-subtle: #6e7681;\n      --color-canvas-default: #0d1117;\n      --color-canvas-subtle: #161b22;\n      --color-border-default: #30363d;\n      --color-border-muted: #21262d;\n      --color-neutral-muted: rgba(110,118,129,0.4);\n      --color-accent-fg: #2f81f7;\n      --color-accent-emphasis: #1f6feb;\n      --color-success-fg: #3fb950;\n      --color-success-emphasis: #238636;\n      --color-attention-fg: #d29922;\n      --color-attention-emphasis: #9e6a03;\n      --color-attention-subtle: rgba(187,128,9,0.15);\n      --color-danger-fg: #f85149;\n      --color-danger-emphasis: #da3633;\n      --color-done-fg: #a371f7;\n      --color-done-emphasis: #8957e5;\n    }\n  }\n  \n  @media (prefers-color-scheme: light) {\n    .markdown-body,\n    [data-theme=\"light\"] {\n      /*light*/\n      color-scheme: light;\n      --color-prettylights-syntax-comment: #57606a;\n      --color-prettylights-syntax-constant: #0550ae;\n      --color-prettylights-syntax-entity: #6639ba;\n      --color-prettylights-syntax-storage-modifier-import: #24292f;\n      --color-prettylights-syntax-entity-tag: #116329;\n      --color-prettylights-syntax-keyword: #cf222e;\n      --color-prettylights-syntax-string: #0a3069;\n      --color-prettylights-syntax-variable: #953800;\n      --color-prettylights-syntax-brackethighlighter-unmatched: #82071e;\n      --color-prettylights-syntax-invalid-illegal-text: #f6f8fa;\n      --color-prettylights-syntax-invalid-illegal-bg: #82071e;\n      --color-prettylights-syntax-carriage-return-text: #f6f8fa;\n      --color-prettylights-syntax-carriage-return-bg: #cf222e;\n      --color-prettylights-syntax-string-regexp: #116329;\n      --color-prettylights-syntax-markup-list: #3b2300;\n      --color-prettylights-syntax-markup-heading: #0550ae;\n      --color-prettylights-syntax-markup-italic: #24292f;\n      --color-prettylights-syntax-markup-bold: #24292f;\n      --color-prettylights-syntax-markup-deleted-text: #82071e;\n      --color-prettylights-syntax-markup-deleted-bg: #ffebe9;\n      --color-prettylights-syntax-markup-inserted-text: #116329;\n      --color-prettylights-syntax-markup-inserted-bg: #dafbe1;\n      --color-prettylights-syntax-markup-changed-text: #953800;\n      --color-prettylights-syntax-markup-changed-bg: #ffd8b5;\n      --color-prettylights-syntax-markup-ignored-text: #eaeef2;\n      --color-prettylights-syntax-markup-ignored-bg: #0550ae;\n      --color-prettylights-syntax-meta-diff-range: #8250df;\n      --color-prettylights-syntax-brackethighlighter-angle: #57606a;\n      --color-prettylights-syntax-sublimelinter-gutter-mark: #8c959f;\n      --color-prettylights-syntax-constant-other-reference-link: #0a3069;\n      --color-fg-default: #1F2328;\n      --color-fg-muted: #656d76;\n      --color-fg-subtle: #6e7781;\n      --color-canvas-default: #ffffff;\n      --color-canvas-subtle: #f6f8fa;\n      --color-border-default: #d0d7de;\n      --color-border-muted: hsla(210,18%,87%,1);\n      --color-neutral-muted: rgba(175,184,193,0.2);\n      --color-accent-fg: #0969da;\n      --color-accent-emphasis: #0969da;\n      --color-success-fg: #1a7f37;\n      --color-success-emphasis: #1f883d;\n      --color-attention-fg: #9a6700;\n      --color-attention-emphasis: #9a6700;\n      --color-attention-subtle: #fff8c5;\n      --color-danger-fg: #d1242f;\n      --color-danger-emphasis: #cf222e;\n      --color-done-fg: #8250df;\n      --color-done-emphasis: #8250df;\n    }\n  }\n  \n  .markdown-body {\n    -ms-text-size-adjust: 100%;\n    -webkit-text-size-adjust: 100%;\n    margin: 0;\n    color: var(--color-fg-default);\n    background-color: var(--color-canvas-default);\n    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",\"Noto Sans\",Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\";\n    font-size: 16px;\n    line-height: 1.5;\n    word-wrap: break-word;\n  }\n  \n  .markdown-body .octicon {\n    display: inline-block;\n    fill: currentColor;\n    vertical-align: text-bottom;\n  }\n  \n  .markdown-body h1:hover .anchor .octicon-link:before,\n  .markdown-body h2:hover .anchor .octicon-link:before,\n  .markdown-body h3:hover .anchor .octicon-link:before,\n  .markdown-body h4:hover .anchor .octicon-link:before,\n  .markdown-body h5:hover .anchor .octicon-link:before,\n  .markdown-body h6:hover .anchor .octicon-link:before {\n    width: 16px;\n    height: 16px;\n    content: ' ';\n    display: inline-block;\n    background-color: currentColor;\n    -webkit-mask-image: url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' aria-hidden='true'><path fill-rule='evenodd' d='M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z'></path></svg>\");\n    mask-image: url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' aria-hidden='true'><path fill-rule='evenodd' d='M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z'></path></svg>\");\n  }\n  \n  .markdown-body details,\n  .markdown-body figcaption,\n  .markdown-body figure {\n    display: block;\n  }\n  \n  .markdown-body summary {\n    display: list-item;\n  }\n  \n  .markdown-body [hidden] {\n    display: none !important;\n  }\n  \n  .markdown-body a {\n    background-color: transparent;\n    color: var(--color-accent-fg);\n    text-decoration: none;\n  }\n  \n  .markdown-body abbr[title] {\n    border-bottom: none;\n    -webkit-text-decoration: underline dotted;\n    text-decoration: underline dotted;\n  }\n  \n  .markdown-body b,\n  .markdown-body strong {\n    font-weight: var(--base-text-weight-semibold, 600);\n  }\n  \n  .markdown-body dfn {\n    font-style: italic;\n  }\n  \n  .markdown-body h1 {\n    margin: .67em 0;\n    font-weight: var(--base-text-weight-semibold, 600);\n    padding-bottom: .3em;\n    font-size: 2em;\n    border-bottom: 1px solid var(--color-border-muted);\n  }\n  \n  .markdown-body mark {\n    background-color: var(--color-attention-subtle);\n    color: var(--color-fg-default);\n  }\n  \n  .markdown-body small {\n    font-size: 90%;\n  }\n  \n  .markdown-body sub,\n  .markdown-body sup {\n    font-size: 75%;\n    line-height: 0;\n    position: relative;\n    vertical-align: baseline;\n  }\n  \n  .markdown-body sub {\n    bottom: -0.25em;\n  }\n  \n  .markdown-body sup {\n    top: -0.5em;\n  }\n  \n  .markdown-body img {\n    border-style: none;\n    max-width: 100%;\n    box-sizing: content-box;\n    background-color: var(--color-canvas-default);\n  }\n  \n  .markdown-body code,\n  .markdown-body kbd,\n  .markdown-body pre,\n  .markdown-body samp {\n    font-family: monospace;\n    font-size: 1em;\n  }\n  \n  .markdown-body figure {\n    margin: 1em 40px;\n  }\n  \n  .markdown-body hr {\n    box-sizing: content-box;\n    overflow: hidden;\n    background: transparent;\n    border-bottom: 1px solid var(--color-border-muted);\n    height: .25em;\n    padding: 0;\n    margin: 24px 0;\n    background-color: var(--color-border-default);\n    border: 0;\n  }\n  \n  .markdown-body input {\n    font: inherit;\n    margin: 0;\n    overflow: visible;\n    font-family: inherit;\n    font-size: inherit;\n    line-height: inherit;\n  }\n  \n  .markdown-body [type=button],\n  .markdown-body [type=reset],\n  .markdown-body [type=submit] {\n    -webkit-appearance: button;\n    appearance: button;\n  }\n  \n  .markdown-body [type=checkbox],\n  .markdown-body [type=radio] {\n    box-sizing: border-box;\n    padding: 0;\n  }\n  \n  .markdown-body [type=number]::-webkit-inner-spin-button,\n  .markdown-body [type=number]::-webkit-outer-spin-button {\n    height: auto;\n  }\n  \n  .markdown-body [type=search]::-webkit-search-cancel-button,\n  .markdown-body [type=search]::-webkit-search-decoration {\n    -webkit-appearance: none;\n    appearance: none;\n  }\n  \n  .markdown-body ::-webkit-input-placeholder {\n    color: inherit;\n    opacity: .54;\n  }\n  \n  .markdown-body ::-webkit-file-upload-button {\n    -webkit-appearance: button;\n    appearance: button;\n    font: inherit;\n  }\n  \n  .markdown-body a:hover {\n    text-decoration: underline;\n  }\n  \n  .markdown-body ::placeholder {\n    color: var(--color-fg-subtle);\n    opacity: 1;\n  }\n  \n  .markdown-body hr::before {\n    display: table;\n    content: \"\";\n  }\n  \n  .markdown-body hr::after {\n    display: table;\n    clear: both;\n    content: \"\";\n  }\n  \n  .markdown-body table {\n    border-spacing: 0;\n    border-collapse: collapse;\n    display: block;\n    width: max-content;\n    max-width: 100%;\n    overflow: auto;\n  }\n  \n  .markdown-body td,\n  .markdown-body th {\n    padding: 0;\n  }\n  \n  .markdown-body details summary {\n    cursor: pointer;\n  }\n  \n  .markdown-body details:not([open])>*:not(summary) {\n    display: none !important;\n  }\n  \n  .markdown-body a:focus,\n  .markdown-body [role=button]:focus,\n  .markdown-body input[type=radio]:focus,\n  .markdown-body input[type=checkbox]:focus {\n    outline: 2px solid var(--color-accent-fg);\n    outline-offset: -2px;\n    box-shadow: none;\n  }\n  \n  .markdown-body a:focus:not(:focus-visible),\n  .markdown-body [role=button]:focus:not(:focus-visible),\n  .markdown-body input[type=radio]:focus:not(:focus-visible),\n  .markdown-body input[type=checkbox]:focus:not(:focus-visible) {\n    outline: solid 1px transparent;\n  }\n  \n  .markdown-body a:focus-visible,\n  .markdown-body [role=button]:focus-visible,\n  .markdown-body input[type=radio]:focus-visible,\n  .markdown-body input[type=checkbox]:focus-visible {\n    outline: 2px solid var(--color-accent-fg);\n    outline-offset: -2px;\n    box-shadow: none;\n  }\n  \n  .markdown-body a:not([class]):focus,\n  .markdown-body a:not([class]):focus-visible,\n  .markdown-body input[type=radio]:focus,\n  .markdown-body input[type=radio]:focus-visible,\n  .markdown-body input[type=checkbox]:focus,\n  .markdown-body input[type=checkbox]:focus-visible {\n    outline-offset: 0;\n  }\n  \n  .markdown-body kbd {\n    display: inline-block;\n    padding: 3px 5px;\n    font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;\n    line-height: 10px;\n    color: var(--color-fg-default);\n    vertical-align: middle;\n    background-color: var(--color-canvas-subtle);\n    border: solid 1px var(--color-neutral-muted);\n    border-bottom-color: var(--color-neutral-muted);\n    border-radius: 6px;\n    box-shadow: inset 0 -1px 0 var(--color-neutral-muted);\n  }\n  \n  .markdown-body h1,\n  .markdown-body h2,\n  .markdown-body h3,\n  .markdown-body h4,\n  .markdown-body h5,\n  .markdown-body h6 {\n    margin-top: 24px;\n    margin-bottom: 16px;\n    font-weight: var(--base-text-weight-semibold, 600);\n    line-height: 1.25;\n  }\n  \n  .markdown-body h2 {\n    font-weight: var(--base-text-weight-semibold, 600);\n    padding-bottom: .3em;\n    font-size: 1.5em;\n    border-bottom: 1px solid var(--color-border-muted);\n  }\n  \n  .markdown-body h3 {\n    font-weight: var(--base-text-weight-semibold, 600);\n    font-size: 1.25em;\n  }\n  \n  .markdown-body h4 {\n    font-weight: var(--base-text-weight-semibold, 600);\n    font-size: 1em;\n  }\n  \n  .markdown-body h5 {\n    font-weight: var(--base-text-weight-semibold, 600);\n    font-size: .875em;\n  }\n  \n  .markdown-body h6 {\n    font-weight: var(--base-text-weight-semibold, 600);\n    font-size: .85em;\n    color: var(--color-fg-muted);\n  }\n  \n  .markdown-body p {\n    margin-top: 0;\n    margin-bottom: 10px;\n  }\n  \n  .markdown-body blockquote {\n    margin: 0;\n    padding: 0 1em;\n    color: var(--color-fg-muted);\n    border-left: .25em solid var(--color-border-default);\n  }\n  \n  .markdown-body ul,\n  .markdown-body ol {\n    margin-top: 0;\n    margin-bottom: 0;\n    padding-left: 2em;\n  }\n  \n  .markdown-body ol ol,\n  .markdown-body ul ol {\n    list-style-type: lower-roman;\n  }\n  \n  .markdown-body ul ul ol,\n  .markdown-body ul ol ol,\n  .markdown-body ol ul ol,\n  .markdown-body ol ol ol {\n    list-style-type: lower-alpha;\n  }\n  \n  .markdown-body dd {\n    margin-left: 0;\n  }\n  \n  .markdown-body tt,\n  .markdown-body code,\n  .markdown-body samp {\n    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;\n    font-size: 12px;\n  }\n  \n  .markdown-body pre {\n    margin-top: 0;\n    margin-bottom: 0;\n    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;\n    font-size: 12px;\n    word-wrap: normal;\n  }\n  \n  .markdown-body .octicon {\n    display: inline-block;\n    overflow: visible !important;\n    vertical-align: text-bottom;\n    fill: currentColor;\n  }\n  \n  .markdown-body input::-webkit-outer-spin-button,\n  .markdown-body input::-webkit-inner-spin-button {\n    margin: 0;\n    -webkit-appearance: none;\n    appearance: none;\n  }\n  \n  .markdown-body .mr-2 {\n    margin-right: var(--base-size-8, 8px) !important;\n  }\n  \n  .markdown-body::before {\n    display: table;\n    content: \"\";\n  }\n  \n  .markdown-body::after {\n    display: table;\n    clear: both;\n    content: \"\";\n  }\n  \n  .markdown-body>*:first-child {\n    margin-top: 0 !important;\n  }\n  \n  .markdown-body>*:last-child {\n    margin-bottom: 0 !important;\n  }\n  \n  .markdown-body a:not([href]) {\n    color: inherit;\n    text-decoration: none;\n  }\n  \n  .markdown-body .absent {\n    color: var(--color-danger-fg);\n  }\n  \n  .markdown-body .anchor {\n    float: left;\n    padding-right: 4px;\n    margin-left: -20px;\n    line-height: 1;\n  }\n  \n  .markdown-body .anchor:focus {\n    outline: none;\n  }\n  \n  .markdown-body p,\n  .markdown-body blockquote,\n  .markdown-body ul,\n  .markdown-body ol,\n  .markdown-body dl,\n  .markdown-body table,\n  .markdown-body pre,\n  .markdown-body details {\n    margin-top: 0;\n    margin-bottom: 16px;\n  }\n  \n  .markdown-body blockquote>:first-child {\n    margin-top: 0;\n  }\n  \n  .markdown-body blockquote>:last-child {\n    margin-bottom: 0;\n  }\n  \n  .markdown-body h1 .octicon-link,\n  .markdown-body h2 .octicon-link,\n  .markdown-body h3 .octicon-link,\n  .markdown-body h4 .octicon-link,\n  .markdown-body h5 .octicon-link,\n  .markdown-body h6 .octicon-link {\n    color: var(--color-fg-default);\n    vertical-align: middle;\n    visibility: hidden;\n  }\n  \n  .markdown-body h1:hover .anchor,\n  .markdown-body h2:hover .anchor,\n  .markdown-body h3:hover .anchor,\n  .markdown-body h4:hover .anchor,\n  .markdown-body h5:hover .anchor,\n  .markdown-body h6:hover .anchor {\n    text-decoration: none;\n  }\n  \n  .markdown-body h1:hover .anchor .octicon-link,\n  .markdown-body h2:hover .anchor .octicon-link,\n  .markdown-body h3:hover .anchor .octicon-link,\n  .markdown-body h4:hover .anchor .octicon-link,\n  .markdown-body h5:hover .anchor .octicon-link,\n  .markdown-body h6:hover .anchor .octicon-link {\n    visibility: visible;\n  }\n  \n  .markdown-body h1 tt,\n  .markdown-body h1 code,\n  .markdown-body h2 tt,\n  .markdown-body h2 code,\n  .markdown-body h3 tt,\n  .markdown-body h3 code,\n  .markdown-body h4 tt,\n  .markdown-body h4 code,\n  .markdown-body h5 tt,\n  .markdown-body h5 code,\n  .markdown-body h6 tt,\n  .markdown-body h6 code {\n    padding: 0 .2em;\n    font-size: inherit;\n  }\n  \n  .markdown-body summary h1,\n  .markdown-body summary h2,\n  .markdown-body summary h3,\n  .markdown-body summary h4,\n  .markdown-body summary h5,\n  .markdown-body summary h6 {\n    display: inline-block;\n  }\n  \n  .markdown-body summary h1 .anchor,\n  .markdown-body summary h2 .anchor,\n  .markdown-body summary h3 .anchor,\n  .markdown-body summary h4 .anchor,\n  .markdown-body summary h5 .anchor,\n  .markdown-body summary h6 .anchor {\n    margin-left: -40px;\n  }\n  \n  .markdown-body summary h1,\n  .markdown-body summary h2 {\n    padding-bottom: 0;\n    border-bottom: 0;\n  }\n  \n  .markdown-body ul.no-list,\n  .markdown-body ol.no-list {\n    padding: 0;\n    list-style-type: none;\n  }\n  \n  .markdown-body ol[type=\"a s\"] {\n    list-style-type: lower-alpha;\n  }\n  \n  .markdown-body ol[type=\"A s\"] {\n    list-style-type: upper-alpha;\n  }\n  \n  .markdown-body ol[type=\"i s\"] {\n    list-style-type: lower-roman;\n  }\n  \n  .markdown-body ol[type=\"I s\"] {\n    list-style-type: upper-roman;\n  }\n  \n  .markdown-body ol[type=\"1\"] {\n    list-style-type: decimal;\n  }\n  \n  .markdown-body div>ol:not([type]) {\n    list-style-type: decimal;\n  }\n  \n  .markdown-body ul ul,\n  .markdown-body ul ol,\n  .markdown-body ol ol,\n  .markdown-body ol ul {\n    margin-top: 0;\n    margin-bottom: 0;\n  }\n  \n  .markdown-body li>p {\n    margin-top: 16px;\n  }\n  \n  .markdown-body li+li {\n    margin-top: .25em;\n  }\n  \n  .markdown-body dl {\n    padding: 0;\n  }\n  \n  .markdown-body dl dt {\n    padding: 0;\n    margin-top: 16px;\n    font-size: 1em;\n    font-style: italic;\n    font-weight: var(--base-text-weight-semibold, 600);\n  }\n  \n  .markdown-body dl dd {\n    padding: 0 16px;\n    margin-bottom: 16px;\n  }\n  \n  .markdown-body table th {\n    font-weight: var(--base-text-weight-semibold, 600);\n  }\n  \n  .markdown-body table th,\n  .markdown-body table td {\n    padding: 6px 13px;\n    border: 1px solid var(--color-border-default);\n  }\n  \n  .markdown-body table td>:last-child {\n    margin-bottom: 0;\n  }\n  \n  .markdown-body table tr {\n    background-color: var(--color-canvas-default);\n    border-top: 1px solid var(--color-border-muted);\n  }\n  \n  .markdown-body table tr:nth-child(2n) {\n    background-color: var(--color-canvas-subtle);\n  }\n  \n  .markdown-body table img {\n    background-color: transparent;\n  }\n  \n  .markdown-body img[align=right] {\n    padding-left: 20px;\n  }\n  \n  .markdown-body img[align=left] {\n    padding-right: 20px;\n  }\n  \n  .markdown-body .emoji {\n    max-width: none;\n    vertical-align: text-top;\n    background-color: transparent;\n  }\n  \n  .markdown-body span.frame {\n    display: block;\n    overflow: hidden;\n  }\n  \n  .markdown-body span.frame>span {\n    display: block;\n    float: left;\n    width: auto;\n    padding: 7px;\n    margin: 13px 0 0;\n    overflow: hidden;\n    border: 1px solid var(--color-border-default);\n  }\n  \n  .markdown-body span.frame span img {\n    display: block;\n    float: left;\n  }\n  \n  .markdown-body span.frame span span {\n    display: block;\n    padding: 5px 0 0;\n    clear: both;\n    color: var(--color-fg-default);\n  }\n  \n  .markdown-body span.align-center {\n    display: block;\n    overflow: hidden;\n    clear: both;\n  }\n  \n  .markdown-body span.align-center>span {\n    display: block;\n    margin: 13px auto 0;\n    overflow: hidden;\n    text-align: center;\n  }\n  \n  .markdown-body span.align-center span img {\n    margin: 0 auto;\n    text-align: center;\n  }\n  \n  .markdown-body span.align-right {\n    display: block;\n    overflow: hidden;\n    clear: both;\n  }\n  \n  .markdown-body span.align-right>span {\n    display: block;\n    margin: 13px 0 0;\n    overflow: hidden;\n    text-align: right;\n  }\n  \n  .markdown-body span.align-right span img {\n    margin: 0;\n    text-align: right;\n  }\n  \n  .markdown-body span.float-left {\n    display: block;\n    float: left;\n    margin-right: 13px;\n    overflow: hidden;\n  }\n  \n  .markdown-body span.float-left span {\n    margin: 13px 0 0;\n  }\n  \n  .markdown-body span.float-right {\n    display: block;\n    float: right;\n    margin-left: 13px;\n    overflow: hidden;\n  }\n  \n  .markdown-body span.float-right>span {\n    display: block;\n    margin: 13px auto 0;\n    overflow: hidden;\n    text-align: right;\n  }\n  \n  .markdown-body code,\n  .markdown-body tt {\n    padding: .2em .4em;\n    margin: 0;\n    font-size: 85%;\n    white-space: break-spaces;\n    background-color: var(--color-neutral-muted);\n    border-radius: 6px;\n  }\n  \n  .markdown-body code br,\n  .markdown-body tt br {\n    display: none;\n  }\n  \n  .markdown-body del code {\n    text-decoration: inherit;\n  }\n  \n  .markdown-body samp {\n    font-size: 85%;\n  }\n  \n  .markdown-body pre code {\n    font-size: 100%;\n  }\n  \n  .markdown-body pre>code {\n    padding: 0;\n    margin: 0;\n    word-break: normal;\n    white-space: pre;\n    background: transparent;\n    border: 0;\n  }\n  \n  .markdown-body .highlight {\n    margin-bottom: 16px;\n  }\n  \n  .markdown-body .highlight pre {\n    margin-bottom: 0;\n    word-break: normal;\n  }\n  \n  .markdown-body .highlight pre,\n  .markdown-body pre {\n    padding: 16px;\n    overflow: auto;\n    font-size: 85%;\n    line-height: 1.45;\n    color: var(--color-fg-default);\n    background-color: var(--color-canvas-subtle);\n    border-radius: 6px;\n  }\n  \n  .markdown-body pre code,\n  .markdown-body pre tt {\n    display: inline;\n    max-width: auto;\n    padding: 0;\n    margin: 0;\n    overflow: visible;\n    line-height: inherit;\n    word-wrap: normal;\n    background-color: transparent;\n    border: 0;\n  }\n  \n  .markdown-body .csv-data td,\n  .markdown-body .csv-data th {\n    padding: 5px;\n    overflow: hidden;\n    font-size: 12px;\n    line-height: 1;\n    text-align: left;\n    white-space: nowrap;\n  }\n  \n  .markdown-body .csv-data .blob-num {\n    padding: 10px 8px 9px;\n    text-align: right;\n    background: var(--color-canvas-default);\n    border: 0;\n  }\n  \n  .markdown-body .csv-data tr {\n    border-top: 0;\n  }\n  \n  .markdown-body .csv-data th {\n    font-weight: var(--base-text-weight-semibold, 600);\n    background: var(--color-canvas-subtle);\n    border-top: 0;\n  }\n  \n  .markdown-body [data-footnote-ref]::before {\n    content: \"[\";\n  }\n  \n  .markdown-body [data-footnote-ref]::after {\n    content: \"]\";\n  }\n  \n  .markdown-body .footnotes {\n    font-size: 12px;\n    color: var(--color-fg-muted);\n    border-top: 1px solid var(--color-border-default);\n  }\n  \n  .markdown-body .footnotes ol {\n    padding-left: 16px;\n  }\n  \n  .markdown-body .footnotes ol ul {\n    display: inline-block;\n    padding-left: 16px;\n    margin-top: 16px;\n  }\n  \n  .markdown-body .footnotes li {\n    position: relative;\n  }\n  \n  .markdown-body .footnotes li:target::before {\n    position: absolute;\n    top: -8px;\n    right: -8px;\n    bottom: -8px;\n    left: -24px;\n    pointer-events: none;\n    content: \"\";\n    border: 2px solid var(--color-accent-emphasis);\n    border-radius: 6px;\n  }\n  \n  .markdown-body .footnotes li:target {\n    color: var(--color-fg-default);\n  }\n  \n  .markdown-body .footnotes .data-footnote-backref g-emoji {\n    font-family: monospace;\n  }\n  \n  .markdown-body .pl-c {\n    color: var(--color-prettylights-syntax-comment);\n  }\n  \n  .markdown-body .pl-c1,\n  .markdown-body .pl-s .pl-v {\n    color: var(--color-prettylights-syntax-constant);\n  }\n  \n  .markdown-body .pl-e,\n  .markdown-body .pl-en {\n    color: var(--color-prettylights-syntax-entity);\n  }\n  \n  .markdown-body .pl-smi,\n  .markdown-body .pl-s .pl-s1 {\n    color: var(--color-prettylights-syntax-storage-modifier-import);\n  }\n  \n  .markdown-body .pl-ent {\n    color: var(--color-prettylights-syntax-entity-tag);\n  }\n  \n  .markdown-body .pl-k {\n    color: var(--color-prettylights-syntax-keyword);\n  }\n  \n  .markdown-body .pl-s,\n  .markdown-body .pl-pds,\n  .markdown-body .pl-s .pl-pse .pl-s1,\n  .markdown-body .pl-sr,\n  .markdown-body .pl-sr .pl-cce,\n  .markdown-body .pl-sr .pl-sre,\n  .markdown-body .pl-sr .pl-sra {\n    color: var(--color-prettylights-syntax-string);\n  }\n  \n  .markdown-body .pl-v,\n  .markdown-body .pl-smw {\n    color: var(--color-prettylights-syntax-variable);\n  }\n  \n  .markdown-body .pl-bu {\n    color: var(--color-prettylights-syntax-brackethighlighter-unmatched);\n  }\n  \n  .markdown-body .pl-ii {\n    color: var(--color-prettylights-syntax-invalid-illegal-text);\n    background-color: var(--color-prettylights-syntax-invalid-illegal-bg);\n  }\n  \n  .markdown-body .pl-c2 {\n    color: var(--color-prettylights-syntax-carriage-return-text);\n    background-color: var(--color-prettylights-syntax-carriage-return-bg);\n  }\n  \n  .markdown-body .pl-sr .pl-cce {\n    font-weight: bold;\n    color: var(--color-prettylights-syntax-string-regexp);\n  }\n  \n  .markdown-body .pl-ml {\n    color: var(--color-prettylights-syntax-markup-list);\n  }\n  \n  .markdown-body .pl-mh,\n  .markdown-body .pl-mh .pl-en,\n  .markdown-body .pl-ms {\n    font-weight: bold;\n    color: var(--color-prettylights-syntax-markup-heading);\n  }\n  \n  .markdown-body .pl-mi {\n    font-style: italic;\n    color: var(--color-prettylights-syntax-markup-italic);\n  }\n  \n  .markdown-body .pl-mb {\n    font-weight: bold;\n    color: var(--color-prettylights-syntax-markup-bold);\n  }\n  \n  .markdown-body .pl-md {\n    color: var(--color-prettylights-syntax-markup-deleted-text);\n    background-color: var(--color-prettylights-syntax-markup-deleted-bg);\n  }\n  \n  .markdown-body .pl-mi1 {\n    color: var(--color-prettylights-syntax-markup-inserted-text);\n    background-color: var(--color-prettylights-syntax-markup-inserted-bg);\n  }\n  \n  .markdown-body .pl-mc {\n    color: var(--color-prettylights-syntax-markup-changed-text);\n    background-color: var(--color-prettylights-syntax-markup-changed-bg);\n  }\n  \n  .markdown-body .pl-mi2 {\n    color: var(--color-prettylights-syntax-markup-ignored-text);\n    background-color: var(--color-prettylights-syntax-markup-ignored-bg);\n  }\n  \n  .markdown-body .pl-mdr {\n    font-weight: bold;\n    color: var(--color-prettylights-syntax-meta-diff-range);\n  }\n  \n  .markdown-body .pl-ba {\n    color: var(--color-prettylights-syntax-brackethighlighter-angle);\n  }\n  \n  .markdown-body .pl-sg {\n    color: var(--color-prettylights-syntax-sublimelinter-gutter-mark);\n  }\n  \n  .markdown-body .pl-corl {\n    text-decoration: underline;\n    color: var(--color-prettylights-syntax-constant-other-reference-link);\n  }\n  \n  .markdown-body g-emoji {\n    display: inline-block;\n    min-width: 1ch;\n    font-family: \"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";\n    font-size: 1em;\n    font-style: normal !important;\n    font-weight: var(--base-text-weight-normal, 400);\n    line-height: 1;\n    vertical-align: -0.075em;\n  }\n  \n  .markdown-body g-emoji img {\n    width: 1em;\n    height: 1em;\n  }\n  \n  .markdown-body .task-list-item {\n    list-style-type: none;\n  }\n  \n  .markdown-body .task-list-item label {\n    font-weight: var(--base-text-weight-normal, 400);\n  }\n  \n  .markdown-body .task-list-item.enabled label {\n    cursor: pointer;\n  }\n  \n  .markdown-body .task-list-item+.task-list-item {\n    margin-top: 4px;\n  }\n  \n  .markdown-body .task-list-item .handle {\n    display: none;\n  }\n  \n  .markdown-body .task-list-item-checkbox {\n    margin: 0 .2em .25em -1.4em;\n    vertical-align: middle;\n  }\n  \n  .markdown-body .contains-task-list:dir(rtl) .task-list-item-checkbox {\n    margin: 0 -1.6em .25em .2em;\n  }\n  \n  .markdown-body .contains-task-list {\n    position: relative;\n  }\n  \n  .markdown-body .contains-task-list:hover .task-list-item-convert-container,\n  .markdown-body .contains-task-list:focus-within .task-list-item-convert-container {\n    display: block;\n    width: auto;\n    height: 24px;\n    overflow: visible;\n    clip: auto;\n  }\n  \n  .markdown-body ::-webkit-calendar-picker-indicator {\n    filter: invert(50%);\n  }\n  \n  .markdown-body .markdown-alert {\n    padding: var(--base-size-8) var(--base-size-16);\n    margin-bottom: 16px;\n    color: inherit;\n    border-left: .25em solid var(--color-border-default);\n  }\n  \n  .markdown-body .markdown-alert>:first-child {\n    margin-top: 0;\n  }\n  \n  .markdown-body .markdown-alert>:last-child {\n    margin-bottom: 0;\n  }\n  \n  .markdown-body .markdown-alert .markdown-alert-title {\n    display: flex;\n    font-weight: var(--base-text-weight-medium, 500);\n    align-items: center;\n    line-height: 1;\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-note {\n    border-left-color: var(--color-accent-emphasis);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-note .markdown-alert-title {\n    color: var(--color-accent-fg);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-important {\n    border-left-color: var(--color-done-emphasis);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-important .markdown-alert-title {\n    color: var(--color-done-fg);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-warning {\n    border-left-color: var(--color-attention-emphasis);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-warning .markdown-alert-title {\n    color: var(--color-attention-fg);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-tip {\n    border-left-color: var(--color-success-emphasis);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-tip .markdown-alert-title {\n    color: var(--color-success-fg);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-caution {\n    border-left-color: var(--color-danger-emphasis);\n  }\n  \n  .markdown-body .markdown-alert.markdown-alert-caution .markdown-alert-title {\n    color: var(--color-danger-fg);\n  }", ""]);
 
 // exports
 
@@ -78241,6 +78262,7 @@ __webpack_require__.r(__webpack_exports__);
                             text: '제공하는 공공서비스들의 정보시스템 보안 위상은 행안부에서 구분하고 있는 5등급 중 어디에 해당 됩니까?',
                             tickLabels: ['공개 정보', '기관 단순정보', '중요정보', '유사제어', '국가존립'],
                             value: 0,
+                            importantCount : 2,
                             goalLevelsList:[
                                 {
                                     goalCheckLevel: 2,
@@ -78261,6 +78283,7 @@ __webpack_require__.r(__webpack_exports__);
                             text: '서비스 장애시, 이로 인한 타 서비스(기관으)로의 비즈니스 영향도가 어느 정도입니까?',
                             tickLabels: ['영향도 없음', '매우낮음', '낮음', '높음', '매우높음'],
                             value: 0,
+                            importantCount : 2,
                             goalLevelsList:[
                                 {
                                     goalCheckLevel: 3,
