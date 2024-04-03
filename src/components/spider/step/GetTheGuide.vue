@@ -37,7 +37,7 @@
                             </div>
                             <br>
                             <div>
-                                <h3>ㆍ전환 및 모더나이즈 방법론 : {{ getConversionMethodInfo(slaResult.conversionMethod).text }}</h3>
+                                <h3>ㆍ전환 방법 : {{ getConversionMethodInfo(slaResult.conversionMethod).text }}</h3>
                                 <v-img :src="getConversionMethodInfo(slaResult.conversionMethod).imagePath" />
                                 <div style="text-align: start;">
                                     <div>{{ slaResult.conversionText }}</div>
@@ -297,7 +297,7 @@ export default {
             // Messaging Channel 조건 설정
             this.messagingChannel = (decomposition && decomposition.goalLevel == 4) || (dataPerspective && dataPerspective.goalLevel == 4);
 
-            // Infra 조건 설정
+            // Infra 조건 설정 ( 기존시스템 유지 : bareMetal, 클라우드 준비단계 : virtualMachine, 친화, 네이티브 : kubernetes )
             this.infra.kubernetes = infraArchitecture && infraArchitecture.goalLevel >= 3;
             this.infra.virtualMachine = infraArchitecture && infraArchitecture.goalLevel === 2;
             this.infra.bareMetal = infraArchitecture && infraArchitecture.goalLevel <= 1;
