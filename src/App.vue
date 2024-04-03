@@ -18,7 +18,7 @@
                             <v-card-title v-else>그룹 : {{ selectedProfile }}</v-card-title>
                         </div>
                     </template>
-                    <span>그룹 관리</span>
+                    <span>그룹/프로필 관리</span>
                 </v-tooltip>
             </v-app-bar>
             <v-main>
@@ -42,8 +42,8 @@ export default {
         '$route'(to, from) {
             // 특정 경로들을 배열로 정의
             const specificPaths = ['/goal-setting', '/assessment', '/get-the-guide'];
-            // 현재 경로가 specificPaths 배열에 포함되어 있는지 확인
-            this.showProfileInfo = specificPaths.includes(to.path);
+            // 현재 경로가 specificPaths 배열에 정의된 경로 중 하나로 시작하는지 확인
+            this.showProfileInfo = specificPaths.some(path => to.path.startsWith(path));
         }
     },
     created() {
