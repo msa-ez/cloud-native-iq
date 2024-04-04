@@ -22,7 +22,9 @@
                         >
                             <div>
                                 <h3>ㆍ목표 성숙도 모델</h3>
-                                <v-img :src="conversionGoalImage(slaResult.conversionGoal)" />
+                                <v-img :src="conversionGoalImage(slaResult.conversionGoal)"
+                                    style="margin-left: -10px;"
+                                />
                                 <div style="text-align: start;">
                                     <div>서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
                                         <span style="font-weight: 700;" class="text-primary">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여
@@ -38,7 +40,9 @@
                             <br>
                             <div>
                                 <h3>ㆍ전환 방법 : {{ getConversionMethodInfo(slaResult.conversionMethod).text }}</h3>
-                                <v-img :src="getConversionMethodInfo(slaResult.conversionMethod).imagePath" />
+                                <v-img :src="getConversionMethodInfo(slaResult.conversionMethod).imagePath" 
+                                    style="margin-left: -10px;"
+                                />
                                 <div style="text-align: start;">
                                     <div>{{ slaResult.conversionText }}</div>
                                 </div>
@@ -52,6 +56,7 @@
                                 <template v-for="(path) in referenceArchitecturegetImagePath()">
                                     <v-img :src="path" />
                                 </template>
+                                <v-img :src="infraGoalImage(slaResult.conversionGoal)" />
                             </div>
                         </v-col>
                     </v-row>
@@ -214,15 +219,6 @@ export default {
             }
 
             // Infrastructure Images
-            if (this.infra.kubernetes) {
-                paths.push(require('../../../../src/image/referenceArchitecture/Kubernetes.png')); // Kubernetes Infrastructure Image
-            }
-            if (this.infra.virtualMachine) {
-                paths.push(require('../../../../src/image/referenceArchitecture/vm.png')); // Virtual Machine Infrastructure Image
-            }
-            if (this.infra.bareMetal) {
-                paths.push(require('../../../../src/image/referenceArchitecture/bare.png')); // Bare Metal Infrastructure Image
-            }
 
             return paths;
         },
@@ -236,6 +232,18 @@ export default {
                     return require('../../../../src/image/conversionGoal/02optimized.png');
                 case 'native':
                     return require('../../../../src/image/conversionGoal/03native.png');
+            }
+        },
+        infraGoalImage (type) {
+            switch (type) {
+                case 'keep':
+                    return require('../../../../src/image/referenceArchitecture/bare.png');
+                case 'ready':
+                    return require('../../../../src/image/referenceArchitecture/vm.png');
+                case 'optimized':
+                    return require('../../../../src/image/referenceArchitecture/Kubernetes.png');
+                case 'native':
+                    return require('../../../../src/image/referenceArchitecture/Kubernetes.png');
             }
         },
         getConversionMethodInfo(type) {
@@ -298,9 +306,9 @@ export default {
             this.messagingChannel = (decomposition && decomposition.goalLevel == 4) || (dataPerspective && dataPerspective.goalLevel == 4);
 
             // Infra 조건 설정 ( 기존시스템 유지 : bareMetal, 클라우드 준비단계 : virtualMachine, 친화, 네이티브 : kubernetes )
-            this.infra.kubernetes = infraArchitecture && infraArchitecture.goalLevel >= 3;
-            this.infra.virtualMachine = infraArchitecture && infraArchitecture.goalLevel === 2;
-            this.infra.bareMetal = infraArchitecture && infraArchitecture.goalLevel <= 1;
+            // this.infra.kubernetes = infraArchitecture && infraArchitecture.goalLevel >= 3;
+            // this.infra.virtualMachine = infraArchitecture && infraArchitecture.goalLevel === 2;
+            // this.infra.bareMetal = infraArchitecture && infraArchitecture.goalLevel <= 1;
         },
         async getAllMarkdownContentFolders() {
             try {
