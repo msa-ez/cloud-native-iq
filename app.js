@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "c1fbc665411bfe770328";
+/******/ 	var hotCurrentHash = "f4c215422ee967c0a6c7";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9182,8 +9182,8 @@ __webpack_require__.r(__webpack_exports__);
         '$route'(to, from) {
             // 특정 경로들을 배열로 정의
             const specificPaths = ['/goal-setting', '/assessment', '/get-the-guide'];
-            // 현재 경로가 specificPaths 배열에 포함되어 있는지 확인
-            this.showProfileInfo = specificPaths.includes(to.path);
+            // 현재 경로가 specificPaths 배열에 정의된 경로 중 하나로 시작하는지 확인
+            this.showProfileInfo = specificPaths.some(path => to.path.startsWith(path));
         }
     },
     created() {
@@ -10098,15 +10098,6 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             // Infrastructure Images
-            if (this.infra.kubernetes) {
-                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/Kubernetes.png */ "./src/image/referenceArchitecture/Kubernetes.png")); // Kubernetes Infrastructure Image
-            }
-            if (this.infra.virtualMachine) {
-                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/vm.png */ "./src/image/referenceArchitecture/vm.png")); // Virtual Machine Infrastructure Image
-            }
-            if (this.infra.bareMetal) {
-                paths.push(__webpack_require__(/*! ../../../../src/image/referenceArchitecture/bare.png */ "./src/image/referenceArchitecture/bare.png")); // Bare Metal Infrastructure Image
-            }
 
             return paths;
         },
@@ -10120,6 +10111,18 @@ __webpack_require__.r(__webpack_exports__);
                     return __webpack_require__(/*! ../../../../src/image/conversionGoal/02optimized.png */ "./src/image/conversionGoal/02optimized.png");
                 case 'native':
                     return __webpack_require__(/*! ../../../../src/image/conversionGoal/03native.png */ "./src/image/conversionGoal/03native.png");
+            }
+        },
+        infraGoalImage (type) {
+            switch (type) {
+                case 'keep':
+                    return __webpack_require__(/*! ../../../../src/image/referenceArchitecture/bare.png */ "./src/image/referenceArchitecture/bare.png");
+                case 'ready':
+                    return __webpack_require__(/*! ../../../../src/image/referenceArchitecture/vm.png */ "./src/image/referenceArchitecture/vm.png");
+                case 'optimized':
+                    return __webpack_require__(/*! ../../../../src/image/referenceArchitecture/Kubernetes.png */ "./src/image/referenceArchitecture/Kubernetes.png");
+                case 'native':
+                    return __webpack_require__(/*! ../../../../src/image/referenceArchitecture/Kubernetes.png */ "./src/image/referenceArchitecture/Kubernetes.png");
             }
         },
         getConversionMethodInfo(type) {
@@ -10181,10 +10184,10 @@ __webpack_require__.r(__webpack_exports__);
             // Messaging Channel 조건 설정
             this.messagingChannel = (decomposition && decomposition.goalLevel == 4) || (dataPerspective && dataPerspective.goalLevel == 4);
 
-            // Infra 조건 설정
-            this.infra.kubernetes = infraArchitecture && infraArchitecture.goalLevel >= 3;
-            this.infra.virtualMachine = infraArchitecture && infraArchitecture.goalLevel === 2;
-            this.infra.bareMetal = infraArchitecture && infraArchitecture.goalLevel <= 1;
+            // Infra 조건 설정 ( 기존시스템 유지 : bareMetal, 클라우드 준비단계 : virtualMachine, 친화, 네이티브 : kubernetes )
+            // this.infra.kubernetes = infraArchitecture && infraArchitecture.goalLevel >= 3;
+            // this.infra.virtualMachine = infraArchitecture && infraArchitecture.goalLevel === 2;
+            // this.infra.bareMetal = infraArchitecture && infraArchitecture.goalLevel <= 1;
         },
         async getAllMarkdownContentFolders() {
             try {
@@ -10728,7 +10731,7 @@ var render = function render() {
                       3753966210
                     ),
                   },
-                  [_c("span", [_vm._v("그룹 관리")])]
+                  [_c("span", [_vm._v("그룹/프로필 관리")])]
                 )
               : _vm._e(),
           ],
@@ -11875,7 +11878,7 @@ var render = function render() {
               [
                 _c("div", { staticClass: "tab-info" }, [
                   _vm._v(
-                    "본 단계에서는 클라우드 네이티브 앱이 가져야 할 주요 관점별 현 수준을 평가하여 목표 수준과의 Gap을 가시화 (개발조직이 내부에 있을 때 - 발주기관이, 개발 조직이 내부에 없을 때 - 수행기관이 평가 가능) 합니다. 아래 현 수준에 해당하는 역량별 체크포인트에 체크해 주시기 바랍니다."
+                    "본 단계에서는 클라우드 네이티브 애플리케이션으로 전환되어야 할 기존 애플리케이션의 주요 관점별 현 수준을 평가하여, 전 단계에서 설정한 목표수준 대비 현 수준과의 갭을 가시화하고 분석합니다. 아래 7개의 관점별 현 수준에 해당하는 레벨에 체크해 주시기 바랍니다."
                   ),
                 ]),
                 _vm._l(
@@ -12132,6 +12135,7 @@ var render = function render() {
                           [
                             _c("h3", [_vm._v("ㆍ목표 성숙도 모델")]),
                             _c("v-img", {
+                              staticStyle: { "margin-left": "-10px" },
                               attrs: {
                                 src: _vm.conversionGoalImage(
                                   _vm.slaResult.conversionGoal
@@ -12212,7 +12216,7 @@ var render = function render() {
                           [
                             _c("h3", [
                               _vm._v(
-                                "ㆍ전환 및 모더나이즈 방법론 : " +
+                                "ㆍ전환 방법 : " +
                                   _vm._s(
                                     _vm.getConversionMethodInfo(
                                       _vm.slaResult.conversionMethod
@@ -12221,6 +12225,7 @@ var render = function render() {
                               ),
                             ]),
                             _c("v-img", {
+                              staticStyle: { "margin-left": "-10px" },
                               attrs: {
                                 src: _vm.getConversionMethodInfo(
                                   _vm.slaResult.conversionMethod
@@ -12258,6 +12263,13 @@ var render = function render() {
                                 return [_c("v-img", { attrs: { src: path } })]
                               }
                             ),
+                            _c("v-img", {
+                              attrs: {
+                                src: _vm.infraGoalImage(
+                                  _vm.slaResult.conversionGoal
+                                ),
+                              },
+                            }),
                           ],
                           2
                         ),
@@ -12339,7 +12351,7 @@ var render = function render() {
               [
                 _c("div", { staticClass: "tab-info" }, [
                   _vm._v(
-                    "본 단계에서는 클라우드 기반 공공 서비스 도입이 필요한 수요기관에서 As-Is 분석과 To-Be 모델을 기반으로 클라우드 서비스 구축사업의 기능/비기능적 요구사항을 정의 합니다. 아래 목표수준 설정에 필요한 클라우드 역량항목에 응답해 주시기 바랍니다."
+                    "클라우드 환경으로의 전환은 단순하고 획일화된 기술 인프라 위주가 아닌, 우리 조직의 목표 시스템이 지향하는 주요 관점별 개선 지표에 최적화된 클라우드 네이티브한 시스템으로의 점진적 전환이 수반되어야 합니다. 이에 주요 관점별 목표수준 설정을 위해 아래 항목별 내용에 체크하세요. "
                   ),
                 ]),
                 _vm._l(_vm.chartData.topics, function (topic, topicIndex) {
@@ -78129,11 +78141,11 @@ __webpack_require__.r(__webpack_exports__);
             // goalLevels : 애플리케이션, 데이터베이스, 인프라스트럭처, 개발, 보안, 확장성, 가시성
             topics: [
                 {
-                    name: '정책 및 업무 관점',
+                    name: '기능 확장 및 신속한 시장대응 관점',
                     questions: [
                         {
-                            title: '[정책 및 업무 변화에 대한 민첩한 대응]',
-                            text: '한국판 뉴딜과 같은 새로운 정책 , 기관별 업무계획 등 다양한 정보화 요구사항 변화에 대해 신속한 대응이 필요합니까 ?',
+                            title: '[기능 확장과 변화에 대한 빠른 대응]',
+                            text: '고객들의 새로운 요구사항이나 변경사항에 대해 현 시스템 구조로는 대응의 효율성이 낮아, 요구변화에 신속하게 대응할 수 있는 인프라의 개선이 필요합니까 ?',
                             value: 0,
                             goalLevelsList:[
                                 {
@@ -78151,8 +78163,8 @@ __webpack_require__.r(__webpack_exports__);
                             ]
                         },
                         {
-                            title: '[디지털 혁신 및 지능화 지원]',
-                            text: '디지털 혁신 및 지능 정보화 관련 신기술 빅데이터 , AI, 블록체인 , IoT 등의 도입이 필요하고 , 연관된 애플리케이션의 개발 또는 개선이 요구됩니까 ?',
+                            title: '[시장 경쟁력 유지를 위한 신속한 출시]',
+                            text: '기술 트랜드에 민감한 기능 개선으로 사용자 유입률 증대 및 사용자 피드백을 통해 유사 업종에서 시장 경쟁력 유지를 위한 신속한 출시가 요구됩니까 ?',
                             tickLabels: ['도입 의사없음', '검토해 보겠다', '검토중이다.', '필요해 보인다.', '아주 시급하다.'],
                             value: 0,
                             goalLevelsList:[
@@ -78258,8 +78270,8 @@ __webpack_require__.r(__webpack_exports__);
                     name: '서비스 중요도 관점',
                     questions: [
                         {
-                            title: '[정보시스템 등급]',
-                            text: '제공하는 공공서비스들의 정보시스템 보안 위상은 행안부에서 구분하고 있는 5등급 중 어디에 해당 됩니까?',
+                            title: '[대상 시스템 중요도]',
+                            text: '전환 대상인 기존 애플리케이션의 중요도 및 비즈니스 가치는 우리 조직 내에서의 우선순위를 볼 때, 어느 정도로 평가합니까 ?',
                             tickLabels: ['공개 정보', '기관 단순정보', '중요정보', '유사제어', '국가존립'],
                             value: 0,
                             importantCount : 2,
