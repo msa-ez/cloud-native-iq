@@ -3,7 +3,7 @@
 		<v-row style="padding:20px;">
 			<v-col>
 				<div class="qna-box assess-box" >
-					<div class="tab-info">본 단계에서는 클라우드 네이티브 앱이 가져야 할 주요 관점별 현 수준을 평가하여 목표 수준과의 Gap을 가시화 (개발조직이 내부에 있을 때 - 발주기관이, 개발 조직이 내부에 없을 때 - 수행기관이 평가 가능) 합니다. 아래 현 수준에 해당하는 역량별 체크포인트에 체크해 주시기 바랍니다.</div>
+					<div class="tab-info">본 단계에서는 클라우드 네이티브 애플리케이션으로 전환되어야 할 기존 애플리케이션의 주요 관점별 현 수준을 평가하여, 전 단계에서 설정한 목표수준 대비 현 수준과의 갭을 가시화하고 분석합니다. 아래 7개의 관점별 현 수준에 해당하는 레벨에 체크해 주시기 바랍니다.</div>
 					<div v-for="(perspective, index) in chartData.perspectives" :key="index" style="margin-bottom: 40px;">
 						<h2 style="margin-bottom: 5px;">{{ perspective.name }}</h2>
 						<div v-for="(level, levelIndex) in perspective.levels" :key="levelIndex">
