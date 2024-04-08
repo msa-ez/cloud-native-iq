@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-list v-if="openEditProfile"
-            style="position: absolute; left:0px; top:0px; height:100vh; z-index:999; border-right:solid 1px gray; overflow: auto;"
+            style="position: absolute; right:0px; top:0px; height:100vh; z-index:999; border-left:solid 1px gray; overflow: auto;"
         >
             <v-row class="ma-0 pa-0">
                 <v-spacer></v-spacer>
