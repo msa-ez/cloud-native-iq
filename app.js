@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "f4c215422ee967c0a6c7";
+/******/ 	var hotCurrentHash = "5bf060e7d80efbe4519c";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -11053,11 +11053,11 @@ var render = function render() {
             {
               staticStyle: {
                 position: "absolute",
-                left: "0px",
+                right: "0px",
                 top: "0px",
                 height: "100vh",
                 "z-index": "999",
-                "border-right": "solid 1px gray",
+                "border-left": "solid 1px gray",
                 overflow: "auto",
               },
             },
