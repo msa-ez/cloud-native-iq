@@ -13,7 +13,7 @@
 					</v-row>
 				</v-row>
 				<v-row>
-					<div style="background-color:rgba(255, 183, 77, 1); "></div>
+					<div class="color-box-style" style="background-color:rgba(255, 183, 77, 1); "></div>
 					<div style="font-size:20px;">현수준</div>
 				</v-row>
 			</div>

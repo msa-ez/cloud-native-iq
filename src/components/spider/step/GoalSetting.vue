@@ -2,7 +2,7 @@
     <div>
         <v-row style="padding:20px;">
             <v-col>
-                <div class="qna-box goal-box">
+                <div style="height:80.9vh; overflow:auto;">
                     <div class="tab-info">클라우드 환경으로의 전환은 단순하고 획일화된 기술 인프라 위주가 아닌, 우리 조직의 목표 시스템이 지향하는 주요 관점별 개선 지표에 최적화된 클라우드 네이티브한 시스템으로의 점진적 전환이 수반되어야 합니다. 이에 주요 관점별 목표수준 설정을 위해 아래 항목별 내용에 체크하세요. </div>
                     <div v-for="(topic, topicIndex) in chartData.topics" :key="topicIndex" style="margin-bottom: 40px;">
                         <h3 style="margin-bottom: 10px;">{{ topic.name }}</h3>

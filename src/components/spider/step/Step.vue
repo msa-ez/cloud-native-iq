@@ -29,7 +29,7 @@
                     :step="n"
                     style="padding:0px;"
                 >
-                    <div class="step-box-in">
+                    <div>
                         <component @saveProfiles="saveProfiles"
                             :selectedProfile="selectedProfile"
                             :chartData="chartData"
@@ -40,13 +40,6 @@
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
-        <!-- <div class="btn-box">
-            <v-btn class="btn-bot"
-                color="primary"
-                @click="nextStep()"
-                :disabled="currentStep === components.length">Next</v-btn>
-            <v-btn class="btn-bot" text>Cancel</v-btn>
-        </div> -->
     </div>
 </template>
 
