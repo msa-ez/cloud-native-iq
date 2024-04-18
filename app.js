@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "bd9375ed7f536e92dcd4";
+/******/ 	var hotCurrentHash = "77d3af5ede32f8aeeec7";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9262,6 +9262,9 @@ __webpack_require__.r(__webpack_exports__);
 		goToStep(path) {
 			this.$router.push(path);
 		},
+		openLink(url) {
+			window.open(url, '_blank');
+		}
 	},
 });
 
@@ -10910,7 +10913,7 @@ var render = function render() {
                     staticClass: "card-box",
                     on: {
                       click: function ($event) {
-                        return _vm.goToStep("/case-study")
+                        return _vm.openLink("https://youtu.be/DgwTK0Ah2Sw")
                       },
                     },
                   },
