@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "5bf060e7d80efbe4519c";
+/******/ 	var hotCurrentHash = "d087944528f0a355f374";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9252,7 +9252,7 @@ __webpack_require__.r(__webpack_exports__);
 					name_en: "Get the Guide",
 					path: "/get-the-guide",
 					icon: "cil:book"
-				}
+				},
 			]
 		}
 	},
@@ -10779,11 +10779,21 @@ var render = function render() {
       [
         _c(
           "v-card-title",
-          { staticClass: "text-center justify-center main-title" },
+          {
+            staticClass: "text-center justify-center main-title",
+            staticStyle: {
+              display: "flex",
+              "flex-direction": "column",
+              "align-items": "center",
+            },
+          },
           [
-            _vm._v("클라우드 네이티브 전환 가이드라인"),
-            _c("br"),
-            _vm._v("(Beta)"),
+            _c(
+              "div",
+              { staticStyle: { display: "flex", "align-items": "center" } },
+              [_vm._v("\n\t\t\t\t클라우드 네이티브 전환 가이드라인\n\t\t\t")]
+            ),
+            _c("div", [_vm._v("(Beta)")]),
           ]
         ),
         _c(
@@ -10809,13 +10819,11 @@ var render = function render() {
           "v-row",
           { staticClass: "ma-0 pa-0" },
           [
+            _c("v-col", { attrs: { cols: "1" } }),
             _vm._l(_vm.steps, function (step, index) {
               return _c(
                 "v-col",
-                {
-                  key: index,
-                  attrs: { cols: "12", lg: "3", md: "3", sm: "6" },
-                },
+                { key: index, attrs: { cols: "2", lg: "2", md: "3", sm: "6" } },
                 [
                   _c(
                     "v-card",
@@ -10855,7 +10863,7 @@ var render = function render() {
             }),
             _c(
               "v-col",
-              { attrs: { cols: "12", lg: "3", md: "3", sm: "6" } },
+              { attrs: { cols: "2", lg: "2", md: "3", sm: "6" } },
               [
                 _c(
                   "v-card",
@@ -10889,6 +10897,43 @@ var render = function render() {
               ],
               1
             ),
+            _c(
+              "v-col",
+              { attrs: { cols: "2", lg: "2", md: "3", sm: "6" } },
+              [
+                _c(
+                  "v-card",
+                  {
+                    staticClass: "card-box",
+                    on: {
+                      click: function ($event) {
+                        return _vm.goToStep("/case-study")
+                      },
+                    },
+                  },
+                  [
+                    _c(
+                      "div",
+                      [
+                        _c("Icon", {
+                          staticClass: "card-icon",
+                          attrs: { icon: "logos:youtube-icon" },
+                        }),
+                        _c("h1", { staticClass: "step-name" }, [
+                          _vm._v("사용 가이드"),
+                        ]),
+                        _c("div", { staticClass: "step-name-en" }, [
+                          _vm._v("User Guide"),
+                        ]),
+                      ],
+                      1
+                    ),
+                  ]
+                ),
+              ],
+              1
+            ),
+            _c("v-col", { attrs: { cols: "1" } }),
           ],
           2
         ),
@@ -11874,7 +11919,7 @@ var render = function render() {
           _c("v-col", [
             _c(
               "div",
-              { staticClass: "qna-box assess-box" },
+              { staticStyle: { height: "80.9vh", overflow: "auto" } },
               [
                 _c("div", { staticClass: "tab-info" }, [
                   _vm._v(
@@ -12135,7 +12180,7 @@ var render = function render() {
                           [
                             _c("h3", [_vm._v("ㆍ목표 성숙도 모델")]),
                             _c("v-img", {
-                              staticStyle: { "margin-left": "-10px" },
+                              staticStyle: { "margin-left": "5px" },
                               attrs: {
                                 src: _vm.conversionGoalImage(
                                   _vm.slaResult.conversionGoal
@@ -12144,7 +12189,12 @@ var render = function render() {
                             }),
                             _c(
                               "div",
-                              { staticStyle: { "text-align": "start" } },
+                              {
+                                staticStyle: {
+                                  "text-align": "start",
+                                  "margin-left": "17px",
+                                },
+                              },
                               [
                                 _c("div", [
                                   _vm._v(
@@ -12225,7 +12275,7 @@ var render = function render() {
                               ),
                             ]),
                             _c("v-img", {
-                              staticStyle: { "margin-left": "-10px" },
+                              staticStyle: { "margin-left": "5px" },
                               attrs: {
                                 src: _vm.getConversionMethodInfo(
                                   _vm.slaResult.conversionMethod
@@ -12234,7 +12284,12 @@ var render = function render() {
                             }),
                             _c(
                               "div",
-                              { staticStyle: { "text-align": "start" } },
+                              {
+                                staticStyle: {
+                                  "text-align": "start",
+                                  "margin-left": "17px",
+                                },
+                              },
                               [
                                 _c("div", [
                                   _vm._v(_vm._s(_vm.slaResult.conversionText)),
@@ -12260,10 +12315,16 @@ var render = function render() {
                             _vm._l(
                               _vm.referenceArchitecturegetImagePath(),
                               function (path) {
-                                return [_c("v-img", { attrs: { src: path } })]
+                                return [
+                                  _c("v-img", {
+                                    staticStyle: { "margin-left": "5px" },
+                                    attrs: { src: path },
+                                  }),
+                                ]
                               }
                             ),
                             _c("v-img", {
+                              staticStyle: { "margin-left": "5px" },
                               attrs: {
                                 src: _vm.infraGoalImage(
                                   _vm.slaResult.conversionGoal
@@ -12347,7 +12408,7 @@ var render = function render() {
           _c("v-col", [
             _c(
               "div",
-              { staticClass: "qna-box goal-box" },
+              { staticStyle: { height: "80.9vh", overflow: "auto" } },
               [
                 _c("div", { staticClass: "tab-info" }, [
                   _vm._v(
@@ -12531,6 +12592,7 @@ var render = function render() {
           ),
           _c("v-row", [
             _c("div", {
+              staticClass: "color-box-style",
               staticStyle: { "background-color": "rgba(255, 183, 77, 1)" },
             }),
             _c("div", { staticStyle: { "font-size": "20px" } }, [
@@ -12744,7 +12806,6 @@ var render = function render() {
                 [
                   _c(
                     "div",
-                    { staticClass: "step-box-in" },
                     [
                       _c(_vm.components[n - 1].component, {
                         tag: "component",
