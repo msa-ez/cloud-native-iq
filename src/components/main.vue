@@ -14,7 +14,7 @@
 			</v-row>
 			<v-row class="ma-0 pa-0">
 				<v-col cols="1"></v-col>
-				<v-col cols="2" lg="2" md="3" sm="6" v-for="(step, index) in steps" :key="index">
+				<v-col cols="12" lg="2" md="3" sm="6" v-for="(step, index) in steps" :key="index">
 					<v-card @click="goToStep(step.path)" class="card-box">
 						<div>
 							<h2 class="step-index">Step. {{ index + 1 }}</h2>
@@ -24,7 +24,7 @@
 						</div>
 					</v-card>
 				</v-col>
-				<v-col cols="2" lg="2" md="3" sm="6">
+				<v-col cols="12" lg="2" md="3" sm="6">
 					<v-card @click="goToStep('/case-study')" class="card-box">
 						<div>
 							<Icon icon="fluent:briefcase-search-20-regular" class="card-icon" />
@@ -33,7 +33,7 @@
 						</div>
 					</v-card>
 				</v-col>
-				<v-col cols="2" lg="2" md="3" sm="6">
+				<v-col cols="12" lg="2" md="3" sm="6">
 					<v-card @click="goToStep('/case-study')" class="card-box">
 						<div>
 							<Icon icon="logos:youtube-icon" class="card-icon" />
@@ -131,8 +131,12 @@ export default {
 	transition: all linear 0.3s 0s;
 }
 .step-name-en {
-	font-size: 1.25rem; 
+	font-size: 1.1rem; 
 	margin-top: 10px;
+}
+
+.step-name {
+	font-size: 1.4rem !important; 
 }
 .footer {
 	position: fixed;
