@@ -23,9 +23,9 @@
                             <div>
                                 <h3>ㆍ목표 성숙도 모델</h3>
                                 <v-img :src="conversionGoalImage(slaResult.conversionGoal)"
-                                    style="margin-left: -10px;"
+                                    style="margin-left: 5px;"
                                 />
-                                <div style="text-align: start;">
+                                <div style="text-align: start; margin-left:17px;">
                                     <div>서비스에 대한 클라우드 네이티브 적합성 검토결과,<br>
                                         <span style="font-weight: 700;" class="text-primary">{{ slaResult.count }}</span>개 이상 항목에서 적합성 조건을 충족하여
                                         <span style="font-weight: 700;" class="text-primary">{{ slaResult.cloudStatus }}{{ getConversionResult(slaResult.conversionGoal) }}</span>
@@ -41,9 +41,9 @@
                             <div>
                                 <h3>ㆍ전환 방법 : {{ getConversionMethodInfo(slaResult.conversionMethod).text }}</h3>
                                 <v-img :src="getConversionMethodInfo(slaResult.conversionMethod).imagePath" 
-                                    style="margin-left: -10px;"
+                                    style="margin-left: 5px;"
                                 />
-                                <div style="text-align: start;">
+                                <div style="text-align: start; margin-left:17px;">
                                     <div>{{ slaResult.conversionText }}</div>
                                 </div>
                             </div>
@@ -54,9 +54,9 @@
                             <div>
                                 <h3>ㆍ참조 아키텍처</h3>
                                 <template v-for="(path) in referenceArchitecturegetImagePath()">
-                                    <v-img :src="path" />
+                                    <v-img :src="path" style="margin-left: 5px;" />
                                 </template>
-                                <v-img :src="infraGoalImage(slaResult.conversionGoal)" />
+                                <v-img style="margin-left: 5px;" :src="infraGoalImage(slaResult.conversionGoal)" />
                             </div>
                         </v-col>
                     </v-row>
