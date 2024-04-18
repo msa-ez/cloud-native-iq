@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "d087944528f0a355f374";
+/******/ 	var hotCurrentHash = "bd9375ed7f536e92dcd4";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -10823,7 +10823,10 @@ var render = function render() {
             _vm._l(_vm.steps, function (step, index) {
               return _c(
                 "v-col",
-                { key: index, attrs: { cols: "2", lg: "2", md: "3", sm: "6" } },
+                {
+                  key: index,
+                  attrs: { cols: "12", lg: "2", md: "3", sm: "6" },
+                },
                 [
                   _c(
                     "v-card",
@@ -10863,7 +10866,7 @@ var render = function render() {
             }),
             _c(
               "v-col",
-              { attrs: { cols: "2", lg: "2", md: "3", sm: "6" } },
+              { attrs: { cols: "12", lg: "2", md: "3", sm: "6" } },
               [
                 _c(
                   "v-card",
@@ -10899,7 +10902,7 @@ var render = function render() {
             ),
             _c(
               "v-col",
-              { attrs: { cols: "2", lg: "2", md: "3", sm: "6" } },
+              { attrs: { cols: "12", lg: "2", md: "3", sm: "6" } },
               [
                 _c(
                   "v-card",
@@ -12869,7 +12872,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, "\n.main-title {\n\tfont-size: 2.4rem;\n\tline-height: 1.5;\n\tfont-weight: bold;\n\tcolor: #003669;\n\ttext-align: center;\n}\n.card-box {\n\tpadding:10px;\n\theight:100%;\n\ttext-align: center;\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content: center;\n\talign-items: center;\n}\n.card-icon {\n\twidth: 45px;\n\theight: 45px;\n\tpadding: 5px;\n\tmargin-top: 10px;\n}\n.card-box:hover {\n\tcolor: #fff;\n\tbackground-color: #003669;\n\tborder: 1px solid #003669 !important;\n}\n.card-box:hover .card-icon {\n\tcolor: #222;\n\tborder-radius: 30%;\n\tbackground-color: #fff;\n\ttransition: all linear 0.3s 0s;\n}\n.step-name-en {\n\tfont-size: 1.25rem; \n\tmargin-top: 10px;\n}\n.footer {\n\tposition: fixed;\n\tbottom: 0;\n\tleft: 0;\n\tmargin-left: 5px;\n}\n@media only screen and (max-width:768px) {\n.main-title {\n\t\tfont-size: 2rem;\n\t\tline-height: 1.2;\n\t\tfont-weight: bold;\n}\n.footer {\n\t\tposition: relative;\n\t\tmargin-left: -20px;\n}\n}\n", ""]);
+exports.push([module.i, "\n.main-title {\n\tfont-size: 2.4rem;\n\tline-height: 1.5;\n\tfont-weight: bold;\n\tcolor: #003669;\n\ttext-align: center;\n}\n.card-box {\n\tpadding:10px;\n\theight:100%;\n\ttext-align: center;\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content: center;\n\talign-items: center;\n}\n.card-icon {\n\twidth: 45px;\n\theight: 45px;\n\tpadding: 5px;\n\tmargin-top: 10px;\n}\n.card-box:hover {\n\tcolor: #fff;\n\tbackground-color: #003669;\n\tborder: 1px solid #003669 !important;\n}\n.card-box:hover .card-icon {\n\tcolor: #222;\n\tborder-radius: 30%;\n\tbackground-color: #fff;\n\ttransition: all linear 0.3s 0s;\n}\n.step-name-en {\n\tfont-size: 1.1rem; \n\tmargin-top: 10px;\n}\n.step-name {\n\tfont-size: 1.4rem !important;\n}\n.footer {\n\tposition: fixed;\n\tbottom: 0;\n\tleft: 0;\n\tmargin-left: 5px;\n}\n@media only screen and (max-width:768px) {\n.main-title {\n\t\tfont-size: 2rem;\n\t\tline-height: 1.2;\n\t\tfont-weight: bold;\n}\n.footer {\n\t\tposition: relative;\n\t\tmargin-left: -20px;\n}\n}\n", ""]);
 
 // exports
 
