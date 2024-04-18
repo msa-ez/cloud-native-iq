@@ -34,7 +34,7 @@
 					</v-card>
 				</v-col>
 				<v-col cols="12" lg="2" md="3" sm="6">
-					<v-card @click="goToStep('/case-study')" class="card-box">
+					<v-card @click="openLink('https://youtu.be/DgwTK0Ah2Sw')" class="card-box">
 						<div>
 							<Icon icon="logos:youtube-icon" class="card-icon" />
 							<h1 class="step-name">사용 가이드</h1>
@@ -92,6 +92,9 @@ export default {
 		goToStep(path) {
 			this.$router.push(path);
 		},
+		openLink(url) {
+			window.open(url, '_blank');
+		}
 	},
 };
 </script>
