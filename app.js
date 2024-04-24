@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "77d3af5ede32f8aeeec7";
+/******/ 	var hotCurrentHash = "35ce084a28e261b6a195";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -10797,38 +10797,28 @@ var render = function render() {
               [_vm._v("\n\t\t\t\t클라우드 네이티브 전환 가이드라인\n\t\t\t")]
             ),
             _c("div", [_vm._v("(Beta)")]),
+            _c("iframe", {
+              attrs: {
+                width: "40%",
+                height: "300",
+                src: "https://www.youtube.com/embed/oCKu8ZsGkjw",
+                title: "YouTube video player",
+                frameborder: "0",
+                allowfullscreen: "",
+              },
+            }),
           ]
-        ),
-        _c(
-          "v-row",
-          { attrs: { justify: "center" } },
-          [
-            _c(
-              "v-col",
-              { attrs: { cols: "6", md: "4", lg: "3" } },
-              [
-                _c("v-img", {
-                  attrs: {
-                    src: "https://github.com/msa-ez/cloud-iq/assets/149130268/66649787-f394-49f9-8a72-8002997161c6",
-                  },
-                }),
-              ],
-              1
-            ),
-          ],
-          1
         ),
         _c(
           "v-row",
           { staticClass: "ma-0 pa-0" },
           [
-            _c("v-col", { attrs: { cols: "1" } }),
             _vm._l(_vm.steps, function (step, index) {
               return _c(
                 "v-col",
                 {
                   key: index,
-                  attrs: { cols: "12", lg: "2", md: "3", sm: "6" },
+                  attrs: { cols: "12", lg: "3", md: "3", sm: "6" },
                 },
                 [
                   _c(
@@ -10869,7 +10859,7 @@ var render = function render() {
             }),
             _c(
               "v-col",
-              { attrs: { cols: "12", lg: "2", md: "3", sm: "6" } },
+              { attrs: { cols: "12", lg: "3", md: "3", sm: "6" } },
               [
                 _c(
                   "v-card",
@@ -10903,43 +10893,6 @@ var render = function render() {
               ],
               1
             ),
-            _c(
-              "v-col",
-              { attrs: { cols: "12", lg: "2", md: "3", sm: "6" } },
-              [
-                _c(
-                  "v-card",
-                  {
-                    staticClass: "card-box",
-                    on: {
-                      click: function ($event) {
-                        return _vm.openLink("https://youtu.be/DgwTK0Ah2Sw")
-                      },
-                    },
-                  },
-                  [
-                    _c(
-                      "div",
-                      [
-                        _c("Icon", {
-                          staticClass: "card-icon",
-                          attrs: { icon: "logos:youtube-icon" },
-                        }),
-                        _c("h1", { staticClass: "step-name" }, [
-                          _vm._v("사용 가이드"),
-                        ]),
-                        _c("div", { staticClass: "step-name-en" }, [
-                          _vm._v("User Guide"),
-                        ]),
-                      ],
-                      1
-                    ),
-                  ]
-                ),
-              ],
-              1
-            ),
-            _c("v-col", { attrs: { cols: "1" } }),
           ],
           2
         ),
@@ -11129,7 +11082,11 @@ var render = function render() {
                         },
                       },
                     },
-                    [_c("v-icon", [_vm._v("mdi-close")])],
+                    [
+                      _c("v-icon", { attrs: { small: "" } }, [
+                        _vm._v("mdi-close"),
+                      ]),
+                    ],
                     1
                   ),
                 ],
@@ -11183,11 +11140,32 @@ var render = function render() {
                                               _c("v-text-field", {
                                                 staticClass:
                                                   "profile-input-field",
+                                                staticStyle: {
+                                                  "margin-left": "-20px",
+                                                },
                                                 attrs: {
-                                                  label: "그룹 입력",
+                                                  label: "그룹 수정",
                                                   rules:
                                                     _vm.newProfile.nameRules,
                                                   required: "",
+                                                },
+                                                on: {
+                                                  keyup: function ($event) {
+                                                    if (
+                                                      !$event.type.indexOf(
+                                                        "key"
+                                                      ) &&
+                                                      _vm._k(
+                                                        $event.keyCode,
+                                                        "enter",
+                                                        13,
+                                                        $event.key,
+                                                        "Enter"
+                                                      )
+                                                    )
+                                                      return null
+                                                    return _vm.updateProfile()
+                                                  },
                                                 },
                                                 model: {
                                                   value: _vm.newProfile.name,
@@ -11204,27 +11182,6 @@ var render = function render() {
                                               _c(
                                                 "v-btn",
                                                 {
-                                                  attrs: {
-                                                    icon: "",
-                                                    disabled:
-                                                      !_vm.checkModified(),
-                                                  },
-                                                  on: {
-                                                    click: function ($event) {
-                                                      return _vm.updateProfile()
-                                                    },
-                                                  },
-                                                },
-                                                [
-                                                  _c("v-icon", [
-                                                    _vm._v("mdi-plus"),
-                                                  ]),
-                                                ],
-                                                1
-                                              ),
-                                              _c(
-                                                "v-btn",
-                                                {
                                                   attrs: { icon: "" },
                                                   on: {
                                                     click: function ($event) {
@@ -11233,9 +11190,11 @@ var render = function render() {
                                                   },
                                                 },
                                                 [
-                                                  _c("v-icon", [
-                                                    _vm._v("mdi-close"),
-                                                  ]),
+                                                  _c(
+                                                    "v-icon",
+                                                    { attrs: { small: "" } },
+                                                    [_vm._v("mdi-close")]
+                                                  ),
                                                 ],
                                                 1
                                               ),
@@ -11256,33 +11215,6 @@ var render = function render() {
                                               _c(
                                                 "div",
                                                 [
-                                                  _c(
-                                                    "v-btn",
-                                                    {
-                                                      attrs: { icon: "" },
-                                                      on: {
-                                                        click: function (
-                                                          $event
-                                                        ) {
-                                                          $event.stopPropagation()
-                                                          return _vm.addUser(
-                                                            index,
-                                                            profile.name
-                                                          )
-                                                        },
-                                                      },
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "v-icon",
-                                                        {
-                                                          attrs: { small: "" },
-                                                        },
-                                                        [_vm._v("mdi-plus")]
-                                                      ),
-                                                    ],
-                                                    1
-                                                  ),
                                                   _c(
                                                     "v-btn",
                                                     {
@@ -11409,11 +11341,27 @@ var render = function render() {
                                     [
                                       _c("v-text-field", {
                                         staticClass: "profile-input-field",
-                                        staticStyle: { "margin-left": "20px" },
+                                        staticStyle: { "margin-left": "-50px" },
                                         attrs: {
-                                          label: "프로필 입력",
+                                          label: "프로필 수정",
                                           rules: _vm.newUser.nameRules,
                                           required: "",
+                                        },
+                                        on: {
+                                          keyup: function ($event) {
+                                            if (
+                                              !$event.type.indexOf("key") &&
+                                              _vm._k(
+                                                $event.keyCode,
+                                                "enter",
+                                                13,
+                                                $event.key,
+                                                "Enter"
+                                              )
+                                            )
+                                              return null
+                                            return _vm.updateProfile()
+                                          },
                                         },
                                         model: {
                                           value: _vm.newUser.name,
@@ -11429,26 +11377,6 @@ var render = function render() {
                                           _c(
                                             "v-btn",
                                             {
-                                              attrs: {
-                                                icon: "",
-                                                disabled: !_vm.checkModified(),
-                                              },
-                                              on: {
-                                                click: function ($event) {
-                                                  return _vm.updateProfile()
-                                                },
-                                              },
-                                            },
-                                            [
-                                              _c("v-icon", [
-                                                _vm._v("mdi-plus"),
-                                              ]),
-                                            ],
-                                            1
-                                          ),
-                                          _c(
-                                            "v-btn",
-                                            {
                                               attrs: { icon: "" },
                                               on: {
                                                 click: function ($event) {
@@ -11457,9 +11385,11 @@ var render = function render() {
                                               },
                                             },
                                             [
-                                              _c("v-icon", [
-                                                _vm._v("mdi-close"),
-                                              ]),
+                                              _c(
+                                                "v-icon",
+                                                { attrs: { small: "" } },
+                                                [_vm._v("mdi-close")]
+                                              ),
                                             ],
                                             1
                                           ),
@@ -11534,21 +11464,80 @@ var render = function render() {
                         1
                       )
                     }),
+                    _c(
+                      "div",
+                      { staticStyle: { padding: "0px 0px 0px 60px" } },
+                      [
+                        !_vm.addUserStatus
+                          ? _c(
+                              "v-card",
+                              {
+                                staticClass: "add-card",
+                                attrs: { outlined: "" },
+                                on: {
+                                  click: function ($event) {
+                                    $event.stopPropagation()
+                                    return _vm.addUser(index, profile.name)
+                                  },
+                                },
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticStyle: {
+                                      display: "flex",
+                                      "justify-content": "center",
+                                      "align-items": "center",
+                                    },
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                        프로필 추가\n                    "
+                                    ),
+                                  ]
+                                ),
+                              ]
+                            )
+                          : _vm._e(),
+                      ],
+                      1
+                    ),
                     _vm.addUserStatus
                       ? _c(
                           "div",
                           [
                             _c(
                               "v-row",
-                              { staticClass: "ma-0 pa-0 d-flex align-center" },
+                              {
+                                staticClass: "ma-0 pa-0 d-flex align-center",
+                                staticStyle: {
+                                  padding: "0px 5px 0px 73px !important",
+                                },
+                              },
                               [
                                 _c("v-text-field", {
                                   staticClass: "profile-input-field",
-                                  staticStyle: { "padding-left": "35px" },
                                   attrs: {
                                     label: "프로필 입력",
                                     rules: _vm.newUser.nameRules,
                                     required: "",
+                                  },
+                                  on: {
+                                    keyup: function ($event) {
+                                      if (
+                                        !$event.type.indexOf("key") &&
+                                        _vm._k(
+                                          $event.keyCode,
+                                          "enter",
+                                          13,
+                                          $event.key,
+                                          "Enter"
+                                        )
+                                      )
+                                        return null
+                                      return _vm.registerProfile()
+                                    },
                                   },
                                   model: {
                                     value: _vm.newUser.name,
@@ -11558,23 +11547,6 @@ var render = function render() {
                                     expression: "newUser.name",
                                   },
                                 }),
-                                _c(
-                                  "v-btn",
-                                  {
-                                    staticStyle: { "margin-top": "10px" },
-                                    attrs: {
-                                      icon: "",
-                                      disabled: !_vm.checkModified(),
-                                    },
-                                    on: {
-                                      click: function ($event) {
-                                        return _vm.registerProfile()
-                                      },
-                                    },
-                                  },
-                                  [_c("v-icon", [_vm._v("mdi-plus")])],
-                                  1
-                                ),
                                 _c(
                                   "v-btn",
                                   {
@@ -11588,7 +11560,11 @@ var render = function render() {
                                       },
                                     },
                                   },
-                                  [_c("v-icon", [_vm._v("mdi-close")])],
+                                  [
+                                    _c("v-icon", { attrs: { small: "" } }, [
+                                      _vm._v("mdi-close"),
+                                    ]),
+                                  ],
                                   1
                                 ),
                               ],
@@ -11604,29 +11580,41 @@ var render = function render() {
               }),
               !_vm.addProfileStatus
                 ? _c(
-                    "v-card",
-                    {
-                      staticClass: "add-card",
-                      attrs: { outlined: "" },
-                      on: {
-                        click: function ($event) {
-                          return _vm.addProfile()
-                        },
-                      },
-                    },
+                    "div",
+                    { staticStyle: { padding: "0px 0px 0px 22px" } },
                     [
                       _c(
-                        "div",
+                        "v-card",
                         {
-                          staticStyle: {
-                            display: "flex",
-                            "justify-content": "center",
-                            "align-items": "center",
+                          staticClass: "add-card",
+                          attrs: { outlined: "" },
+                          on: {
+                            click: function ($event) {
+                              $event.stopPropagation()
+                              return _vm.addProfile()
+                            },
                           },
                         },
-                        [_vm._v("\n                그룹 추가\n            ")]
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticStyle: {
+                                display: "flex",
+                                "justify-content": "center",
+                                "align-items": "center",
+                              },
+                            },
+                            [
+                              _vm._v(
+                                "\n                    그룹 추가\n                "
+                              ),
+                            ]
+                          ),
+                        ]
                       ),
-                    ]
+                    ],
+                    1
                   )
                 : _c(
                     "div",
@@ -11643,6 +11631,22 @@ var render = function render() {
                               rules: _vm.newProfile.nameRules,
                               required: "",
                             },
+                            on: {
+                              keyup: function ($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                )
+                                  return null
+                                return _vm.registerProfile()
+                              },
+                            },
                             model: {
                               value: _vm.newProfile.name,
                               callback: function ($$v) {
@@ -11654,32 +11658,20 @@ var render = function render() {
                           _c(
                             "v-btn",
                             {
-                              staticStyle: { "margin-top": "10px" },
-                              attrs: {
-                                icon: "",
-                                disabled: !_vm.checkModified(),
-                              },
-                              on: {
-                                click: function ($event) {
-                                  return _vm.registerProfile()
-                                },
-                              },
-                            },
-                            [_c("v-icon", [_vm._v("mdi-plus")])],
-                            1
-                          ),
-                          _c(
-                            "v-btn",
-                            {
                               staticStyle: { margin: "10px 10px 0px 0px" },
                               attrs: { icon: "" },
                               on: {
                                 click: function ($event) {
+                                  $event.stopPropagation()
                                   _vm.addProfileStatus = false
                                 },
                               },
                             },
-                            [_c("v-icon", [_vm._v("mdi-close")])],
+                            [
+                              _c("v-icon", { attrs: { small: "" } }, [
+                                _vm._v("mdi-close"),
+                              ]),
+                            ],
                             1
                           ),
                         ],
