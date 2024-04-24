@@ -1,5 +1,35 @@
 <template>
     <div>
+        <!-- <v-treeview
+            v-model="activeProfile"
+            :items="profiles"
+            item-children="users"
+            style="position: absolute; right:0px; top:0px; height:100vh; z-index:999; border-left:solid 1px gray; overflow: auto;background-color:white;"
+        >
+            <template v-slot:append="{ index, item  }">
+                    <div>Index: {{ index }}, Item name: {{ item.name }}</div>
+                <v-btn icon @click.stop="editProfile(index, item.name)">
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn icon @click.stop="deleteItem(index)">
+                    <v-icon color="red">mdi-delete</v-icon>
+                </v-btn>
+                <v-text-field
+                    v-if="isEditingProfile && editingIndex === index"
+                    @keyup.enter="updateProfile(index)"
+                    class="profile-input-field"
+                    label="그룹 수정"
+                    v-model="newProfile.name"
+                    :rules="newProfile.nameRules"
+                    required
+                ></v-text-field>
+                <v-btn @click="isEditingClose(index)"
+                    icon
+                >
+                    <v-icon small>mdi-close</v-icon>
+                </v-btn>
+            </template>
+        </v-treeview> -->
         <v-list v-if="openEditProfile"
             style="position: absolute; right:0px; top:0px; height:100vh; z-index:999; border-left:solid 1px gray; overflow: auto;"
         >
@@ -9,7 +39,7 @@
                     small icon
                     style="margin-right:10px;"
                 >
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon small>mdi-close</v-icon>
                 </v-btn>
             </v-row>
             <v-list-group
@@ -28,31 +58,23 @@
                             <v-row v-if="isEditingProfile == true && editingIndex == index"
                                 style="padding-top:10px;"
                             >
-                                <v-text-field class="profile-input-field"
-                                    label="그룹 입력"
+                                <v-text-field @keyup.enter="updateProfile()"
+                                    class="profile-input-field"
+                                    label="그룹 수정"
                                     v-model="newProfile.name"
                                     :rules="newProfile.nameRules"
                                     required
+                                    style="margin-left:-20px;"
                                 ></v-text-field>
-                                <v-btn @click="updateProfile()"
-                                    icon
-                                    :disabled="!checkModified()"
-                                >
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>
-                                
                                 <v-btn @click="isEditingClose()"
                                     icon
                                 >
-                                    <v-icon>mdi-close</v-icon>
+                                    <v-icon small>mdi-close</v-icon>
                                 </v-btn>
                             </v-row>
                             <v-row v-else class="ma-0 pa-0" style="margin-left:30px !important;">
                                 <v-spacer></v-spacer>
                                 <div>
-                                    <v-btn icon @click.stop="addUser(index, profile.name)">
-                                        <v-icon small>mdi-plus</v-icon>
-                                    </v-btn>
                                     <v-btn icon @click.stop="editProfile(index, profile.name)">
                                         <v-icon small>mdi-pencil</v-icon>
                                     </v-btn>
@@ -80,23 +102,18 @@
                             v-if="isEditingUser && editingIndex == index"
                         >
                             <v-text-field class="profile-input-field"
-                                style="margin-left:20px;"
-                                label="프로필 입력"
+                                style="margin-left:-50px;"
+                                label="프로필 수정"
                                 v-model="newUser.name"
                                 :rules="newUser.nameRules"
                                 required
+                                @keyup.enter="updateProfile()"
                             ></v-text-field>
                             <div>
-                                <v-btn @click="updateProfile()"
-                                    icon
-                                    :disabled="!checkModified()"
-                                >
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>
                                 <v-btn @click="isEditingClose()"
                                     icon
                                 >
-                                    <v-icon>mdi-close</v-icon>
+                                    <v-icon small>mdi-close</v-icon>
                                 </v-btn>
                             </div>
                         </v-row>
@@ -110,44 +127,50 @@
                         </div>
                     </v-row>
                 </v-list-item>
+                <div style="padding:0px 0px 0px 60px;">
+                    <v-card v-if="!addUserStatus"
+                        @click.stop="addUser(index, profile.name)"
+                        class="add-card"
+                        outlined
+                    >
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            프로필 추가
+                        </div>
+                    </v-card>
+                </div>
+                    
                 <div v-if="addUserStatus">
-                    <v-row class="ma-0 pa-0 d-flex align-center">
-                        <v-text-field
+                    <v-row class="ma-0 pa-0 d-flex align-center" style="padding:0px 5px 0px 73px !important;">
+                        <v-text-field @keyup.enter="registerProfile()"
                             class="profile-input-field"
-                            style="padding-left:35px;"
                             label="프로필 입력"
                             v-model="newUser.name"
                             :rules="newUser.nameRules"
                             required
                         ></v-text-field>
-                        <v-btn style="margin-top:10px;"
-                            @click="registerProfile()"
-                            icon
-                            :disabled="!checkModified()"
-                        >
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
                         <v-btn style="margin:10px 10px 0px 0px;"
                             @click="addUserStatus = false"
                             icon
                         >
-                            <v-icon>mdi-close</v-icon>
+                            <v-icon small>mdi-close</v-icon>
                         </v-btn>
                     </v-row>
                 </div>
             </v-list-group>
-            <v-card v-if="!addProfileStatus"
-                @click="addProfile()"
-                class="add-card"
-                outlined
-            >
-                <div style="display: flex; justify-content: center; align-items: center;">
-                    그룹 추가
-                </div>
-            </v-card>
+            <div v-if="!addProfileStatus" style="padding:0px 0px 0px 22px;">
+                <v-card
+                    @click.stop="addProfile()"
+                    class="add-card"
+                    outlined
+                >
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        그룹 추가
+                    </div>
+                </v-card>
+            </div>
             <div v-else>
                 <v-row class="ma-0 pa-0">
-                    <v-text-field 
+                    <v-text-field @keyup.enter="registerProfile()"
                         class="profile-input-field"
                         style="padding-left:35px;"
                         label="그룹 입력"
@@ -155,18 +178,11 @@
                         :rules="newProfile.nameRules"
                         required
                     ></v-text-field>
-                    <v-btn style="margin-top:10px;"
-                        @click="registerProfile()"
-                        icon
-                        :disabled="!checkModified()"
-                    >
-                        <v-icon>mdi-plus</v-icon>
-                    </v-btn>
                     <v-btn style="margin:10px 10px 0px 0px;"
-                        @click="addProfileStatus = false"
+                        @click.stop="addProfileStatus = false"
                         icon
                     >
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon small>mdi-close</v-icon>
                     </v-btn>
                 </v-row>
             </div>
