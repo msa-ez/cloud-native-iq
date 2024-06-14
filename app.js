@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "2579d8d1329fa12b80af";
+/******/ 	var hotCurrentHash = "b78550d89e2b5afc3516";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9725,6 +9725,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
     },
+    props: {
+        selectedAllGuideStatus: Boolean,
+    },
     data () {
         return {
             guide: [
@@ -9815,6 +9818,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     created() {
         this.loadGoalPath();
+    },
+    watch: {
+        selectedAllGuideStatus(newVal) {
+            if (newVal) {
+                this.loadGoalPath();
+            }
+        }
     },
     methods: {
         navigate(path) {
@@ -9978,7 +9988,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     props: {
         selectedProfile: null,
-        chartData: null
+        chartData: null,
+        selectedAllGuideStatus: Boolean,
     },
     data () {
         return {
@@ -10052,11 +10063,16 @@ __webpack_require__.r(__webpack_exports__);
             deep:true
         },
         tab(newVal) {
-            // 고정 탭 선택시 라우트 변경
+            // 고정 탭 선택시 라우트 변경 및 selectedAllGuideStatus 설정
             if (newVal === 0) {
+                this.selectedAllGuideStatus = true;
                 this.$router.push(`/get-the-guide/review-result`);
                 return;
-            } if (newVal === 1) {
+            } else {
+                this.selectedAllGuideStatus = false;
+            }
+
+            if (newVal === 1) {
                 this.$router.push(`/get-the-guide/reference-architecture`);
                 return;
             }
@@ -10068,7 +10084,7 @@ __webpack_require__.r(__webpack_exports__);
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
                 }
             });
-        }
+        },
     },
     methods: {
         referenceArchitecturegetImagePath() {
@@ -10604,7 +10620,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     data () {
         return {
-            stepNumber: 0,
+            selectedAllGuideStatus: false,
             currentStep: 1,
             components: [
                 { component: _GoalSetting__WEBPACK_IMPORTED_MODULE_1__["default"], name: '목표수준설정', name_en: 'GoalSetting', path: 'goal-setting' },
@@ -10618,6 +10634,7 @@ __webpack_require__.r(__webpack_exports__);
         const matchingComponentIndex = this.components.findIndex(c => c.path === path);
         if (matchingComponentIndex !== -1) {
             this.currentStep = matchingComponentIndex + 1;
+            this.updateSelectedAllGuideStatus(this.currentStep);
         }
     },
     watch: {
@@ -10627,6 +10644,7 @@ __webpack_require__.r(__webpack_exports__);
                 if (this.$route.params.path !== path) {
                     this.$router.push(`/${path}`);
                 }
+                this.updateSelectedAllGuideStatus(newVal);
             }
         }
     },
@@ -10634,12 +10652,9 @@ __webpack_require__.r(__webpack_exports__);
         saveProfiles(){
             this.$emit('saveProfiles')
         },
-        // nextStep () {
-        //     if (this.currentStep === this.components.length) {
-        //     } else {
-        //         this.currentStep++
-        //     }
-        // },
+        updateSelectedAllGuideStatus(step) {
+            this.selectedAllGuideStatus = this.components[step - 1].name_en === 'GetTheGuide';
+        }
     },
 });
 
@@ -12166,7 +12181,16 @@ var render = function render() {
         },
         [
           _c("v-tab-item", [
-            _c("div", { staticStyle: { padding: "0px" } }, [_c("AllGuide")], 1),
+            _c(
+              "div",
+              { staticStyle: { padding: "0px" } },
+              [
+                _c("AllGuide", {
+                  attrs: { selectedAllGuideStatus: _vm.selectedAllGuideStatus },
+                }),
+              ],
+              1
+            ),
           ]),
           _c("v-tab-item", [
             _c(
@@ -12822,6 +12846,7 @@ var render = function render() {
                         attrs: {
                           selectedProfile: _vm.selectedProfile,
                           chartData: _vm.chartData,
+                          selectedAllGuideStatus: _vm.selectedAllGuideStatus,
                         },
                         on: { saveProfiles: _vm.saveProfiles },
                       }),
