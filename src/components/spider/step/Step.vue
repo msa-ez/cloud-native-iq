@@ -33,6 +33,7 @@
                         <component @saveProfiles="saveProfiles"
                             :selectedProfile="selectedProfile"
                             :chartData="chartData"
+                            :selectedAllGuideStatus="selectedAllGuideStatus"
                             :is="components[n - 1].component"
                         />
                     </div>
@@ -56,7 +57,7 @@ export default {
     },
     data () {
         return {
-            stepNumber: 0,
+            selectedAllGuideStatus: false,
             currentStep: 1,
             components: [
                 { component: GoalSetting, name: '목표수준설정', name_en: 'GoalSetting', path: 'goal-setting' },
@@ -70,6 +71,7 @@ export default {
         const matchingComponentIndex = this.components.findIndex(c => c.path === path);
         if (matchingComponentIndex !== -1) {
             this.currentStep = matchingComponentIndex + 1;
+            this.updateSelectedAllGuideStatus(this.currentStep);
         }
     },
     watch: {
@@ -79,6 +81,7 @@ export default {
                 if (this.$route.params.path !== path) {
                     this.$router.push(`/${path}`);
                 }
+                this.updateSelectedAllGuideStatus(newVal);
             }
         }
     },
@@ -86,12 +89,9 @@ export default {
         saveProfiles(){
             this.$emit('saveProfiles')
         },
-        // nextStep () {
-        //     if (this.currentStep === this.components.length) {
-        //     } else {
-        //         this.currentStep++
-        //     }
-        // },
+        updateSelectedAllGuideStatus(step) {
+            this.selectedAllGuideStatus = this.components[step - 1].name_en === 'GetTheGuide';
+        }
     },
 }
 </script>

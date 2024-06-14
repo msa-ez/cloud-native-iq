@@ -4,6 +4,7 @@
             <thead>
                 <tr class="all-guide-table-head">
                     <th style="text-align: left !important;">
+                        {{ selectedAllGuideStatus }}
                     <v-row>
                         <div>목표수준</div>
                         <div class="color-box-style" style="background-color:rgb(25, 118, 210); margin-left: 4px;"></div>&nbsp;/
@@ -43,6 +44,9 @@
 <script>
 export default {
     components: {
+    },
+    props: {
+        selectedAllGuideStatus: Boolean,
     },
     data () {
         return {
@@ -134,6 +138,13 @@ export default {
     },
     created() {
         this.loadGoalPath();
+    },
+    watch: {
+        selectedAllGuideStatus(newVal) {
+            if (newVal) {
+                this.loadGoalPath();
+            }
+        }
     },
     methods: {
         navigate(path) {
