@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "b78550d89e2b5afc3516";
+/******/ 	var hotCurrentHash = "071ab82a25f9bb89de3f";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9823,6 +9823,7 @@ __webpack_require__.r(__webpack_exports__);
         selectedAllGuideStatus(newVal) {
             if (newVal) {
                 this.loadGoalPath();
+                this.checkPathMatch()
             }
         }
     },
@@ -9989,7 +9990,7 @@ __webpack_require__.r(__webpack_exports__);
     props: {
         selectedProfile: null,
         chartData: null,
-        selectedAllGuideStatus: Boolean,
+        selectedAllGuideStatus: Boolean
     },
     data () {
         return {
@@ -10063,16 +10064,11 @@ __webpack_require__.r(__webpack_exports__);
             deep:true
         },
         tab(newVal) {
-            // 고정 탭 선택시 라우트 변경 및 selectedAllGuideStatus 설정
+            // 고정 탭 선택시 라우트 변경
             if (newVal === 0) {
-                this.selectedAllGuideStatus = true;
                 this.$router.push(`/get-the-guide/review-result`);
                 return;
-            } else {
-                this.selectedAllGuideStatus = false;
-            }
-
-            if (newVal === 1) {
+            } if (newVal === 1) {
                 this.$router.push(`/get-the-guide/reference-architecture`);
                 return;
             }
@@ -10084,7 +10080,7 @@ __webpack_require__.r(__webpack_exports__);
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
                 }
             });
-        },
+        }
     },
     methods: {
         referenceArchitecturegetImagePath() {
