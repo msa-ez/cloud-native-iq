@@ -105,7 +105,7 @@ export default {
     props: {
         selectedProfile: null,
         chartData: null,
-        selectedAllGuideStatus: Boolean,
+        selectedAllGuideStatus: Boolean
     },
     data () {
         return {
@@ -179,16 +179,11 @@ export default {
             deep:true
         },
         tab(newVal) {
-            // 고정 탭 선택시 라우트 변경 및 selectedAllGuideStatus 설정
+            // 고정 탭 선택시 라우트 변경
             if (newVal === 0) {
-                this.selectedAllGuideStatus = true;
                 this.$router.push(`/get-the-guide/review-result`);
                 return;
-            } else {
-                this.selectedAllGuideStatus = false;
-            }
-
-            if (newVal === 1) {
+            } if (newVal === 1) {
                 this.$router.push(`/get-the-guide/reference-architecture`);
                 return;
             }
@@ -200,7 +195,7 @@ export default {
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
                 }
             });
-        },
+        }
     },
     methods: {
         referenceArchitecturegetImagePath() {

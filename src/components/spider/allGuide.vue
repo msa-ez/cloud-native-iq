@@ -142,6 +142,7 @@ export default {
         selectedAllGuideStatus(newVal) {
             if (newVal) {
                 this.loadGoalPath();
+                this.checkPathMatch()
             }
         }
     },
