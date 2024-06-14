@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "35ce084a28e261b6a195";
+/******/ 	var hotCurrentHash = "2579d8d1329fa12b80af";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9961,6 +9961,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var marked__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! marked */ "./node_modules/marked/lib/marked.js");
 /* harmony import */ var marked__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(marked__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _SLABase_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SLABase.vue */ "./src/components/spider/step/SLABase.vue");
+/* harmony import */ var _allGuide_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../allGuide.vue */ "./src/components/spider/allGuide.vue");
+
 
 
 
@@ -9972,6 +9974,7 @@ __webpack_require__.r(__webpack_exports__);
         _SLABase_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
     ],
     components: {
+        AllGuide: _allGuide_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
     },
     props: {
         selectedProfile: null,
@@ -10053,10 +10056,13 @@ __webpack_require__.r(__webpack_exports__);
             if (newVal === 0) {
                 this.$router.push(`/get-the-guide/review-result`);
                 return;
+            } if (newVal === 1) {
+                this.$router.push(`/get-the-guide/reference-architecture`);
+                return;
             }
 
             // 기존 탭들에 대한 처리
-            const tabName = this.guideTabs[newVal - 1].tab_en; // 인덱스 조정
+            const tabName = this.guideTabs[newVal - 2].tab_en; // 인덱스 조정
             this.chartData.perspectives.forEach(p => {
                 if (p.name_en === tabName) {
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);
@@ -11865,7 +11871,6 @@ var render = function render() {
                           style: _vm.checkPathMatch(level.path),
                         },
                         [
-                          _c("div", [_vm._v("전환 가이드 보기")]),
                           _c("div", { staticStyle: { "font-weight": "900" } }, [
                             _vm._v(_vm._s(level.name)),
                           ]),
@@ -12133,8 +12138,11 @@ var render = function render() {
           },
         },
         [
-          _c("v-tab", { key: "fixed-tab", staticClass: "tab-title" }, [
+          _c("v-tab", { staticClass: "tab-title" }, [
             _vm._v("\n            검토결과\n        "),
+          ]),
+          _c("v-tab", { staticClass: "tab-title" }, [
+            _vm._v("\n            참조 아키텍처\n        "),
           ]),
           _vm._l(_vm.guideTabs, function (item) {
             return _c("v-tab", { key: item.tab, staticClass: "tab-title" }, [
@@ -12157,7 +12165,10 @@ var render = function render() {
           },
         },
         [
-          _c("v-tab-item", { key: "fixed-tab-content" }, [
+          _c("v-tab-item", [
+            _c("div", { staticStyle: { padding: "0px" } }, [_c("AllGuide")], 1),
+          ]),
+          _c("v-tab-item", [
             _c(
               "div",
               { staticStyle: { padding: "0px" } },
@@ -12751,6 +12762,7 @@ var render = function render() {
       _c(
         "v-stepper",
         {
+          staticStyle: { "box-shadow": "none" },
           model: {
             value: _vm.currentStep,
             callback: function ($$v) {
@@ -79042,13 +79054,13 @@ const routes = [
         props: true,
     },
     {
-        path: '/case-study',
-        component: _components_spider_CaseStudy_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+        path: '/get-the-guide/reference-architecture',
+        component: _components_spider_Profile_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
         props: true,
     },
     {
-        path: '/all-guide',
-        component: _components_spider_allGuide_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+        path: '/case-study',
+        component: _components_spider_CaseStudy_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
         props: true,
     },
     {
