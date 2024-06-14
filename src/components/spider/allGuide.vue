@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-simple-table>
+        <v-simple-table v-if="!selectedMarkdownContent">
             <thead>
                 <tr class="all-guide-table-head">
                     <th style="text-align: left !important;">
@@ -24,7 +24,7 @@
                     <td>{{ guideItem.name }}</td>
                     <td v-for="level in guideItem.levels" :key="level.level"
                         class="all-guide-view"
-                        @click="navigate(level.path)"
+                        @click="navigate(guideItem.name_en, level.level)"
                     >
                         <v-card style="padding:20px;
                             margin:10px;
@@ -37,10 +37,30 @@
                 </tr>
             </tbody>
         </v-simple-table>
+        <template v-else>
+            <v-card class="pa-0 ma-0">
+                <v-row class="ma-0 pa-0">
+                    <v-spacer></v-spacer>
+                    <v-btn @click="goBack()"
+                        icon text color="black"
+                        style="margin-right:10px;"
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-row>
+                <div class="markdown-body" v-html="selectedMarkdownContent"
+                    style="height:calc(100vh - 220px);
+                    overflow:auto;"
+                ></div>
+            </v-card>
+        </template>
     </div>
-  </template>
+</template>
 
 <script>
+import axios from 'axios';
+import marked from 'marked';
+
 export default {
     components: {
     },
@@ -61,8 +81,8 @@ export default {
                     ]
                 },
                 {
-					name: '데이터베이스 관점',
-					name_en: 'database',
+                    name: '데이터베이스 관점',
+                    name_en: 'database',
                     levels: [
                         { level: 1, path: '/database/level1', name: '싱글 DBMS 사용' },
                         { level: 2, path: '/database/level2', name: '개별 스키마 정의(Scheme per Service)' },
@@ -71,8 +91,8 @@ export default {
                     ]
                 },
                 {
-					name: '인프라스트럭처 관점',
-					name_en: 'infrastructure',
+                    name: '인프라스트럭처 관점',
+                    name_en: 'infrastructure',
                     levels: [
                         { level: 1, path: '/infrastructure/level1', name: '베어 메탈 서버기반 호스팅' },
                         { level: 2, path: '/infrastructure/level2', name: '가상화 데이터센터 기반 인프라 운영' },
@@ -81,8 +101,8 @@ export default {
                     ]
                 },
                 {
-					name: '개발 관점',
-					name_en: 'development',
+                    name: '개발 관점',
+                    name_en: 'development',
                     levels: [
                         { level: 1, path: '/development/level1', name: '폭포수 모델, 구조적 방법론' },
                         { level: 2, path: '/development/level2', name: '폭포수 모델과 에자일 방법론 혼용(Iteration)' },
@@ -91,8 +111,8 @@ export default {
                     ]
                 },
                 {
-					name: '보안 관점',
-					name_en: 'security',
+                    name: '보안 관점',
+                    name_en: 'security',
                     levels: [
                         { level: 1, path: '/security/level1', name: '세션기반 인증 & 서버 사이드 렌더링' },
                         { level: 2, path: '/security/level2', name: '세션 클러스터링 & 서버 사이드 렌더링' },
@@ -101,8 +121,8 @@ export default {
                     ]
                 },
                 {
-					name: '확장성 관점',
-					name_en: 'scalability',
+                    name: '확장성 관점',
+                    name_en: 'scalability',
                     levels: [
                         { level: 1, path: '/scalability/level1', name: '수직 확장(Vertical Scaling)' },
                         { level: 2, path: '/scalability/level2', name: '수직 확장과 수평 확장의 혼용' },
@@ -111,8 +131,8 @@ export default {
                     ]
                 },
                 {
-					name: '가시성 관점',
-					name_en: 'visibility',
+                    name: '가시성 관점',
+                    name_en: 'visibility',
                     levels: [
                         { level: 1, path: '/visibility/level1', name: 'OS, Hardware 및 정적 로그 통계 모니터링' },
                         { level: 2, path: '/visibility/level2', name: '텔레메트리(Telemetry) 지표 수집에 의한 Observability' },
@@ -125,6 +145,7 @@ export default {
             goalLevelAssessmentPaths: [],
             currentLevelAssessmentPaths: [],
             goalLevels: 0,
+            selectedMarkdownContent: null, // 마크다운 콘텐츠를 저장할 새로운 데이터 속성
         }
     },
     computed: {
@@ -147,8 +168,18 @@ export default {
         }
     },
     methods: {
-        navigate(path) {
+        navigate(name_en, level) {
+            const path = `/get-the-guide/${name_en}/level${level}`;
             this.$router.push(path);
+            this.loadMarkdownContent(name_en, level);
+        },
+        async loadMarkdownContent(name_en, level) {
+            try {
+                const response = await axios.get(`https://raw.githubusercontent.com/msa-ez/cloud-iq-md/main/get-the-guide-md2/${name_en}/level${level}.md`);
+                this.selectedMarkdownContent = marked(response.data);
+            } catch (error) {
+                console.error(`Failed to load markdown content for ${name_en} level ${level}`, error);
+            }
         },
         loadGoalPath() {
             const profilesData = localStorage.getItem('registeredProfiles');
@@ -207,6 +238,10 @@ export default {
                 color: '' // 기본 글자색
             };
         },
+        goBack() {
+            this.selectedMarkdownContent = null;
+            this.$router.push(`/get-the-guide/review-result`);
+        },
     },
 }
 </script>
@@ -226,4 +261,9 @@ export default {
     font-weight: 900 !important;
     text-align: center !important;
 }
+
+.markdown-body {
+    padding: 20px;
+}
 </style>
+                       

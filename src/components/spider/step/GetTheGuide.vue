@@ -369,7 +369,6 @@ export default {
     color:#1976D2
 }
 .guide-box {
-    padding:20px;
     overflow: auto;
 }
 .tab-title {
