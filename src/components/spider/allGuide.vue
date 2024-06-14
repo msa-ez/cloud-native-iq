@@ -31,7 +31,6 @@
                             text-align: center;"
                             :style="checkPathMatch(level.path)"
                         >
-                            <div>전환 가이드 보기</div>
                             <div style="font-weight: 900;">{{ level.name }}</div>
                         </v-card>
                     </td>

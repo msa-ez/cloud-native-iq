@@ -2,8 +2,11 @@
     <div>
         <v-tabs v-model="tab" fixed-tabs>
             <!-- 새로운 고정 탭 추가 -->
-            <v-tab class="tab-title" key="fixed-tab">
+            <v-tab class="tab-title">
                 검토결과
+            </v-tab>
+            <v-tab class="tab-title">
+                참조 아키텍처
             </v-tab>
             <!-- 기존 v-for를 사용한 탭들 -->
             <v-tab class="tab-title" v-for="item in guideTabs" :key="item.tab">
@@ -12,8 +15,14 @@
         </v-tabs>
 
         <v-tabs-items v-model="tab" class="guide-box">
+            <!-- 검토결과 -->
+            <v-tab-item>
+                <div style="padding:0px;">
+                    <AllGuide></AllGuide>
+                </div>
+            </v-tab-item>
             <!-- 새로운 고정 탭 컨텐츠 -->
-            <v-tab-item key="fixed-tab-content">
+            <v-tab-item>
                 <div style="padding:0px;">
                     <!-- 외부 컨테이너 div 추가 -->
                     <v-row class="ma-0 pa-0">
@@ -83,6 +92,7 @@
 import axios from 'axios';
 import marked from 'marked';
 import SLABase from './SLABase.vue'
+import AllGuide from '../allGuide.vue'
 
 export default {
     name: "GetTheGuide",
@@ -90,6 +100,7 @@ export default {
         SLABase
     ],
     components: {
+        AllGuide
     },
     props: {
         selectedProfile: null,
@@ -171,10 +182,13 @@ export default {
             if (newVal === 0) {
                 this.$router.push(`/get-the-guide/review-result`);
                 return;
+            } if (newVal === 1) {
+                this.$router.push(`/get-the-guide/reference-architecture`);
+                return;
             }
 
             // 기존 탭들에 대한 처리
-            const tabName = this.guideTabs[newVal - 1].tab_en; // 인덱스 조정
+            const tabName = this.guideTabs[newVal - 2].tab_en; // 인덱스 조정
             this.chartData.perspectives.forEach(p => {
                 if (p.name_en === tabName) {
                     this.$router.push(`/get-the-guide/${tabName}/level${p.goalLevel}`);

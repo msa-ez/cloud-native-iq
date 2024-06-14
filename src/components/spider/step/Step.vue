@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-stepper v-model="currentStep">
+        <v-stepper v-model="currentStep" style="box-shadow: none;">
             <v-stepper-header>
                 <template v-for="n in components.length">
                     <v-stepper-step
@@ -36,7 +36,6 @@
                             :is="components[n - 1].component"
                         />
                     </div>
-                    
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>

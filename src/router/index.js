@@ -26,13 +26,13 @@ const routes = [
         props: true,
     },
     {
-        path: '/case-study',
-        component: CaseStudy,
+        path: '/get-the-guide/reference-architecture',
+        component: Profile,
         props: true,
     },
     {
-        path: '/all-guide',
-        component: allGuide,
+        path: '/case-study',
+        component: CaseStudy,
         props: true,
     },
     {
