@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "071ab82a25f9bb89de3f";
+/******/ 	var hotCurrentHash = "961e7bb653235d7965af";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9721,6 +9721,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var marked__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! marked */ "./node_modules/marked/lib/marked.js");
+/* harmony import */ var marked__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(marked__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -9742,8 +9748,8 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '데이터베이스 관점',
-					name_en: 'database',
+                    name: '데이터베이스 관점',
+                    name_en: 'database',
                     levels: [
                         { level: 1, path: '/database/level1', name: '싱글 DBMS 사용' },
                         { level: 2, path: '/database/level2', name: '개별 스키마 정의(Scheme per Service)' },
@@ -9752,8 +9758,8 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '인프라스트럭처 관점',
-					name_en: 'infrastructure',
+                    name: '인프라스트럭처 관점',
+                    name_en: 'infrastructure',
                     levels: [
                         { level: 1, path: '/infrastructure/level1', name: '베어 메탈 서버기반 호스팅' },
                         { level: 2, path: '/infrastructure/level2', name: '가상화 데이터센터 기반 인프라 운영' },
@@ -9762,8 +9768,8 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '개발 관점',
-					name_en: 'development',
+                    name: '개발 관점',
+                    name_en: 'development',
                     levels: [
                         { level: 1, path: '/development/level1', name: '폭포수 모델, 구조적 방법론' },
                         { level: 2, path: '/development/level2', name: '폭포수 모델과 에자일 방법론 혼용(Iteration)' },
@@ -9772,8 +9778,8 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '보안 관점',
-					name_en: 'security',
+                    name: '보안 관점',
+                    name_en: 'security',
                     levels: [
                         { level: 1, path: '/security/level1', name: '세션기반 인증 & 서버 사이드 렌더링' },
                         { level: 2, path: '/security/level2', name: '세션 클러스터링 & 서버 사이드 렌더링' },
@@ -9782,8 +9788,8 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '확장성 관점',
-					name_en: 'scalability',
+                    name: '확장성 관점',
+                    name_en: 'scalability',
                     levels: [
                         { level: 1, path: '/scalability/level1', name: '수직 확장(Vertical Scaling)' },
                         { level: 2, path: '/scalability/level2', name: '수직 확장과 수평 확장의 혼용' },
@@ -9792,8 +9798,8 @@ __webpack_require__.r(__webpack_exports__);
                     ]
                 },
                 {
-					name: '가시성 관점',
-					name_en: 'visibility',
+                    name: '가시성 관점',
+                    name_en: 'visibility',
                     levels: [
                         { level: 1, path: '/visibility/level1', name: 'OS, Hardware 및 정적 로그 통계 모니터링' },
                         { level: 2, path: '/visibility/level2', name: '텔레메트리(Telemetry) 지표 수집에 의한 Observability' },
@@ -9806,6 +9812,7 @@ __webpack_require__.r(__webpack_exports__);
             goalLevelAssessmentPaths: [],
             currentLevelAssessmentPaths: [],
             goalLevels: 0,
+            selectedMarkdownContent: null, // 마크다운 콘텐츠를 저장할 새로운 데이터 속성
         }
     },
     computed: {
@@ -9828,8 +9835,18 @@ __webpack_require__.r(__webpack_exports__);
         }
     },
     methods: {
-        navigate(path) {
+        navigate(name_en, level) {
+            const path = `/get-the-guide/${name_en}/level${level}`;
             this.$router.push(path);
+            this.loadMarkdownContent(name_en, level);
+        },
+        async loadMarkdownContent(name_en, level) {
+            try {
+                const response = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].get(`https://raw.githubusercontent.com/msa-ez/cloud-iq-md/main/get-the-guide-md2/${name_en}/level${level}.md`);
+                this.selectedMarkdownContent = marked__WEBPACK_IMPORTED_MODULE_1___default()(response.data);
+            } catch (error) {
+                console.error(`Failed to load markdown content for ${name_en} level ${level}`, error);
+            }
         },
         loadGoalPath() {
             const profilesData = localStorage.getItem('registeredProfiles');
@@ -9887,6 +9904,10 @@ __webpack_require__.r(__webpack_exports__);
                 backgroundColor: '', // 기본 배경색
                 color: '' // 기본 글자색
             };
+        },
+        goBack() {
+            this.selectedMarkdownContent = null;
+            this.$router.push(`/get-the-guide/review-result`);
         },
     },
 });
@@ -11806,100 +11827,145 @@ var render = function render() {
   return _c(
     "div",
     [
-      _c("v-simple-table", [
-        _c("thead", [
-          _c("tr", { staticClass: "all-guide-table-head" }, [
+      !_vm.selectedMarkdownContent
+        ? _c("v-simple-table", [
+            _c("thead", [
+              _c("tr", { staticClass: "all-guide-table-head" }, [
+                _c(
+                  "th",
+                  { staticStyle: { "text-align": "left !important" } },
+                  [
+                    _c("v-row", [
+                      _c("div", [_vm._v("목표수준")]),
+                      _c("div", {
+                        staticClass: "color-box-style",
+                        staticStyle: {
+                          "background-color": "rgb(25, 118, 210)",
+                          "margin-left": "4px",
+                        },
+                      }),
+                      _vm._v(" /\n                    "),
+                      _c("div", [_vm._v("현수준")]),
+                      _c("div", {
+                        staticClass: "color-box-style",
+                        staticStyle: {
+                          "background-color": "rgba(255, 183, 77, 1)",
+                          "margin-left": "4px",
+                        },
+                      }),
+                      _vm._v(" /\n                    "),
+                      _c("div", [_vm._v("달성수준")]),
+                      _c("div", {
+                        staticClass: "color-box-style",
+                        staticStyle: {
+                          "background-color": "green",
+                          "margin-left": "4px",
+                        },
+                      }),
+                    ]),
+                  ],
+                  1
+                ),
+                _c("th", [_vm._v("Level 1")]),
+                _c("th", [_vm._v("Level 2")]),
+                _c("th", [_vm._v("Level 3")]),
+                _c("th", [_vm._v("Level 4")]),
+              ]),
+            ]),
             _c(
-              "th",
-              { staticStyle: { "text-align": "left !important" } },
+              "tbody",
+              _vm._l(_vm.guide, function (guideItem, guideIndex) {
+                return _c(
+                  "tr",
+                  { key: guideIndex },
+                  [
+                    _c("td", [_vm._v(_vm._s(guideItem.name))]),
+                    _vm._l(guideItem.levels, function (level) {
+                      return _c(
+                        "td",
+                        {
+                          key: level.level,
+                          staticClass: "all-guide-view",
+                          on: {
+                            click: function ($event) {
+                              return _vm.navigate(
+                                guideItem.name_en,
+                                level.level
+                              )
+                            },
+                          },
+                        },
+                        [
+                          _c(
+                            "v-card",
+                            {
+                              staticStyle: {
+                                padding: "20px",
+                                margin: "10px",
+                                "text-align": "center",
+                              },
+                              style: _vm.checkPathMatch(level.path),
+                            },
+                            [
+                              _c(
+                                "div",
+                                { staticStyle: { "font-weight": "900" } },
+                                [_vm._v(_vm._s(level.name))]
+                              ),
+                            ]
+                          ),
+                        ],
+                        1
+                      )
+                    }),
+                  ],
+                  2
+                )
+              }),
+              0
+            ),
+          ])
+        : [
+            _c(
+              "v-card",
+              { staticClass: "pa-0 ma-0" },
               [
-                _c("v-row", [
-                  _c("div", [_vm._v("목표수준")]),
-                  _c("div", {
-                    staticClass: "color-box-style",
-                    staticStyle: {
-                      "background-color": "rgb(25, 118, 210)",
-                      "margin-left": "4px",
-                    },
-                  }),
-                  _vm._v(" /\n                    "),
-                  _c("div", [_vm._v("현수준")]),
-                  _c("div", {
-                    staticClass: "color-box-style",
-                    staticStyle: {
-                      "background-color": "rgba(255, 183, 77, 1)",
-                      "margin-left": "4px",
-                    },
-                  }),
-                  _vm._v(" /\n                    "),
-                  _c("div", [_vm._v("달성수준")]),
-                  _c("div", {
-                    staticClass: "color-box-style",
-                    staticStyle: {
-                      "background-color": "green",
-                      "margin-left": "4px",
-                    },
-                  }),
-                ]),
+                _c(
+                  "v-row",
+                  { staticClass: "ma-0 pa-0" },
+                  [
+                    _c("v-spacer"),
+                    _c(
+                      "v-btn",
+                      {
+                        staticStyle: { "margin-right": "10px" },
+                        attrs: { icon: "", text: "", color: "black" },
+                        on: {
+                          click: function ($event) {
+                            return _vm.goBack()
+                          },
+                        },
+                      },
+                      [_c("v-icon", [_vm._v("mdi-close")])],
+                      1
+                    ),
+                  ],
+                  1
+                ),
+                _c("div", {
+                  staticClass: "markdown-body",
+                  staticStyle: {
+                    height: "calc(100vh - 220px)",
+                    overflow: "auto",
+                  },
+                  domProps: { innerHTML: _vm._s(_vm.selectedMarkdownContent) },
+                }),
               ],
               1
             ),
-            _c("th", [_vm._v("Level 1")]),
-            _c("th", [_vm._v("Level 2")]),
-            _c("th", [_vm._v("Level 3")]),
-            _c("th", [_vm._v("Level 4")]),
-          ]),
-        ]),
-        _c(
-          "tbody",
-          _vm._l(_vm.guide, function (guideItem, guideIndex) {
-            return _c(
-              "tr",
-              { key: guideIndex },
-              [
-                _c("td", [_vm._v(_vm._s(guideItem.name))]),
-                _vm._l(guideItem.levels, function (level) {
-                  return _c(
-                    "td",
-                    {
-                      key: level.level,
-                      staticClass: "all-guide-view",
-                      on: {
-                        click: function ($event) {
-                          return _vm.navigate(level.path)
-                        },
-                      },
-                    },
-                    [
-                      _c(
-                        "v-card",
-                        {
-                          staticStyle: {
-                            padding: "20px",
-                            margin: "10px",
-                            "text-align": "center",
-                          },
-                          style: _vm.checkPathMatch(level.path),
-                        },
-                        [
-                          _c("div", { staticStyle: { "font-weight": "900" } }, [
-                            _vm._v(_vm._s(level.name)),
-                          ]),
-                        ]
-                      ),
-                    ],
-                    1
-                  )
-                }),
-              ],
-              2
-            )
-          }),
-          0
-        ),
-      ]),
+          ],
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []
@@ -12938,7 +13004,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.all-guide-view {\n    cursor: pointer;\n    opacity: 0.8;\n}\n.all-guide-view:hover {\n    opacity: 1;\n}\n.all-guide-table-head th {\n    font-size: 20px !important;\n    font-weight: 900 !important;\n    text-align: center !important;\n}\n", ""]);
+exports.push([module.i, "\n.all-guide-view {\n    cursor: pointer;\n    opacity: 0.8;\n}\n.all-guide-view:hover {\n    opacity: 1;\n}\n.all-guide-table-head th {\n    font-size: 20px !important;\n    font-weight: 900 !important;\n    text-align: center !important;\n}\n.markdown-body {\n    padding: 20px;\n}\n", ""]);
 
 // exports
 
@@ -12976,7 +13042,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.get-the-guide-col-padding-right {\n    padding:0px 20% 0px 20px !important;\n}\n.text-primary {\n    color:#1976D2\n}\n.guide-box {\n    padding:20px;\n    overflow: auto;\n}\n.tab-title {\n    font-size: 16px;\n    font-weight: 700;\n}\n", ""]);
+exports.push([module.i, "\n.get-the-guide-col-padding-right {\n    padding:0px 20% 0px 20px !important;\n}\n.text-primary {\n    color:#1976D2\n}\n.guide-box {\n    overflow: auto;\n}\n.tab-title {\n    font-size: 16px;\n    font-weight: 700;\n}\n", ""]);
 
 // exports
 
