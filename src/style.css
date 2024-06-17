@@ -51,7 +51,9 @@ svg {
 }
 
 
-
+.separation-box svg {
+  margin-top:-2px;
+}
 
 
 

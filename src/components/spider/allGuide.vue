@@ -4,14 +4,23 @@
             <thead>
                 <tr class="all-guide-table-head">
                     <th style="text-align: left !important;">
-                    <v-row>
-                        <div>목표수준</div>
-                        <div class="color-box-style" style="background-color:rgb(25, 118, 210); margin-left: 4px;"></div>&nbsp;/
-                        <div>현수준</div>
-                        <div class="color-box-style" style="background-color:rgba(255, 183, 77, 1); margin-left: 4px;"></div>&nbsp;/
-                        <div>달성수준</div>
-                        <div class="color-box-style" style="background-color:green; margin-left: 4px;"></div>
-                    </v-row>
+                        <v-row class="separation-box">
+                            <div>목표수준</div>
+                            <Icon icon="fluent:animal-rabbit-24-regular" width="24" height="24" 
+                                style="color:rgb(25, 118, 210);"
+                            />&nbsp;/
+                            <div>현수준</div>
+                            <Icon icon="fluent:animal-turtle-16-regular" width="24" height="24" 
+                                style="color:rgba(255, 183, 77, 1);"
+                            />&nbsp;/
+                            <div>달성수준</div>
+                            <Icon icon="fluent:animal-rabbit-24-regular" width="24" height="24" 
+                                style="color:green;"
+                            />
+                            <Icon icon="fluent:animal-turtle-16-regular" width="24" height="24" 
+                                style="color:green;"
+                            />
+                        </v-row>
                     </th>
                     <th>Level 1</th>
                     <th>Level 2</th>
@@ -29,8 +38,15 @@
                         <v-card style="padding:20px;
                             margin:10px;
                             text-align: center;"
-                            :style="checkPathMatch(level.path)"
+                            :style="checkPathMatch(level.path).style"
                         >
+                        <!-- v-if="checkPathMatch(level.path).attainmentStatus" -->
+                            <v-row class="ma-0 pa-0" style="position: absolute; right:0px; top:0px;">
+                                <Icon v-if="checkPathMatch(level.path).attainmentStatus.both" icon="fluent:animal-turtle-16-regular" width="24" height="24" />
+                                <Icon v-if="checkPathMatch(level.path).attainmentStatus.both" icon="fluent:animal-rabbit-24-regular" width="24" height="24" />
+                                <Icon v-else-if="checkPathMatch(level.path).attainmentStatus.goal" icon="fluent:animal-rabbit-24-regular" width="24" height="24" />
+                                <Icon v-else-if="checkPathMatch(level.path).attainmentStatus.current" icon="fluent:animal-turtle-16-regular" width="24" height="24" />
+                            </v-row>
                             <div style="font-weight: 900;">{{ level.name }}</div>
                         </v-card>
                     </td>
@@ -213,30 +229,40 @@ export default {
             }
         },
         checkPathMatch(path) {
-            if(this.goalLevelAssessmentPaths.includes(path)&& this.currentLevelAssessmentPaths.includes(path)) {
-                //겹치는 부분 색상 변경
-                return {
-                    backgroundColor: 'green', // 여기에 원하는 배경색을 지정
-                    color: 'white' // 여기에 원하는 글자색을 지정
-                };
-            }
-            else if (this.goalLevelAssessmentPaths.includes(path)) {
-                // 목표수준 색상 변경
-                return {
-                    backgroundColor: 'rgb(25, 118, 210)', // 여기에 원하는 배경색을 지정
-                    color: 'white' // 여기에 원하는 글자색을 지정
-                };
-            } else if (this.currentLevelAssessmentPaths.includes(path)) {
-                // 현수준 색상 변경
-                return {
-                    backgroundColor: 'rgba(255, 183, 77, 1)', // 여기에 원하는 배경색을 지정
-                    color: 'white' // 여기에 원하는 글자색을 지정
-                };
-            } else
-            return {
+            let style = {
                 backgroundColor: '', // 기본 배경색
                 color: '' // 기본 글자색
             };
+            let attainmentStatus = {
+                goal: false,
+                current: false,
+                both: false
+            };
+
+            if (this.goalLevelAssessmentPaths.includes(path) && this.currentLevelAssessmentPaths.includes(path)) {
+                // 겹치는 부분 아이콘
+                style = {
+                    backgroundColor: 'green', // 여기에 원하는 녹색 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+                attainmentStatus.both = true;
+            } else if (this.goalLevelAssessmentPaths.includes(path)) {
+                // 목표수준 색상 변경
+                style = {
+                    backgroundColor: 'rgb(25, 118, 210)', // 여기에 원하는 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+                attainmentStatus.goal = true;
+            } else if (this.currentLevelAssessmentPaths.includes(path)) {
+                // 현수준 색상 변경
+                style = {
+                    backgroundColor: 'rgba(255, 183, 77, 1)', // 여기에 원하는 배경색을 지정
+                    color: 'white' // 여기에 원하는 글자색을 지정
+                };
+                attainmentStatus.current = true;
+            }
+
+            return { style, attainmentStatus };
         },
         goBack() {
             this.selectedMarkdownContent = null;
@@ -257,8 +283,8 @@ export default {
 }
 
 .all-guide-table-head th {
-    font-size: 20px !important;
-    font-weight: 900 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
     text-align: center !important;
 }
 
