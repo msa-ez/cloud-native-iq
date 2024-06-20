@@ -40,12 +40,8 @@
                             text-align: center;"
                             :style="checkPathMatch(level.path).style"
                         >
-                        <!-- v-if="checkPathMatch(level.path).attainmentStatus" -->
                             <v-row class="ma-0 pa-0" style="position: absolute; right:0px; top:0px;">
-                                <Icon v-if="checkPathMatch(level.path).attainmentStatus.both" icon="fluent:animal-turtle-16-regular" width="24" height="24" />
-                                <Icon v-if="checkPathMatch(level.path).attainmentStatus.both" icon="fluent:animal-rabbit-24-regular" width="24" height="24" />
-                                <Icon v-else-if="checkPathMatch(level.path).attainmentStatus.goal" icon="fluent:animal-rabbit-24-regular" width="24" height="24" />
-                                <Icon v-else-if="checkPathMatch(level.path).attainmentStatus.current" icon="fluent:animal-turtle-16-regular" width="24" height="24" />
+                                <Icon v-for="icon in getIconForPath(level.path)" :icon="icon" :key="icon" width="24" height="24" />
                             </v-row>
                             <div style="font-weight: 900;">{{ level.name }}</div>
                         </v-card>
@@ -240,29 +236,37 @@ export default {
             };
 
             if (this.goalLevelAssessmentPaths.includes(path) && this.currentLevelAssessmentPaths.includes(path)) {
-                // 겹치는 부분 아이콘
                 style = {
-                    backgroundColor: 'green', // 여기에 원하는 녹색 배경색을 지정
+                    backgroundColor: 'green', // 초록색
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
                 attainmentStatus.both = true;
             } else if (this.goalLevelAssessmentPaths.includes(path)) {
-                // 목표수준 색상 변경
                 style = {
-                    backgroundColor: 'rgb(25, 118, 210)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'rgb(25, 118, 210)', // 목표수준 색상
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
                 attainmentStatus.goal = true;
             } else if (this.currentLevelAssessmentPaths.includes(path)) {
-                // 현수준 색상 변경
                 style = {
-                    backgroundColor: 'rgba(255, 183, 77, 1)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'rgba(255, 183, 77, 1)', // 현수준 색상
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
                 attainmentStatus.current = true;
             }
 
             return { style, attainmentStatus };
+        },
+        getIconForPath(path) {
+            const status = this.checkPathMatch(path).attainmentStatus;
+            if (status.both) {
+                return ['fluent:animal-turtle-16-regular', 'fluent:animal-rabbit-24-regular'];
+            } else if (status.goal) {
+                return ['fluent:animal-rabbit-24-regular'];
+            } else if (status.current) {
+                return ['fluent:animal-turtle-16-regular'];
+            }
+            return [];
         },
         goBack() {
             this.selectedMarkdownContent = null;

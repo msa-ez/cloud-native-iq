@@ -74,7 +74,7 @@
             <!-- 기존 v-for를 사용한 탭 컨텐츠들 -->
             <v-tab-item v-for="item in guideTabs" :key="item.tab">
                 <div flat style="padding:20px;">
-                    <div v-if="goalLevels[item.tab_en] > 0 && Object.keys(markdownContentFolders).length > 0"
+                    <div v-if="goalLevels[item.tab_en] > 0 && markdownContentFolders[item.tab_en] && Object.keys(markdownContentFolders[item.tab_en]).length > 0"
                         v-html="markdownContentFolders[item.tab_en][goalLevels[item.tab_en]]"
                         class="markdown-body"    
                     >

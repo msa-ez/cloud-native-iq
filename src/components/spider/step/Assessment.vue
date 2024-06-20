@@ -80,19 +80,25 @@ export default {
 					lastTrueIndex = index;
 				}
 			});
-			// 마지막으로 체크된 level의 index 이전의 모든 levels을 isCompleted = true로 설정
-			if (lastTrueIndex !== -1) {
+
+			// 모든 체크박스가 해제된 경우 처리
+			if (lastTrueIndex === -1) {
+				perspective.levels.forEach(lvl => {
+					lvl.isCompleted = false;
+				});
+			} else {
+				// 마지막으로 체크된 level의 index 이전의 모든 levels을 isCompleted = true로 설정
 				perspective.levels.forEach((lvl, index) => {
 					if (index <= lastTrueIndex) {
 						lvl.isCompleted = true;
 					} else {
-						// 선택적으로, lastTrueIndex 이후의 levels을 isCompleted = false로 설정할 수 있습니다.
 						lvl.isCompleted = false;
 					}
 				});
 			}
+
 			this.$emit('saveProfiles');
-		},
+		}
 	}
 };
 </script>
