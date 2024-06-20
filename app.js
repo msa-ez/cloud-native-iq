@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "959d97c8f7431cb35365";
+/******/ 	var hotCurrentHash = "90eaccf7d328aa12a932";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -9891,29 +9891,37 @@ __webpack_require__.r(__webpack_exports__);
             };
 
             if (this.goalLevelAssessmentPaths.includes(path) && this.currentLevelAssessmentPaths.includes(path)) {
-                // 겹치는 부분 아이콘
                 style = {
-                    backgroundColor: 'green', // 여기에 원하는 녹색 배경색을 지정
+                    backgroundColor: 'green', // 초록색
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
                 attainmentStatus.both = true;
             } else if (this.goalLevelAssessmentPaths.includes(path)) {
-                // 목표수준 색상 변경
                 style = {
-                    backgroundColor: 'rgb(25, 118, 210)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'rgb(25, 118, 210)', // 목표수준 색상
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
                 attainmentStatus.goal = true;
             } else if (this.currentLevelAssessmentPaths.includes(path)) {
-                // 현수준 색상 변경
                 style = {
-                    backgroundColor: 'rgba(255, 183, 77, 1)', // 여기에 원하는 배경색을 지정
+                    backgroundColor: 'rgba(255, 183, 77, 1)', // 현수준 색상
                     color: 'white' // 여기에 원하는 글자색을 지정
                 };
                 attainmentStatus.current = true;
             }
 
             return { style, attainmentStatus };
+        },
+        getIconForPath(path) {
+            const status = this.checkPathMatch(path).attainmentStatus;
+            if (status.both) {
+                return ['fluent:animal-turtle-16-regular', 'fluent:animal-rabbit-24-regular'];
+            } else if (status.goal) {
+                return ['fluent:animal-rabbit-24-regular'];
+            } else if (status.current) {
+                return ['fluent:animal-turtle-16-regular'];
+            }
+            return [];
         },
         goBack() {
             this.selectedMarkdownContent = null;
@@ -9971,19 +9979,25 @@ __webpack_require__.r(__webpack_exports__);
 					lastTrueIndex = index;
 				}
 			});
-			// 마지막으로 체크된 level의 index 이전의 모든 levels을 isCompleted = true로 설정
-			if (lastTrueIndex !== -1) {
+
+			// 모든 체크박스가 해제된 경우 처리
+			if (lastTrueIndex === -1) {
+				perspective.levels.forEach(lvl => {
+					lvl.isCompleted = false;
+				});
+			} else {
+				// 마지막으로 체크된 level의 index 이전의 모든 levels을 isCompleted = true로 설정
 				perspective.levels.forEach((lvl, index) => {
 					if (index <= lastTrueIndex) {
 						lvl.isCompleted = true;
 					} else {
-						// 선택적으로, lastTrueIndex 이후의 levels을 isCompleted = false로 설정할 수 있습니다.
 						lvl.isCompleted = false;
 					}
 				});
 			}
+
 			this.$emit('saveProfiles');
-		},
+		}
 	}
 });
 
@@ -11107,7 +11121,7 @@ var render = function render() {
                 position: "absolute",
                 right: "0px",
                 top: "0px",
-                height: "100vh",
+                height: "calc(100vh - 64px)",
                 "z-index": "999",
                 "border-left": "solid 1px gray",
                 overflow: "auto",
@@ -11943,46 +11957,19 @@ var render = function render() {
                                     top: "0px",
                                   },
                                 },
-                                [
-                                  _vm.checkPathMatch(level.path)
-                                    .attainmentStatus.both
-                                    ? _c("Icon", {
-                                        attrs: {
-                                          icon: "fluent:animal-turtle-16-regular",
-                                          width: "24",
-                                          height: "24",
-                                        },
-                                      })
-                                    : _vm._e(),
-                                  _vm.checkPathMatch(level.path)
-                                    .attainmentStatus.both
-                                    ? _c("Icon", {
-                                        attrs: {
-                                          icon: "fluent:animal-rabbit-24-regular",
-                                          width: "24",
-                                          height: "24",
-                                        },
-                                      })
-                                    : _vm.checkPathMatch(level.path)
-                                        .attainmentStatus.goal
-                                    ? _c("Icon", {
-                                        attrs: {
-                                          icon: "fluent:animal-rabbit-24-regular",
-                                          width: "24",
-                                          height: "24",
-                                        },
-                                      })
-                                    : _vm.checkPathMatch(level.path)
-                                        .attainmentStatus.current
-                                    ? _c("Icon", {
-                                        attrs: {
-                                          icon: "fluent:animal-turtle-16-regular",
-                                          width: "24",
-                                          height: "24",
-                                        },
-                                      })
-                                    : _vm._e(),
-                                ],
+                                _vm._l(
+                                  _vm.getIconForPath(level.path),
+                                  function (icon) {
+                                    return _c("Icon", {
+                                      key: icon,
+                                      attrs: {
+                                        icon: icon,
+                                        width: "24",
+                                        height: "24",
+                                      },
+                                    })
+                                  }
+                                ),
                                 1
                               ),
                               _c(
@@ -12524,7 +12511,9 @@ var render = function render() {
                 { staticStyle: { padding: "20px" }, attrs: { flat: "" } },
                 [
                   _vm.goalLevels[item.tab_en] > 0 &&
-                  Object.keys(_vm.markdownContentFolders).length > 0
+                  _vm.markdownContentFolders[item.tab_en] &&
+                  Object.keys(_vm.markdownContentFolders[item.tab_en]).length >
+                    0
                     ? _c("div", {
                         staticClass: "markdown-body",
                         domProps: {
